@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+/* ── Variables ─────────────────────────────────────────────── */
+:root {
+  --gold:       #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dark:  #a8893a;
+  --navy:       #0c4a6e;
+  --navy-dark:  #083a57;
+  --sky:        #38bdf8;
+  --sky-dark:   #0284c7;
+  --cream:      #faf8f4;
+  --surface:    #f8fafc;
+
+  --font-sans:     var(--font-montserrat), 'Montserrat', system-ui, sans-serif;
+  --font-display:  var(--font-montserrat), 'Montserrat', system-ui, sans-serif;
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  background: #ffffff;
+  color: #1a1a2e;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+/* ── Typography ─────────────────────────────────────────────── */
+.font-display { font-family: var(--font-display); }
+.font-sans    { font-family: var(--font-sans); }
+
+/* Heading scale — Montserrat */
+h1, .h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; }
+h2, .h2 { font-size: clamp(1.5rem, 3.5vw, 2.5rem); font-weight: 700; line-height: 1.2; letter-spacing: -0.01em; }
+h3, .h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 600; line-height: 1.3; }
+
+/* ── Design tokens ──────────────────────────────────────────── */
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 700;
+  color: var(--navy);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(201,168,76,0.1);
+  border: 1px solid rgba(201,168,76,0.25);
+  padding: 4px 14px;
+  border-radius: 999px;
+}
+
+/* ── Buttons ────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--gold);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+.btn-primary:hover {
+  background: var(--gold-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(201,168,76,0.35);
+}
+.btn-primary:active { transform: translateY(0); }
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.65rem 1.5rem;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.btn-outline:hover {
+  background: var(--gold);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--navy);
+  font-weight: 600;
+  font-size: 0.875rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+.btn-ghost:hover { background: rgba(12,74,110,0.06); }
+
+/* ── Cards ──────────────────────────────────────────────────── */
+.card-hover {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.10);
+}
+
+/* ── Inputs ─────────────────────────────────────────────────── */
+.input-base {
+  width: 100%;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.65rem 0.875rem;
+  font-size: 0.875rem;
+  font-family: var(--font-sans);
+  color: #1a1a2e;
+  background: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+.input-base:focus {
+  border-color: var(--sky);
+  box-shadow: 0 0 0 3px rgba(56,189,248,0.15);
+}
+.input-base::placeholder { color: #94a3b8; }
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Utilities ──────────────────────────────────────────────── */
+.text-balance { text-wrap: balance; }
+.gradient-gold { background: linear-gradient(135deg, var(--gold), var(--gold-light)); }
+.gradient-navy { background: linear-gradient(135deg, var(--navy-dark), var(--navy)); }
+
+/* ── Animations ─────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-up { animation: fadeUp 0.5s ease forwards; }
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.shimmer {
+  background: linear-gradient(90deg, transparent 25%, rgba(255,255,255,0.4) 50%, transparent 75%);
+  background-size: 200% auto;
+  animation: shimmer 2s linear infinite;
+}
+
+/* ── Responsive helpers ─────────────────────────────────────── */
+.container-tight { max-width: 720px; margin-inline: auto; padding-inline: 1rem; }
+.container-wide  { max-width: 1280px; margin-inline: auto; padding-inline: 1rem; }
+
+@media (min-width: 640px)  { .container-tight, .container-wide { padding-inline: 1.5rem; } }
+@media (min-width: 1024px) { .container-wide { padding-inline: 2rem; } }
