@@ -35,6 +35,19 @@ model Evenement {
   @@map("evenements")
 }
 
+// NOUVEAU MODÈLE AJOUTÉ ICI
+model EvenementPrestation {
+  id          String   @id @default(cuid())
+  label       String
+  description String?
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("evenement_prestations")
+}
+
 model RdvInscription {
   id             String   @id @default(cuid())
   reference      String   @unique
@@ -113,7 +126,6 @@ model CollectiviteService {
   @@map("collectivite_services")
 }
 
-// NOUVEAU MODÈLE AJOUTÉ ICI
 model CollectiviteAnnuaire {
   id        String   @id @default(cuid())
   nom       String
