@@ -607,17 +607,6 @@ model BlockedDate {
 
   @@map("blocked_dates")
 }
-model InfoPrestation {
-  id          String   @id @default(cuid())
-  nom         String   // ou "label" / "titre" selon ce que votre frontend envoie
-  description String?
-  image       String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("info_prestations")
-}
 
 model SiteContent {
   id        String   @id @default(cuid())
@@ -628,12 +617,14 @@ model SiteContent {
 
   @@map("site_content")
 }
+
+// LE MODÈLE INFOPRESTATION FINAL SANS DOUBLON
 model InfoPrestation {
   id          String   @id @default(cuid())
   nom         String
-  categorie   String?  // <-- Ligne ajoutée
+  categorie   String?
   description String?
-  prix        String?  // <-- Ligne ajoutée
+  prix        String?
   image       String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
