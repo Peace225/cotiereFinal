@@ -19,7 +19,7 @@ const services = [
   { label: "Le RDV Des Evenements A Venir",    href: "/services/rdv",          Icon: CalendarDays },
 ];
 
-export default function Navbar({ session }: { session: any }) {
+export default function Navbar({ session }: { session?: any }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropOpen, setDropOpen]     = useState(false);
   const [scrolled, setScrolled]     = useState(false);
