@@ -1,11 +1,12 @@
-// app/dashboard-partner/evenement/page.jsx
+// app/dashboard-partner/evenement/page.tsx
 "use client";
 
 import React from 'react';
 import { Calendar, MapPin, Ticket, FileText, Clock, Building } from 'lucide-react';
 
 export default function EvenementPage() {
-  const handleSubmit = (e) => {
+  // 1. ADDED TYPE HERE: e: React.FormEvent<HTMLFormElement>
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("Données de l'événement enregistrées");
   };
