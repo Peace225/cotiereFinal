@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateReference } from "@/lib/reference";
-import { getSession } from "@/lib/auth";
-import { created, badRequest, serverError } from "@/lib/api-response";
+import { created, ok, badRequest, serverError, forbidden } from "@/lib/api-response";
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
 import { z } from "zod";
 
 const reservationSchema = z.object({
@@ -12,25 +12,23 @@ const reservationSchema = z.object({
   clientEmail: z.string().email().optional().or(z.literal("")),
   eventDate: z.string().optional(),
   message: z.string().optional(),
-  serviceTitle: z.string().min(1),   // ex: "Chambre Supérieure"
-  serviceDetails: z.string().optional(), // ex: "Chambre · 2 personnes · 40 000 FCFA/nuit"
+  serviceTitle: z.string().min(1),
+  serviceDetails: z.string().optional(),
   pageUrl: z.string().optional(),
 });
 
-// POST /api/reservations — Réservation générique depuis le modal
+// POST /api/reservations — Réservation générique (Public)
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const parsed = reservationSchema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
 
-    const session = await getSession();
     const d = parsed.data;
 
     const reservation = await prisma.eventRequest.create({
       data: {
         reference: generateReference("RES"),
-        userId: session?.user ? (session.user as { id: string }).id : undefined,
         clientFirstName: d.clientFirstName,
         clientLastName: d.clientLastName,
         clientEmail: d.clientEmail || "non-fourni@cotiere.ci",
@@ -50,6 +48,21 @@ export async function POST(req: NextRequest) {
     });
 
     return created({ id: reservation.id, reference: reservation.reference });
+  } catch (e) {
+    return serverError(e);
+  }
+}
+
+// GET /api/reservations — Liste des réservations (Admin uniquement)
+export async function GET() {
+  // Sécurisation : Seuls les admins peuvent voir les demandes
+  try { await requireAdmin(); } catch { return forbidden(); }
+
+  try {
+    const reservations = await prisma.eventRequest.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+    return ok({ reservations });
   } catch (e) {
     return serverError(e);
   }

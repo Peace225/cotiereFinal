@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ok, notFound, badRequest, serverError } from "@/lib/api-response";
+import { ok, badRequest, forbidden, serverError } from "@/lib/api-response";
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
 import { z } from "zod";
 
 type Params = { params: Promise<{ id: string }> };
@@ -16,8 +17,11 @@ const updateSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
-// PATCH /api/rooms/[id]
+// PATCH /api/rooms/[id] — Admin uniquement
 export async function PATCH(req: NextRequest, { params }: Params) {
+  // Sécurisation : Seul un admin peut modifier les chambres
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const { id } = await params;
     const body = await req.json();
@@ -31,8 +35,11 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   }
 }
 
-// DELETE /api/rooms/[id]
+// DELETE /api/rooms/[id] — Admin uniquement
 export async function DELETE(_req: NextRequest, { params }: Params) {
+  // Sécurisation : Seul un admin peut désactiver des chambres
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const { id } = await params;
     await prisma.room.update({ where: { id }, data: { isActive: false } });

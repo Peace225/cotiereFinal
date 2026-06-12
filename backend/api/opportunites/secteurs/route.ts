@@ -14,21 +14,24 @@ const DEFAULT_SECTEURS = [
   { nom: "Énergie", categorie: "Énergie", couleur: "bg-red-500", description: "Projets d'énergie renouvelable et d'électrification dans la région côtière.", image: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=400&q=80" },
 ];
 
-// GET /api/opportunites/secteurs — Public (ou admin avec ?admin=1 pour tout voir)
+// GET /api/opportunites/secteurs
 export async function GET(req: NextRequest) {
-  try {
-    const { searchParams } = new URL(req.url);
-    const isAdmin = searchParams.get("admin") === "1";
+  const { searchParams } = new URL(req.url);
+  const isAdminRequest = searchParams.get("admin") === "1";
 
-    // En mode admin, on retourne tous les secteurs (actifs et inactifs)
-    const whereClause = isAdmin ? {} : { isActive: true };
+  // Vérification de sécurité réelle si admin demandé
+  if (isAdminRequest) {
+    try { await requireAdmin(); } catch { return forbidden(); }
+  }
+
+  try {
+    const whereClause = isAdminRequest ? {} : { isActive: true };
 
     let secteurs = await prisma.opportuniteSecteur.findMany({
       where: whereClause,
       orderBy: { createdAt: "asc" },
     });
 
-    // Si la table est vide, on seed les secteurs par défaut
     if (secteurs.length === 0) {
       await prisma.opportuniteSecteur.createMany({ data: DEFAULT_SECTEURS });
       secteurs = await prisma.opportuniteSecteur.findMany({
@@ -43,13 +46,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/opportunites/secteurs — Admin
+// POST /api/opportunites/secteurs
 export async function POST(req: NextRequest) {
-  try {
-    await requireAdmin();
-  } catch {
-    return forbidden();
-  }
+  try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
     const body = await req.json();

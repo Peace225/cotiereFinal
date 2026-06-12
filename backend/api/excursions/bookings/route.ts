@@ -2,11 +2,11 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { excursionBookingSchema } from "@/lib/validations";
 import { generateReference } from "@/lib/reference";
-import { getSession } from "@/lib/auth";
-import { created, badRequest, ok, serverError } from "@/lib/api-response";
+import { created, badRequest, ok, serverError, forbidden } from "@/lib/api-response";
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
 import { sendExcursionBookingConfirmation, sendExcursionBookingAdminNotif } from "@/lib/email";
 
-// POST /api/excursions/bookings — Réserver une excursion
+// POST /api/excursions/bookings — Réserver une excursion (Public)
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -14,7 +14,6 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
 
     const data = parsed.data;
-    const session = await getSession();
 
     // Vérifier disponibilité
     const availability = await prisma.excursionAvailability.findUnique({
@@ -36,7 +35,7 @@ export async function POST(req: NextRequest) {
         return badRequest("Plus assez de places disponibles");
     }
 
-    // Récupérer les tarifs de l'excursion
+    // Récupérer les tarifs
     const excursion = await prisma.excursion.findUnique({
       where: { id: data.excursionId },
       include: { options: true },
@@ -55,13 +54,12 @@ export async function POST(req: NextRequest) {
 
     const totalAmount = adultsTotal + childrenTotal + optionsTotal;
 
-    // Créer la réservation dans une transaction
+    // Créer la réservation
     const booking = await prisma.$transaction(async (tx) => {
       const b = await tx.excursionBooking.create({
         data: {
           reference: generateReference("TOUR"),
           excursionId: data.excursionId,
-          userId: session?.user ? (session.user as { id: string }).id : undefined,
           clientFirstName: data.clientFirstName,
           clientLastName: data.clientLastName,
           clientEmail: data.clientEmail,
@@ -83,27 +81,18 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // Mettre à jour les quotas
       if (availability) {
         await tx.excursionAvailability.update({
           where: { id: availability.id },
           data: { bookedSlots: { increment: totalParticipants } },
         });
       }
-
       return b;
     });
 
-    // Envoi des emails (non bloquant)
     await Promise.allSettled([
-      sendExcursionBookingConfirmation({
-        ...booking,
-        excursionTitle: excursion.title,
-      }),
-      sendExcursionBookingAdminNotif({
-        ...booking,
-        excursionTitle: excursion.title,
-      }),
+      sendExcursionBookingConfirmation({ ...booking, excursionTitle: excursion.title }),
+      sendExcursionBookingAdminNotif({ ...booking, excursionTitle: excursion.title }),
     ]);
 
     return created(booking);
@@ -112,8 +101,11 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/excursions/bookings — Liste (admin)
+// GET /api/excursions/bookings — Liste (Admin uniquement)
 export async function GET(req: NextRequest) {
+  // Sécurisation : Seuls les admins peuvent accéder à la liste des réservations
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");

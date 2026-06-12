@@ -1,6 +1,7 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ok, badRequest, serverError } from "@/lib/api-response";
+import { ok, badRequest, serverError, forbidden } from "@/lib/api-response";
+import { requireAdmin } from "@/lib/auth"; // Import de la sécurité
 import { z } from "zod";
 
 const blockSchema = z.object({
@@ -10,7 +11,7 @@ const blockSchema = z.object({
   reason: z.string().optional(),
 });
 
-// GET /api/availability?serviceType=room&serviceId=xxx
+// GET : Lecture publique (généralement autorisé)
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -33,7 +34,6 @@ export async function GET(req: NextRequest) {
       return ok(blocked);
     }
 
-    // Tous les blocages
     const [rooms, excursions] = await Promise.all([
       prisma.roomAvailability.findMany({ where: { isBlocked: true }, include: { room: { select: { name: true } } }, orderBy: { date: "asc" } }),
       prisma.excursionAvailability.findMany({ where: { isBlocked: true }, orderBy: { date: "asc" } }),
@@ -44,8 +44,10 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/availability — Bloquer une date
+// POST : Protégé - Bloquer une date (Admin uniquement)
 export async function POST(req: NextRequest) {
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const body = await req.json();
     const parsed = blockSchema.safeParse(body);
@@ -73,8 +75,10 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// DELETE /api/availability — Débloquer une date
+// DELETE : Protégé - Débloquer une date (Admin uniquement)
 export async function DELETE(req: NextRequest) {
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const body = await req.json();
     const { serviceType, id } = body;

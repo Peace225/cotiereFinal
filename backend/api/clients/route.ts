@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ok, created, badRequest, serverError } from "@/lib/api-response";
+import { ok, created, badRequest, serverError, forbidden } from "@/lib/api-response";
+import { requireAdmin } from "@/lib/auth"; // Sécurité ajoutée
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 
@@ -15,6 +16,9 @@ const createSchema = z.object({
 });
 
 export async function GET() {
+  // Protection : Seuls les admins peuvent voir la liste des clients
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const clients = await prisma.user.findMany({
       orderBy: { createdAt: "desc" },
@@ -38,6 +42,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  // Protection : Seuls les admins peuvent créer un utilisateur
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const body = await req.json();
     const parsed = createSchema.safeParse(body);

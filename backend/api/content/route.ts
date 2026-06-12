@@ -5,6 +5,9 @@ import { requireAdmin } from "@/lib/auth";
 
 // GET /api/admin/content — Récupérer le contenu du site
 export async function GET() {
+  // Sécurisation ajoutée : Seul un admin peut lire la configuration globale
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const content = await prisma.siteContent.findMany();
     // Transformer en objet clé/valeur
@@ -17,11 +20,7 @@ export async function GET() {
 
 // PUT /api/admin/content — Mettre à jour le contenu (admin)
 export async function PUT(req: NextRequest) {
-  try {
-    await requireAdmin();
-  } catch {
-    return forbidden();
-  }
+  try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
     const body = await req.json() as Record<string, string>;

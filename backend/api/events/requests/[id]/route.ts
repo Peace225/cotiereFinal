@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { eventStatusSchema } from "@/lib/validations";
 import { ok, notFound, forbidden, badRequest, serverError } from "@/lib/api-response";
 import { sendEventStatusUpdate } from "@/lib/email";
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -23,6 +24,9 @@ export async function GET(_req: NextRequest, { params }: Params) {
 
 // PATCH /api/events/requests/[id] — Mise à jour statut (admin)
 export async function PATCH(req: NextRequest, { params }: Params) {
+  // Sécurisation : Seul un admin peut modifier le statut
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const { id } = await params;
     const body = await req.json();
@@ -45,6 +49,9 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
 // DELETE /api/events/requests/[id] — Suppression définitive (admin)
 export async function DELETE(_req: NextRequest, { params }: Params) {
+  // Sécurisation : Seul un admin peut supprimer une réservation
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const { id } = await params;
     await prisma.eventRequest.delete({ where: { id } });

@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ok, serverError } from "@/lib/api-response";
+import { ok, forbidden, serverError } from "@/lib/api-response";
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
 
 const DEFAULT_TEMPLATES = [
   { key: "confirmation_reservation", label: "Confirmation de réservation", subject: "Votre réservation COTIERE est confirmée", content: "Bonjour {{clientName}},\n\nVotre réservation pour {{service}} du {{date}} a été confirmée.\n\nMontant : {{montant}} FCFA\n\nMerci de votre confiance.\nCÔTIÈRE MEDIA GROUP\n07 47 72 29 31" },
@@ -10,6 +11,9 @@ const DEFAULT_TEMPLATES = [
 ];
 
 export async function GET() {
+  // Sécurisation du GET (lecture des modèles)
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const stored = await prisma.siteContent.findMany({
       where: { key: { startsWith: "email_template_" } },
@@ -31,6 +35,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  // Sécurisation du POST (écriture/modification)
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const { key, subject, content } = await req.json();
     await prisma.siteContent.upsert({

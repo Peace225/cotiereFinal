@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth";
 
-type AdminUser = { role: string };
 type Params = { params: Promise<{ id: string }> };
 
 export async function GET(_req: NextRequest, { params }: Params) {
@@ -18,13 +16,17 @@ export async function GET(_req: NextRequest, { params }: Params) {
 }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const session = await getServerSession(authOptions);
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes((session.user as AdminUser)?.role)) {
+  try {
+    await requireAdmin();
+  } catch {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
+
   try {
     const { id } = await params;
     const body = await req.json();
+    
+    // Mise à jour sécurisée
     const produit = await prisma.marketProduit.update({
       where: { id },
       data: {
@@ -33,7 +35,9 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         ...(body.prix !== undefined && { prix: parseInt(body.prix) }),
         ...(body.unite !== undefined && { unite: body.unite }),
         ...(body.categorie !== undefined && { categorie: body.categorie }),
-        ...(body.images !== undefined && { images: Array.isArray(body.images) ? body.images : body.images.split(",").map((s: string) => s.trim()).filter(Boolean) }),
+        ...(body.images !== undefined && { 
+          images: Array.isArray(body.images) ? body.images : body.images.split(",").map((s: string) => s.trim()).filter(Boolean) 
+        }),
         ...(body.isActive !== undefined && { isActive: body.isActive }),
       },
     });
@@ -44,10 +48,12 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 }
 
 export async function DELETE(_req: NextRequest, { params }: Params) {
-  const session = await getServerSession(authOptions);
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes((session.user as AdminUser)?.role)) {
+  try {
+    await requireAdmin();
+  } catch {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
+
   try {
     const { id } = await params;
     await prisma.marketProduit.delete({ where: { id } });

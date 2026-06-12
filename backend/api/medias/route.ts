@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ok, created, badRequest, serverError } from "@/lib/api-response";
+import { ok, created, badRequest, serverError, forbidden } from "@/lib/api-response";
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
 import { z } from "zod";
 
 const schema = z.object({
@@ -15,18 +16,25 @@ const schema = z.object({
   description: z.string().optional(),
 });
 
+// GET : Protégé - Liste des demandes média (Admin uniquement)
 export async function GET() {
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
-    const requests = await prisma.mediaAdRequest.findMany({ orderBy: { createdAt: "desc" } });
+    const requests = await prisma.mediaAdRequest.findMany({ 
+      orderBy: { createdAt: "desc" } 
+    });
     return ok({ requests });
   } catch (e) { return serverError(e); }
 }
 
+// POST : Public - Soumission d'une demande par un client
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const parsed = schema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
+    
     const request = await prisma.mediaAdRequest.create({
       data: {
         reference: `MED-${Date.now().toString(36).toUpperCase()}`,

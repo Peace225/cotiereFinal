@@ -1,8 +1,8 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ok, created, badRequest, serverError } from "@/lib/api-response";
+import { ok, created, badRequest, serverError, forbidden } from "@/lib/api-response";
 import { z } from "zod";
-import { getSession } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth"; // Utilisation de votre sécurité centralisée
 
 const rentalSchema = z.object({
   clientFirstName: z.string().min(1),
@@ -23,6 +23,9 @@ const rentalSchema = z.object({
 });
 
 export async function GET() {
+  // Sécurisation : Seuls les admins peuvent voir la liste des locations
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const rentals = await prisma.equipmentRental.findMany({
       orderBy: { createdAt: "desc" },
@@ -38,13 +41,11 @@ export async function POST(req: NextRequest) {
     const parsed = rentalSchema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
 
-    const session = await getSession();
     const d = parsed.data;
     const start = new Date(d.startDate);
     const end = new Date(d.endDate);
     const days = Math.max(1, Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
 
-    // Calculer les totaux
     let equipmentTotal = 0;
     let depositAmount = 0;
     const itemsData: { equipmentId: string; quantity: number; pricePerDay: number; subtotal: number }[] = [];
@@ -68,7 +69,6 @@ export async function POST(req: NextRequest) {
       const r = await tx.equipmentRental.create({
         data: {
           reference: `LOC-${Date.now().toString(36).toUpperCase()}`,
-          userId: session?.user ? (session.user as { id: string }).id : undefined,
           clientFirstName: d.clientFirstName,
           clientLastName: d.clientLastName,
           clientPhone: d.clientPhone,

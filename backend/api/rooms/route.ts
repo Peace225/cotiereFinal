@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ok, created, badRequest, serverError } from "@/lib/api-response";
+import { ok, created, badRequest, forbidden, serverError } from "@/lib/api-response";
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
 import { z } from "zod";
 
 const roomSchema = z.object({
@@ -14,7 +15,7 @@ const roomSchema = z.object({
   description: z.string().optional(),
 });
 
-// GET /api/rooms — Liste des chambres actives
+// GET /api/rooms — Liste des chambres actives (Public)
 export async function GET() {
   try {
     const rooms = await prisma.room.findMany({
@@ -27,8 +28,11 @@ export async function GET() {
   }
 }
 
-// POST /api/rooms — Créer une chambre (admin)
+// POST /api/rooms — Créer une chambre (Admin uniquement)
 export async function POST(req: NextRequest) {
+  // Sécurisation : Seul un admin peut ajouter des chambres
+  try { await requireAdmin(); } catch { return forbidden(); }
+
   try {
     const body = await req.json();
     const parsed = roomSchema.safeParse(body);
