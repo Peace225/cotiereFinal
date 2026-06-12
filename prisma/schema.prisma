@@ -626,6 +626,20 @@ model MediaSupport {
   @@map("media_supports")
 }
 
+model MusiqueService {
+  id          String   @id @default(cuid())
+  nom         String
+  categorie   String
+  prix        String   @default("Sur devis")
+  description String?
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("musique_services")
+}
+
 model BlockedDate {
   id          String   @id @default(cuid())
   serviceType String
