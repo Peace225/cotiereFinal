@@ -6,7 +6,7 @@ import { CartProvider } from "@/components/frontend/CartContext";
 export default function FrontendLayout({ children }: { children: React.ReactNode }) {
   return (
     <CartProvider>
-      <Navbar />
+      <Navbar session={null} />
       <main>{children}</main>
       <Footer />
       <WhatsAppButton />
