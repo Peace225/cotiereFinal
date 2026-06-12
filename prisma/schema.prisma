@@ -628,6 +628,19 @@ model SiteContent {
 
   @@map("site_content")
 }
+model InfoPrestation {
+  id          String   @id @default(cuid())
+  nom         String
+  categorie   String?  // <-- Ligne ajoutée
+  description String?
+  prix        String?  // <-- Ligne ajoutée
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("info_prestations")
+}
 
 model VilleContenu {
   id          String   @id @default(cuid())
