@@ -667,6 +667,18 @@ model BlockedDate {
   @@map("blocked_dates")
 }
 
+model StudioService {
+  id          String   @id @default(cuid())
+  label       String
+  description String?
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("studio_services")
+}
+
 model SiteContent {
   id        String   @id @default(cuid())
   key       String   @unique
