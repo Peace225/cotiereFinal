@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/Toaster";
-import Providers from "@/components/Providers";
+import { Providers } from "./Providers"; // Importation réintégrée
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -45,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className={montserrat.variable}>
       <body className="font-sans antialiased" suppressHydrationWarning>
+        {/* Le wrapper Providers englobe l'arborescence pour activer useSession et useCart */}
         <Providers>
           {children}
           <Toaster />

@@ -1,17 +1,17 @@
 ﻿import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { getSession } from "@/lib/auth";
 
 function generateRef() {
   return "RDV-" + Date.now().toString(36).toUpperCase() + "-" + Math.random().toString(36).slice(2, 6).toUpperCase();
 }
 
 export async function GET() {
-  const session = await getServerSession(authOptions);
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes((session.user as {role:string})?.role)) {
+  const session = await getSession();
+  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
   }
+
   try {
     const inscriptions = await prisma.rdvInscription.findMany({
       orderBy: { createdAt: "desc" },
@@ -25,22 +25,10 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { clientName, clientPhone, clientEmail, evenementSlug, evenementTitre, evenementDate, evenementLieu, participants, message } = body;
-    if (!clientName || !clientPhone || !evenementSlug) {
-      return NextResponse.json({ error: "Champs obligatoires manquants" }, { status: 400 });
-    }
     const inscription = await prisma.rdvInscription.create({
       data: {
         reference: generateRef(),
-        clientName,
-        clientPhone,
-        clientEmail: clientEmail || null,
-        evenementSlug,
-        evenementTitre,
-        evenementDate,
-        evenementLieu,
-        participants: parseInt(participants) || 1,
-        message: message || null,
+        ...body,
         status: "PENDING",
       },
     });

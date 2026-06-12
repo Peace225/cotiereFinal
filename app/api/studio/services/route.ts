@@ -1,59 +1,61 @@
-import { NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { ok, created, badRequest, forbidden, serverError } from "@/lib/api-response";
+import { NextRequest, NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth";
+import { createServerClient } from "@supabase/ssr";
+import { cookies } from "next/headers";
 
-const DEFAULT_SERVICES = [
-  { label: "Tournage vidéo professionnel", description: "Captation vidéo HD/4K avec équipement professionnel.", image: "https://images.unsplash.com/photo-1601506521793-dc748fc80b67?w=400&q=80" },
-  { label: "Photographie professionnelle", description: "Séances photo studio et extérieur, retouche incluse.", image: "https://images.unsplash.com/photo-1542038784456-1ea8e935640e?w=400&q=80" },
-  { label: "Streaming en direct (live)", description: "Diffusion live sur toutes les plateformes sociales.", image: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=400&q=80" },
-  { label: "Prises de vue aériennes par drone", description: "Drone 4K pour vues aériennes spectaculaires.", image: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=400&q=80" },
-  { label: "Régie mobile pour rendu TV", description: "Régie complète pour productions télévisées.", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80" },
-  { label: "Montage vidéo post-production", description: "Montage professionnel, effets visuels et étalonnage.", image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=400&q=80" },
-  { label: "Livraison sur clé USB / lien", description: "Livraison rapide de vos fichiers finaux.", image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&q=80" },
-];
+export const dynamic = 'force-dynamic';
 
-// GET /api/studio/services — Public
+async function getSupabaseClient() {
+  const cookieStore = await cookies();
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() { return cookieStore.getAll() },
+        setAll() {}
+      }
+    }
+  );
+}
+
 export async function GET() {
   try {
-    let services = await prisma.studioService.findMany({
-      where: { isActive: true },
-      orderBy: { createdAt: "asc" },
-    });
+    const supabase = await getSupabaseClient();
+    
+    // Tentative de récupération depuis la table 'studio_services'
+    const { data, error } = await supabase
+      .from('studio_services')
+      .select('*');
 
-    if (services.length === 0) {
-      await prisma.studioService.createMany({ data: DEFAULT_SERVICES });
-      services = await prisma.studioService.findMany({
-        where: { isActive: true },
-        orderBy: { createdAt: "asc" },
-      });
+    if (error) {
+      // C'EST ICI QUE NOUS VERRONS L'ERREUR DANS LE TERMINAL VS CODE
+      console.error("ERREUR SUPABASE (Détail):", JSON.stringify(error, null, 2));
+      throw error;
     }
 
-    return ok(services);
-  } catch (e) {
-    return serverError(e);
+    return NextResponse.json({ data: data || [] });
+  } catch (e: any) {
+    console.error("ERREUR API (Catch):", e.message);
+    return NextResponse.json({ error: e.message }, { status: 500 });
   }
 }
 
-// POST /api/studio/services — Admin
 export async function POST(req: NextRequest) {
-  try { await requireAdmin(); } catch { return forbidden(); }
-
   try {
+    await requireAdmin();
     const body = await req.json();
-    const { label, description, image } = body;
-    if (!label) return badRequest("Nom requis");
+    const supabase = await getSupabaseClient();
+    
+    const { data, error } = await supabase
+      .from('studio_services')
+      .insert([body])
+      .select()
+      .single();
 
-    const service = await prisma.studioService.create({
-      data: {
-        label,
-        description: description || label,
-        image: image || "https://images.unsplash.com/photo-1601506521793-dc748fc80b67?w=400&q=80",
-      },
-    });
-
-    return created(service);
-  } catch (e) {
-    return serverError(e);
+    if (error) throw error;
+    return NextResponse.json({ data }, { status: 201 });
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
   }
 }

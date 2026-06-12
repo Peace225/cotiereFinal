@@ -17,24 +17,41 @@ const schema = z.object({
 });
 
 export async function GET() {
-  try { await requireAdmin(); } catch { return forbidden(); }
-  try {
-    const requests = await prisma.mediaAdRequest.findMany({ orderBy: { createdAt: "desc" } });
+  try { 
+    // Vérification admin
+    await requireAdmin(); 
+    
+    // Récupération des données
+    const requests = await prisma.mediaAdRequest.findMany({ 
+      orderBy: { createdAt: "desc" } 
+    });
+    
     return ok({ requests });
-  } catch (e) { return serverError(e); }
+  } catch (e: any) { 
+    console.error("GET Error:", e); // Important pour voir l'erreur dans le terminal
+    return serverError(e); 
+  }
 }
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const parsed = schema.safeParse(body);
-    if (!parsed.success) return badRequest(parsed.error.errors[0].message);
+    
+    if (!parsed.success) {
+      return badRequest(parsed.error.errors[0].message);
+    }
+
     const request = await prisma.mediaAdRequest.create({
       data: {
         reference: `MED-${Date.now().toString(36).toUpperCase()}`,
         ...parsed.data,
       },
     });
+    
     return created(request);
-  } catch (e) { return serverError(e); }
+  } catch (e: any) { 
+    console.error("POST Error:", e); // Important pour voir l'erreur dans le terminal
+    return serverError(e); 
+  }
 }

@@ -1,5 +1,5 @@
 export default function WhatsAppButton() {
-  const phone = "2250747722931";
+  const phone = "2250704281719";
   const message = encodeURIComponent("Bonjour CÔTIÈRE MEDIA GROUP, je souhaite avoir des informations sur vos services.");
 
   return (

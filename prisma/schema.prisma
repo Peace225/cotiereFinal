@@ -7,40 +7,130 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// --- MODÈLES CORRIGÉS & AJOUTÉS ---
+
+model Evenement {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  titre         String
+  categorie     String
+  date          DateTime
+  heure         String?
+  lieu          String
+  ville         String?
+  prix          String?
+  capacite      String?
+  organisateur  String?
+  description   String?
+  image         String?
+  badge         String?
+  badgeColor    String?
+  artistes      Json?
+  duree         String?
+  programme     Json?
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("evenements")
+}
+
+model RdvInscription {
+  id             String   @id @default(cuid())
+  reference      String   @unique
+  clientName     String
+  clientPhone    String
+  clientEmail    String?
+  evenementSlug  String
+  evenementTitre String?
+  evenementDate  String?
+  evenementLieu  String?
+  participants   Int      @default(1)
+  message        String?
+  status         String   @default("PENDING")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("rdv_inscriptions")
+}
+
+// --- UTILISATEURS & AUTH ---
 model User {
-  id                String             @id @default(cuid())
-  email             String             @unique
-  password          String?
-  firstName         String
-  lastName          String
-  phone             String?
-  whatsapp          String?
-  nationality       String?
-  role              Role               @default(CLIENT)
-  emailVerified     Boolean            @default(false)
-  emailVerifyToken  String?
-  resetToken        String?
-  resetTokenExpiry  DateTime?
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
-  username          String?            @unique
-  equipmentRentals  EquipmentRental[]
-  eventRequests     EventRequest[]
+  id               String            @id @default(cuid())
+  email            String            @unique
+  password         String?
+  firstName        String
+  lastName         String
+  phone            String?
+  whatsapp         String?
+  nationality      String?
+  role             Role              @default(CLIENT)
+  emailVerified    Boolean           @default(false)
+  emailVerifyToken String?
+  resetToken       String?
+  resetTokenExpiry DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  equipmentRentals EquipmentRental[]
+  eventRequests    EventRequest[]
   excursionBookings ExcursionBooking[]
-  hotelBookings     HotelBooking[]
-  mediaRequests     MediaAdRequest[]
-  musicBookings     MusicBooking[]
-  notifications     Notification[]
-  payments          Payment[]
-  reviews           Review[]
-  studioBookings    StudioBooking[]
+  hotelBookings    HotelBooking[]
+  mediaRequests    MediaAdRequest[]
+  musicBookings    MusicBooking[]
+  notifications    Notification[]
+  payments         Payment[]
+  reviews          Review[]
+  studioBookings   StudioBooking[]
 
   @@map("users")
 }
 
+// --- OPPORTUNITÉS & SERVICES ---
+model OpportuniteSecteur {
+  id          String   @id @default(cuid())
+  nom         String
+  categorie   String
+  couleur     String
+  description String
+  image       String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("opportunite_secteurs")
+}
+
+model CollectiviteService {
+  id          String   @id @default(cuid())
+  nom         String
+  categorie   String
+  description String
+  image       String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("collectivite_services")
+}
+
+model AfroubaSupport {
+  id          String   @id @default(cuid())
+  nom         String
+  categorie   String
+  description String
+  prix        String   @default("Sur devis")
+  image       String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("afrouba_supports")
+}
+
+// --- BOOKINGS & RESERVATIONS ---
 model StudioBooking {
-  id                String         @id @default(cuid())
-  reference         String         @unique
+  id                String        @id @default(cuid())
+  reference         String        @unique
   userId            String?
   clientFirstName   String
   clientLastName    String
@@ -59,17 +149,17 @@ model StudioBooking {
   attachments       String[]
   estimatedPriceMin Int?
   estimatedPriceMax Int?
-  status            BookingStatus  @default(PENDING)
+  status            BookingStatus @default(PENDING)
   adminNotes        String?
   quotePdfUrl       String?
-  paymentStatus     PaymentStatus  @default(UNPAID)
+  paymentStatus     PaymentStatus @default(UNPAID)
   depositAmount     Int?
   totalAmount       Int?
-  createdAt         DateTime       @default(now())
-  updatedAt         DateTime       @updatedAt
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
   notifications     Notification[]
   payments          Payment[]
-  user              User?          @relation(fields: [userId], references: [id])
+  user              User?         @relation(fields: [userId], references: [id])
 
   @@map("studio_bookings")
 }
@@ -133,8 +223,8 @@ model ExcursionAvailability {
 }
 
 model ExcursionBooking {
-  id                 String         @id @default(cuid())
-  reference          String         @unique
+  id                 String        @id @default(cuid())
+  reference          String        @unique
   excursionId        String
   userId             String?
   clientFirstName    String
@@ -142,27 +232,27 @@ model ExcursionBooking {
   clientEmail        String
   clientPhone        String
   clientNationality  String?
-  bookingDate        DateTime       @db.Date
+  bookingDate        DateTime      @db.Date
   timeSlot           String
-  guideLanguage      String         @default("FR")
+  guideLanguage      String        @default("FR")
   adultsCount        Int
-  childrenCount      Int            @default(0)
+  childrenCount      Int           @default(0)
   specialRequests    String?
-  conditionsAccepted Boolean        @default(false)
+  conditionsAccepted Boolean       @default(false)
   selectedOptions    Json?
   adultsTotal        Int
   childrenTotal      Int
-  optionsTotal       Int            @default(0)
+  optionsTotal       Int           @default(0)
   totalAmount        Int
-  status             BookingStatus  @default(PENDING)
+  status             BookingStatus @default(PENDING)
   voucherPdfUrl      String?
   adminNotes         String?
-  paymentStatus      PaymentStatus  @default(UNPAID)
+  paymentStatus      PaymentStatus @default(UNPAID)
   depositAmount      Int?
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-  excursion          Excursion      @relation(fields: [excursionId], references: [id])
-  user               User?          @relation(fields: [userId], references: [id])
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  excursion          Excursion     @relation(fields: [excursionId], references: [id])
+  user               User?         @relation(fields: [userId], references: [id])
   notifications      Notification[]
   payments           Payment[]
 
@@ -170,9 +260,9 @@ model ExcursionBooking {
 }
 
 model Equipment {
-  id           String                @id @default(cuid())
+  id           String              @id @default(cuid())
   name         String
-  slug         String                @unique
+  slug         String              @unique
   description  String?
   category     String
   totalStock   Int
@@ -180,46 +270,46 @@ model Equipment {
   depositValue Int
   images       String[]
   techSheetUrl String?
-  isActive     Boolean               @default(true)
-  createdAt    DateTime              @default(now())
-  updatedAt    DateTime              @updatedAt
+  isActive     Boolean             @default(true)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
   rentalItems  EquipmentRentalItem[]
 
   @@map("equipment")
 }
 
 model EquipmentRental {
-  id              String                @id @default(cuid())
-  reference       String                @unique
+  id              String        @id @default(cuid())
+  reference       String        @unique
   userId          String?
   clientFirstName String
   clientLastName  String
   clientEmail     String
   clientPhone     String
-  startDate       DateTime              @db.Date
-  endDate         DateTime              @db.Date
+  startDate       DateTime      @db.Date
+  endDate         DateTime      @db.Date
   daysCount       Int
   deliveryAddress String?
-  selfPickup      Boolean               @default(false)
-  withDelivery    Boolean               @default(false)
-  withInstall     Boolean               @default(false)
-  withInsurance   Boolean               @default(false)
+  selfPickup      Boolean       @default(false)
+  withDelivery    Boolean       @default(false)
+  withInstall     Boolean       @default(false)
+  withInsurance   Boolean       @default(false)
   equipmentTotal  Int
-  optionsTotal    Int                   @default(0)
-  insuranceAmount Int                   @default(0)
+  optionsTotal    Int           @default(0)
+  insuranceAmount Int           @default(0)
   depositAmount   Int
   totalAmount     Int
-  status          BookingStatus         @default(PENDING)
+  status          BookingStatus @default(PENDING)
   returnStatus    String?
   returnDate      DateTime?
   penaltyAmount   Int?
   contractPdfUrl  String?
   adminNotes      String?
-  paymentStatus   PaymentStatus         @default(UNPAID)
-  createdAt       DateTime              @default(now())
-  updatedAt       DateTime              @updatedAt
+  paymentStatus   PaymentStatus @default(UNPAID)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
   items           EquipmentRentalItem[]
-  user            User?                 @relation(fields: [userId], references: [id])
+  user            User?         @relation(fields: [userId], references: [id])
   notifications   Notification[]
   payments        Payment[]
 
@@ -271,31 +361,31 @@ model RoomAvailability {
 }
 
 model HotelBooking {
-  id              String         @id @default(cuid())
-  reference       String         @unique
+  id              String        @id @default(cuid())
+  reference       String        @unique
   roomId          String
   userId          String?
   clientFirstName String
   clientLastName  String
   clientEmail     String
   clientPhone     String
-  checkIn         DateTime       @db.Date
-  checkOut        DateTime       @db.Date
+  checkIn         DateTime      @db.Date
+  checkOut        DateTime      @db.Date
   nightsCount     Int
   guestsCount     Int
   mealPlan        String?
   roomTotal       Int
-  mealTotal       Int            @default(0)
+  mealTotal       Int           @default(0)
   totalAmount     Int
-  status          BookingStatus  @default(PENDING)
+  status          BookingStatus @default(PENDING)
   voucherPdfUrl   String?
   adminNotes      String?
-  paymentStatus   PaymentStatus  @default(UNPAID)
+  paymentStatus   PaymentStatus @default(UNPAID)
   depositAmount   Int
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  room            Room           @relation(fields: [roomId], references: [id])
-  user            User?          @relation(fields: [userId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  room            Room          @relation(fields: [roomId], references: [id])
+  user            User?         @relation(fields: [userId], references: [id])
   notifications   Notification[]
   payments        Payment[]
 
@@ -303,8 +393,8 @@ model HotelBooking {
 }
 
 model MusicBooking {
-  id                 String         @id @default(cuid())
-  reference          String         @unique
+  id                 String        @id @default(cuid())
+  reference          String        @unique
   userId             String?
   clientFirstName    String
   clientLastName     String
@@ -317,12 +407,12 @@ model MusicBooking {
   sessionDuration    String
   serviceType        String
   totalAmount        Int?
-  status             BookingStatus  @default(PENDING)
+  status             BookingStatus @default(PENDING)
   adminNotes         String?
-  paymentStatus      PaymentStatus  @default(UNPAID)
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
-  user               User?          @relation(fields: [userId], references: [id])
+  paymentStatus      PaymentStatus @default(UNPAID)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  user               User?         @relation(fields: [userId], references: [id])
   notifications      Notification[]
   payments           Payment[]
 
@@ -330,8 +420,8 @@ model MusicBooking {
 }
 
 model EventRequest {
-  id              String         @id @default(cuid())
-  reference       String         @unique
+  id              String        @id @default(cuid())
+  reference       String        @unique
   userId          String?
   clientFirstName String
   clientLastName  String
@@ -345,14 +435,14 @@ model EventRequest {
   services        String[]
   attachments     String[]
   description     String?
-  status          BookingStatus  @default(PENDING)
+  status          BookingStatus @default(PENDING)
   quotePdfUrl     String?
   adminNotes      String?
-  paymentStatus   PaymentStatus  @default(UNPAID)
+  paymentStatus   PaymentStatus @default(UNPAID)
   totalAmount     Int?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  user            User?          @relation(fields: [userId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  user            User?         @relation(fields: [userId], references: [id])
   notifications   Notification[]
   payments        Payment[]
 
@@ -360,8 +450,8 @@ model EventRequest {
 }
 
 model MediaAdRequest {
-  id            String         @id @default(cuid())
-  reference     String         @unique
+  id            String        @id @default(cuid())
+  reference     String        @unique
   userId        String?
   clientName    String
   clientEmail   String
@@ -374,12 +464,12 @@ model MediaAdRequest {
   endDate       DateTime?
   budget        String?
   description   String?
-  status        BookingStatus  @default(PENDING)
+  status        BookingStatus @default(PENDING)
   quotePdfUrl   String?
   adminNotes    String?
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  user          User?          @relation(fields: [userId], references: [id])
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  user          User?         @relation(fields: [userId], references: [id])
   notifications Notification[]
 
   @@map("media_ad_requests")
@@ -403,86 +493,13 @@ model AfroubaRequest {
   @@map("afrouba_requests")
 }
 
-model RdvInscription {
-  id              String        @id @default(cuid())
-  reference       String        @unique
-  clientName      String
-  clientPhone     String
-  clientEmail     String?
-  evenementSlug   String
-  evenementTitre  String
-  evenementDate   String
-  evenementLieu   String
-  participants    Int           @default(1)
-  message         String?
-  status          BookingStatus @default(PENDING)
-  adminNotes      String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
-
-  @@map("rdv_inscriptions")
-}
-
-model Evenement {
-  id           String   @id @default(cuid())
-  slug         String   @unique
-  titre        String
-  categorie    String
-  date         String
-  heure        String
-  lieu         String
-  ville        String
-  prix         String
-  capacite     String
-  organisateur String
-  description  String
-  image        String
-  badge        String   @default("A venir")
-  badgeColor   String   @default("bg-blue-500")
-  artistes     String?
-  duree        String?
-  programme    String[]
-  isActive     Boolean  @default(true)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  @@map("evenements")
-}
-
-model MarketProduit {
-  id        String   @id @default(cuid())
-  label     String
-  desc      String
-  prix      Int
-  unite     String
-  categorie String
-  images    String[]
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@map("market_produits")
-}
-
-model EvenementPrestation {
-  id          String   @id @default(cuid())
-  label       String
-  description String   @default("")
-  image       String   @default("")
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("evenement_prestations")
-}
-
 model Payment {
-  id                 String            @id @default(cuid())
-  reference          String            @unique
+  id                 String          @id @default(cuid())
+  reference          String          @unique
   userId             String?
   amount             Int
   method             PaymentMethod
-  status             PaymentStatus     @default(UNPAID)
+  status             PaymentStatus   @default(UNPAID)
   transactionId      String?
   phoneNumber        String?
   studioBookingId    String?
@@ -493,26 +510,26 @@ model Payment {
   eventRequestId     String?
   receiptPdfUrl      String?
   paidAt             DateTime?
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
-  equipmentRental    EquipmentRental?  @relation(fields: [equipmentRentalId], references: [id])
-  eventRequest       EventRequest?     @relation(fields: [eventRequestId], references: [id])
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  equipmentRental    EquipmentRental? @relation(fields: [equipmentRentalId], references: [id])
+  eventRequest       EventRequest?   @relation(fields: [eventRequestId], references: [id])
   excursionBooking   ExcursionBooking? @relation(fields: [excursionBookingId], references: [id])
-  hotelBooking       HotelBooking?     @relation(fields: [hotelBookingId], references: [id])
-  musicBooking       MusicBooking?     @relation(fields: [musicBookingId], references: [id])
-  studioBooking      StudioBooking?    @relation(fields: [studioBookingId], references: [id])
-  user               User?             @relation(fields: [userId], references: [id])
+  hotelBooking       HotelBooking?   @relation(fields: [hotelBookingId], references: [id])
+  musicBooking       MusicBooking?   @relation(fields: [musicBookingId], references: [id])
+  studioBooking      StudioBooking?  @relation(fields: [studioBookingId], references: [id])
+  user               User?           @relation(fields: [userId], references: [id])
 
   @@map("payments")
 }
 
 model Notification {
-  id                 String            @id @default(cuid())
+  id                 String          @id @default(cuid())
   userId             String?
   type               NotificationType
   subject            String
   content            String
-  isRead             Boolean           @default(false)
+  isRead             Boolean         @default(false)
   sentAt             DateTime?
   studioBookingId    String?
   excursionBookingId String?
@@ -521,30 +538,30 @@ model Notification {
   musicBookingId     String?
   eventRequestId     String?
   mediaRequestId     String?
-  createdAt          DateTime          @default(now())
-  equipmentRental    EquipmentRental?  @relation(fields: [equipmentRentalId], references: [id])
-  eventRequest       EventRequest?     @relation(fields: [eventRequestId], references: [id])
+  createdAt          DateTime        @default(now())
+  equipmentRental    EquipmentRental? @relation(fields: [equipmentRentalId], references: [id])
+  eventRequest       EventRequest?   @relation(fields: [eventRequestId], references: [id])
   excursionBooking   ExcursionBooking? @relation(fields: [excursionBookingId], references: [id])
-  hotelBooking       HotelBooking?     @relation(fields: [hotelBookingId], references: [id])
-  mediaRequest       MediaAdRequest?   @relation(fields: [mediaRequestId], references: [id])
-  musicBooking       MusicBooking?     @relation(fields: [musicBookingId], references: [id])
-  studioBooking      StudioBooking?    @relation(fields: [studioBookingId], references: [id])
-  user               User?             @relation(fields: [userId], references: [id])
+  hotelBooking       HotelBooking?   @relation(fields: [hotelBookingId], references: [id])
+  mediaRequest       MediaAdRequest? @relation(fields: [mediaRequestId], references: [id])
+  musicBooking       MusicBooking?   @relation(fields: [musicBookingId], references: [id])
+  studioBooking      StudioBooking?  @relation(fields: [studioBookingId], references: [id])
+  user               User?           @relation(fields: [userId], references: [id])
 
   @@map("notifications")
 }
 
 model Review {
-  id          String     @id @default(cuid())
+  id          String    @id @default(cuid())
   userId      String
   excursionId String?
   serviceType String
   rating      Int
   comment     String?
-  isApproved  Boolean    @default(false)
-  createdAt   DateTime   @default(now())
+  isApproved  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
   excursion   Excursion? @relation(fields: [excursionId], references: [id])
-  user        User       @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
 
   @@map("reviews")
 }
@@ -570,140 +587,10 @@ model SiteContent {
   @@map("site_content")
 }
 
-model OpportuniteSecteur {
-  id          String   @id @default(cuid())
-  nom         String
-  categorie   String
-  couleur     String   @default("bg-cyan-500")
-  description String
-  image       String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("opportunite_secteurs")
-}
-
-model MusiqueService {
-  id          String   @id @default(cuid())
-  nom         String
-  categorie   String
-  prix        String
-  description String
-  image       String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("musique_services")
-}
-
-model StudioService {
-  id          String   @id @default(cuid())
-  label       String
-  description String
-  image       String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("studio_services")
-}
-
-model InfoPrestation {
-  id          String   @id @default(cuid())
-  nom         String
-  categorie   String
-  description String
-  prix        String
-  image       String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("info_prestations")
-}
-
-model Vehicule {
-  id          String   @id @default(cuid())
-  nom         String
-  categorie   String
-  description String
-  prix        String
-  caution     String
-  places      Int      @default(5)
-  image       String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("vehicules")
-}
-
-model MediaSupport {
-  id          String   @id @default(cuid())
-  nom         String
-  categorie   String
-  description String
-  image       String
-  badge       String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("media_supports")
-}
-
-model CollectiviteService {
-  id          String   @id @default(cuid())
-  nom         String
-  categorie   String
-  description String
-  image       String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("collectivite_services")
-}
-
-model CollectiviteAnnuaire {
-  id        String   @id @default(cuid())
-  nom       String
-  type      String   // mairie, conseil, service
-  ville     String
-  region    String   @default("")
-  telephone String?
-  email     String?
-  adresse   String?
-  siteWeb   String?
-  horaires  String?
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([ville, type])
-  @@map("collectivite_annuaire")
-}
-
-model AfroubaSupport {
-  id          String   @id @default(cuid())
-  nom         String
-  categorie   String
-  description String
-  prix        String   @default("Sur devis")
-  image       String
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("afrouba_supports")
-}
-
 model VilleContenu {
   id          String   @id @default(cuid())
-  ville       String   // slug: grand-bassam, abidjan, etc.
-  categorie   String   // hotels, residences, plages, restaurants, sites, transport
+  ville       String
+  categorie   String
   nom         String
   description String?
   adresse     String?
@@ -721,6 +608,7 @@ model VilleContenu {
   @@map("ville_contenus")
 }
 
+// --- ENUMS ---
 enum Role {
   CLIENT
   ADMIN
