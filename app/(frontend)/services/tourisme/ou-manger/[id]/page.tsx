@@ -1,17 +1,40 @@
-import { ArrowRight, Phone, MapPin, Star, Clock, ChevronLeft, Utensils } from "lucide-react";
+"use client";
+
+import { ArrowRight, Phone, ChevronLeft, MapPin, Clock, Star, Utensils } from "lucide-react";
 import Link from "next/link";
+
+// Force le rendu dynamique pour éviter les erreurs de génération statique au build
+export const dynamic = 'force-dynamic';
 
 const restaurants: Record<string, {
   nom: string; categorie: string; description: string; prix: string;
   image: string; note: number; images: string[];
   horaires: string; adresse: string; specialites: string[];
 }> = {
-  "le-littoral": { nom: "Restaurant Le Littoral", categorie: "Gastronomique", description: "Cuisine ivoirienne et internationale avec vue sur la mer. Spécialités : poisson braisé, attiéké, fruits de mer. Un cadre exceptionnel pour vos repas d'affaires ou en famille.", prix: "15 000 – 40 000 FCFA", image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80", note: 5, images: ["https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80", "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80"], horaires: "Lun-Dim : 11h00 – 23h00", adresse: "Bord de mer, Littoral ivoirien", specialites: ["Poisson braisé", "Attiéké aux fruits de mer", "Homard grillé", "Cocktails tropicaux"] },
-  "chez-adjoua": { nom: "Maquis Chez Adjoua", categorie: "Maquis local", description: "Ambiance authentique, attiéké poisson, garba et grillades au bord de l'eau. L'adresse incontournable pour découvrir la vraie cuisine ivoirienne.", prix: "2 000 – 8 000 FCFA", image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80", note: 5, images: ["https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80", "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80"], horaires: "Lun-Dim : 07h00 – 22h00", adresse: "Village de pêcheurs, Littoral", specialites: ["Attiéké poisson", "Garba", "Grillades", "Alloco"] },
-  "grillades-bord-mer": { nom: "Grillades du Bord de Mer", categorie: "Grillades", description: "Poissons et fruits de mer grillés à la braise, directement sur la plage. Fraîcheur garantie, ambiance décontractée.", prix: "5 000 – 20 000 FCFA", image: "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=800&q=80", note: 4, images: ["https://images.unsplash.com/photo-1534482421-64566f976cfa?w=800&q=80", "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=800&q=80"], horaires: "Mar-Dim : 12h00 – 22h00", adresse: "Plage principale, Littoral", specialites: ["Poisson braisé", "Crevettes grillées", "Homard", "Brochettes"] },
-  "saveurs-ivoire": { nom: "Restaurant Saveurs d'Ivoire", categorie: "Cuisine ivoirienne", description: "Plats traditionnels ivoiriens dans un cadre chaleureux. Foutou, sauce graine, kedjenou de poulet, alloco — la cuisine de chez nous.", prix: "3 000 – 12 000 FCFA", image: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80", note: 4, images: ["https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80", "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80"], horaires: "Lun-Sam : 10h00 – 21h00", adresse: "Centre-ville, Littoral", specialites: ["Foutou sauce graine", "Kedjenou de poulet", "Alloco", "Riz gras"] },
-  "patisserie-littoral": { nom: "Café Pâtisserie du Littoral", categorie: "Pâtisserie", description: "Pâtisseries françaises et africaines, glaces artisanales, café et jus de fruits frais. L'endroit idéal pour une pause gourmande.", prix: "1 000 – 5 000 FCFA", image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80", note: 4, images: ["https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&q=80", "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80"], horaires: "Lun-Dim : 07h00 – 20h00", adresse: "Rue principale, Littoral", specialites: ["Croissants", "Glaces artisanales", "Jus frais", "Café"] },
-  "fastfood-cotiere": { nom: "Fast-Food Côtière", categorie: "Fast-food", description: "Burgers, sandwichs, brochettes et boissons fraîches. Service rapide et prix abordables pour tous les budgets.", prix: "1 500 – 6 000 FCFA", image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80", note: 3, images: ["https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&q=80", "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80"], horaires: "Lun-Dim : 08h00 – 23h00", adresse: "Zone commerciale, Littoral", specialites: ["Burgers", "Sandwichs", "Brochettes", "Boissons fraîches"] },
+  "le-littoral": { 
+    nom: "Restaurant Le Littoral", 
+    categorie: "Gastronomique", 
+    description: "Cuisine ivoirienne et internationale avec vue sur la mer. Spécialités : poisson braisé, attiéké, fruits de mer. Un cadre exceptionnel pour vos repas d'affaires ou en famille.", 
+    prix: "15 000 – 40 000 FCFA", 
+    image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80", 
+    note: 5, 
+    images: ["https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&q=80", "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80"], 
+    horaires: "Lun-Dim : 11h00 – 23h00", 
+    adresse: "Bord de mer, Littoral ivoirien", 
+    specialites: ["Poisson braisé", "Attiéké aux fruits de mer", "Homard grillé", "Cocktails tropicaux"] 
+  },
+  "chez-adjoua": { 
+    nom: "Maquis Chez Adjoua", 
+    categorie: "Maquis local", 
+    description: "Ambiance authentique, attiéké poisson, garba et grillades au bord de l'eau. L'adresse incontournable pour découvrir la vraie cuisine ivoirienne.", 
+    prix: "2 000 – 8 000 FCFA", 
+    image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80", 
+    note: 5, 
+    images: ["https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&q=80"], 
+    horaires: "Lun-Dim : 07h00 – 22h00", 
+    adresse: "Village de pêcheurs, Littoral", 
+    specialites: ["Attiéké poisson", "Garba", "Grillades", "Alloco"] 
+  },
 };
 
 export default function RestaurantDetailPage({ params }: { params: { id: string } }) {
@@ -26,6 +49,7 @@ export default function RestaurantDetailPage({ params }: { params: { id: string 
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-gray-500">
           <Link href="/" className="hover:text-[#0c4a6e]">Accueil</Link>
@@ -43,6 +67,7 @@ export default function RestaurantDetailPage({ params }: { params: { id: string 
           <ChevronLeft size={16} /> Retour aux restaurants
         </Link>
 
+        {/* Hero Section */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
             <div className="relative h-72 md:h-full min-h-[300px]">
@@ -76,8 +101,8 @@ export default function RestaurantDetailPage({ params }: { params: { id: string 
               </div>
 
               <div className="space-y-3">
-                <Link href="/reservation" className="btn-primary w-full justify-center">
-                  Réserver une table <ArrowRight size={16} />
+                <Link href="/reservation" className="btn-primary w-full justify-center text-center py-3 rounded-xl font-bold">
+                  Réserver une table <ArrowRight size={16} className="inline ml-1" />
                 </Link>
                 <a href="tel:+2250747722931" className="w-full flex items-center justify-center gap-2 border border-gray-200 text-gray-700 font-semibold py-3 rounded-xl hover:bg-gray-50 transition-colors">
                   <Phone size={16} /> Appeler pour réserver
@@ -97,24 +122,6 @@ export default function RestaurantDetailPage({ params }: { params: { id: string 
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Galerie */}
-        {r.images.length > 1 && (
-          <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8">
-            <h2 className="text-xl font-bold text-[#0c4a6e] mb-4">Galerie</h2>
-            <div className="grid grid-cols-2 gap-3">
-              {r.images.map((img, i) => (
-                <img key={i} src={img} alt={`${r.nom} ${i + 1}`} className="w-full h-40 object-cover rounded-xl" />
-              ))}
-            </div>
-          </div>
-        )}
-
-        <div className="text-center">
-          <Link href="/services/tourisme/ou-manger" className="inline-flex items-center gap-2 text-[#0c4a6e] font-semibold hover:underline">
-            <ChevronLeft size={16} /> Voir toutes les adresses
-          </Link>
         </div>
       </div>
     </div>

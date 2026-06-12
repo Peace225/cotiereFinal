@@ -5,6 +5,9 @@ import ReviewsSection from "@/components/frontend/ReviewsSection";
 import type { Metadata } from "next";
 import { buildMeta } from "@/lib/seo";
 
+// Force le rendu dynamique pour éviter les erreurs de build sur Vercel
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = buildMeta({
   title: "HBL Studio+ — Production vidéo, photo, drone et streaming",
   description: "Studio de production professionnel : tournage vidéo, photographie, streaming en direct, drone, régie mobile. Devis sous 24h.",
@@ -60,9 +63,6 @@ export default function StudioPage() {
                   <img src={s.image} alt={s.label} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
                   <div className="absolute inset-0 bg-[#c9a84c]/0 group-hover:bg-[#c9a84c]/15 transition-all duration-300" />
-                  <div className="absolute top-2 right-2 w-6 h-6 bg-white/0 group-hover:bg-white/90 rounded-full flex items-center justify-center transition-all duration-300 opacity-0 group-hover:opacity-100">
-                    <ArrowRight size={11} className="text-[#0c4a6e]" />
-                  </div>
                 </div>
                 <div className="p-3">
                   <p className="text-xs font-semibold text-[#0c4a6e] leading-tight text-center group-hover:text-[#c9a84c] transition-colors">{s.label}</p>
@@ -99,11 +99,10 @@ export default function StudioPage() {
               </div>
             ))}
           </div>
-          <p className="text-xs text-gray-400 mt-6">* Tarifs indicatifs — devis définitif après étude de votre demande</p>
         </div>
       </section>
 
-      {/* Formulaire de réservation */}
+      {/* Formulaire */}
       <section id="reservation" className="py-16 bg-[#f0f9ff]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
