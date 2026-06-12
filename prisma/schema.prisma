@@ -640,6 +640,22 @@ model MusiqueService {
   @@map("musique_services")
 }
 
+model Vehicule {
+  id          String   @id @default(cuid())
+  nom         String
+  categorie   String
+  description String?
+  prix        String   @default("Sur devis")
+  caution     String   @default("Aucune")
+  places      Int      @default(5)
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("vehicules")
+}
+
 model BlockedDate {
   id          String   @id @default(cuid())
   serviceType String
