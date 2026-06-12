@@ -727,12 +727,12 @@ enum BookingStatus {
   REFUSED
   COMPLETED
 }
-
 enum PaymentStatus {
   UNPAID
   PARTIAL
   PAID
   REFUNDED
+  CONFIRMED  // <--- AJOUTEZ CETTE LIGNE
 }
 
 enum PaymentMethod {

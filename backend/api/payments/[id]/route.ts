@@ -1,13 +1,14 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, badRequest, notFound, serverError, forbidden } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
+import { requireAdmin } from "@/lib/auth";
 import { z } from "zod";
 
 type Params = { params: Promise<{ id: string }> };
 
+// Schéma validé pour correspondre aux enums de votre schéma Prisma
 const confirmSchema = z.object({
-  status: z.enum(["CONFIRMED", "PARTIAL", "PAID", "REFUNDED"]), // Ajout de CONFIRMED si nécessaire
+  status: z.enum(["UNPAID", "PARTIAL", "PAID", "REFUNDED"]),
   transactionId: z.string().optional(),
   paidAt: z.string().optional(),
 });
