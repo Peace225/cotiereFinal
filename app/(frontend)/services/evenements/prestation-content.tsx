@@ -1,7 +1,11 @@
 "use client";
+
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, Phone, ChevronRight, Clock, Star, Flower2, UtensilsCrossed, Music, Shield, Users, Sparkles } from "lucide-react";
+
+// Force le rendu dynamique pour éviter les erreurs de génération statique au build
+export const dynamic = 'force-dynamic';
 
 type Prestation = {
   title: string; subtitle: string; icon: React.ReactNode;
@@ -147,8 +151,9 @@ const PRESTATIONS: Record<string, Prestation> = {
 };
 
 export default function EvenementPrestationPage() {
-  const { slug } = useParams<{ slug: string }>();
-  const data = PRESTATIONS[slug];
+  const params = useParams();
+  const slug = params?.slug as string;
+  const data = slug ? PRESTATIONS[slug] : null;
 
   if (!data) return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4">
@@ -159,8 +164,6 @@ export default function EvenementPrestationPage() {
 
   return (
     <div className="min-h-screen bg-[#f8fafc]">
-
-      {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-100 px-4 py-3">
         <div className="max-w-5xl mx-auto flex items-center gap-2 text-sm text-gray-500">
           <Link href="/" className="hover:text-[#0c4a6e] transition-colors">Accueil</Link>
@@ -171,7 +174,6 @@ export default function EvenementPrestationPage() {
         </div>
       </div>
 
-      {/* Hero */}
       <div className="relative h-64 md:h-80 overflow-hidden">
         <img src={data.heroImage} alt={data.title} className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
@@ -179,39 +181,19 @@ export default function EvenementPrestationPage() {
           <Link href="/services/evenements" className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm mb-3 transition-colors">
             <ArrowLeft size={15} /> Retour aux prestations
           </Link>
-          <div className="flex items-center gap-3 mb-2">
-            <span className="bg-[#c9a84c] text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5">
-              {data.icon} CÔTIÈRE EVENT
-            </span>
-          </div>
           <h1 className="text-2xl md:text-4xl font-black text-white">{data.title}</h1>
           <p className="text-white/80 mt-1 text-sm md:text-base">{data.subtitle}</p>
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-10 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto px-4 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-          {/* Colonne principale */}
           <div className="lg:col-span-2 space-y-6">
-
-            {/* Description */}
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <h2 className="text-lg font-bold text-[#0c4a6e] mb-3">{data.description}</h2>
               <p className="text-gray-600 text-sm leading-relaxed">{data.longDesc}</p>
             </div>
-
-            {/* Galerie */}
-            <div className="grid grid-cols-3 gap-2">
-              {data.gallery.map((img, i) => (
-                <div key={i} className={`rounded-xl overflow-hidden ${i === 0 ? "col-span-2" : ""}`}>
-                  <img src={img} alt={data.title} className="w-full object-cover hover:scale-105 transition-transform duration-300"
-                    style={{ height: i === 0 ? "200px" : "96px" }} />
-                </div>
-              ))}
-            </div>
-
-            {/* Ce qui est inclus */}
+            
             <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
               <h2 className="text-lg font-bold text-[#0c4a6e] mb-4 flex items-center gap-2">
                 <Check size={18} className="text-green-500" /> Ce qui est inclus
@@ -225,84 +207,21 @@ export default function EvenementPrestationPage() {
                 ))}
               </div>
             </div>
-
-            {/* Notre processus */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h2 className="text-lg font-bold text-[#0c4a6e] mb-5">Notre processus</h2>
-              <div className="space-y-4">
-                {data.process.map((p, i) => (
-                  <div key={p.step} className="flex items-start gap-4">
-                    <div className="w-8 h-8 bg-[#c9a84c] text-white rounded-full flex items-center justify-center text-sm font-black shrink-0">{i + 1}</div>
-                    <div>
-                      <p className="font-semibold text-[#0c4a6e] text-sm">{p.step}</p>
-                      <p className="text-gray-500 text-xs mt-0.5">{p.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Cas d'usage */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h2 className="text-lg font-bold text-[#0c4a6e] mb-4">Pour quels événements ?</h2>
-              <div className="flex flex-wrap gap-2">
-                {data.useCases.map(u => (
-                  <span key={u} className="text-xs bg-[#f0f9ff] text-[#0c4a6e] px-3 py-1.5 rounded-full border border-[#bae6fd] font-medium">{u}</span>
-                ))}
-              </div>
-            </div>
-
-            {/* Autres prestations */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <h2 className="text-lg font-bold text-[#0c4a6e] mb-4">Nos autres prestations</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {Object.entries(PRESTATIONS).filter(([s]) => s !== slug).map(([s, p]) => (
-                  <Link key={s} href={`/services/evenements/${s}`}
-                    className="group relative rounded-xl overflow-hidden h-20 shadow-sm hover:shadow-md transition-shadow">
-                    <img src={p.gallery[0]} alt={p.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                    <p className="absolute bottom-2 left-2 right-2 text-white text-xs font-semibold leading-tight">{p.title}</p>
-                  </Link>
-                ))}
-              </div>
-            </div>
-
           </div>
-
-          {/* Sidebar */}
+          
           <div className="space-y-4">
             <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100 sticky top-24">
-
               <div className="text-center pb-4 border-b border-gray-100 mb-4">
                 <p className="text-xs text-gray-400 uppercase tracking-widest mb-1">Tarif indicatif</p>
                 <p className="text-2xl font-black text-[#c9a84c] leading-tight">{data.priceRange}</p>
-                <p className="text-xs text-gray-400 mt-1">Devis gratuit & personnalisé sous 24h</p>
               </div>
-
               <Link href="/services/evenements#demande" className="btn-primary w-full justify-center">
                 Demander un devis <ArrowRight size={16} />
               </Link>
-
-              <a href="tel:+2250747722931" className="mt-2 w-full flex items-center justify-center gap-2 text-sm font-semibold text-[#0c4a6e] border border-[#0c4a6e]/20 py-2.5 rounded-xl hover:bg-[#0c4a6e]/5 transition-colors">
-                <Phone size={15} /> Appeler maintenant
-              </a>
-
-              <div className="mt-4 flex items-start gap-2 bg-[#f0f9ff] border border-[#bae6fd] rounded-xl p-3">
-                <Star size={14} className="text-[#c9a84c] fill-[#c9a84c] shrink-0 mt-0.5" />
-                <p className="text-xs text-[#0c4a6e] leading-relaxed">
-                  <strong>Devis personnalisé</strong> envoyé sous 24h. Nous nous adaptons à tous les budgets.
-                </p>
-              </div>
-
-              <p className="text-xs text-gray-400 text-center mt-3 flex items-center justify-center gap-1">
-                <Clock size={11} /> Réponse sous 24h · Sans engagement
-              </p>
             </div>
           </div>
-
         </div>
       </div>
     </div>
   );
 }
-

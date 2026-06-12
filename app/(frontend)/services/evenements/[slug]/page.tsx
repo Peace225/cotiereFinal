@@ -1,9 +1,13 @@
 "use client";
+
 import { useParams } from "next/navigation";
 import { ArrowRight, Phone, ChevronLeft, Check, Clock } from "lucide-react";
 import { useState } from "react";
 import Link from "next/link";
 import EventRequestForm from "@/components/frontend/events/EventRequestForm";
+
+// Force le rendu dynamique pour les pages utilisant des paramètres d'URL (slugs)
+export const dynamic = 'force-dynamic';
 
 const SERVICES: Record<string, {
   label: string; image: string; subtitle: string; description: string;

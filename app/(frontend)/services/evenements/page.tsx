@@ -6,6 +6,9 @@ import PrestationsSection from "@/components/frontend/events/PrestationsSection"
 import type { Metadata } from "next";
 import { buildMeta } from "@/lib/seo";
 
+// Force le rendu dynamique pour éviter les erreurs de build liées aux hooks de session
+export const dynamic = 'force-dynamic';
+
 export const metadata: Metadata = buildMeta({
   title: "CÔTIÈRE EVENT — Organisation d'événements mariages, galas, conférences",
   description: "Organisation complète de vos événements : mariages, galas, conférences, anniversaires. Décoration, traiteur, sonorisation. Devis gratuit sous 24h.",
