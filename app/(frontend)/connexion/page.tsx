@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { createBrowserClient } from '@supabase/ssr';
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Eye, EyeOff, ArrowRight, Lock, Mail } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 export default function ConnexionPage() {
   const router = useRouter();
@@ -13,16 +13,19 @@ export default function ConnexionPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  // Initialisation mémorisée pour éviter de recréer le client à chaque rendu
+  const supabase = useMemo(() => 
+    createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    ), 
+    []
   );
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
     setError("");
-    console.log('>>> Tentative de connexion pour:', form.email);
 
     try {
       // 1. Authentification
@@ -32,42 +35,33 @@ export default function ConnexionPage() {
       });
 
       if (authError) throw authError;
+      if (!authData.user) throw new Error("Erreur inattendue lors de la connexion.");
 
-      console.log('>>> Authentification réussie. ID:', authData.user?.id);
-
-      // 2. Récupération du rôle dans la table public.users
+      // 2. Récupération du rôle
       const { data: profile, error: profileError } = await supabase
         .from('users')
         .select('role')
         .eq('id', authData.user.id)
         .maybeSingle(); 
 
-      if (profileError) {
-        console.error('>>> Erreur lors de la lecture du profil:', profileError);
-        throw new Error("Impossible de vérifier vos accès.");
-      }
+      if (profileError) throw new Error("Impossible de vérifier vos accès.");
 
       const role = profile?.role || 'CLIENT';
-      console.log('>>> Rôle détecté:', role);
-
-      // 3. Redirection
+      
+      // 3. Redirection sécurisée
       const target = (role === 'ADMIN' || role === 'SUPER_ADMIN') 
         ? '/admin/dashboard' 
         : '/';
-
-      console.log('>>> Redirection vers:', target);
       
       router.push(target);
       router.refresh();
 
     } catch (err: any) {
-      console.error('LOGIN ERROR', err);
       setError(err.message === "Invalid login credentials" ? "Email ou mot de passe incorrect." : err.message);
       setLoading(false);
     }
   }
 
-  // ... (le reste de votre code UI est identique)
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f0f9ff] px-4">
       <div className="w-full max-w-md">
