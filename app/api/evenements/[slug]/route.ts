@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { requireAdmin } from "@/lib/auth"; // Import de votre système Supabase
 
-type AdminUser = { role: string };
 type Params = { params: Promise<{ slug: string }> };
 
 // GET — détail d'un événement par slug (public)
@@ -18,54 +16,42 @@ export async function GET(_req: NextRequest, { params }: Params) {
   }
 }
 
-// PATCH — modifier un événement (admin)
+// PATCH — modifier un événement (admin uniquement)
 export async function PATCH(req: NextRequest, { params }: Params) {
-  const session = await getServerSession(authOptions);
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes((session.user as AdminUser)?.role)) {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
-  }
   try {
+    // Vérification admin
+    await requireAdmin();
+
     const { slug } = await params;
     const body = await req.json();
+
+    // Mise à jour simplifiée
     const evenement = await prisma.evenement.update({
       where: { slug },
-      data: {
-        ...(body.titre !== undefined && { titre: body.titre }),
-        ...(body.categorie !== undefined && { categorie: body.categorie }),
-        ...(body.date !== undefined && { date: body.date }),
-        ...(body.heure !== undefined && { heure: body.heure }),
-        ...(body.lieu !== undefined && { lieu: body.lieu }),
-        ...(body.ville !== undefined && { ville: body.ville }),
-        ...(body.prix !== undefined && { prix: body.prix }),
-        ...(body.capacite !== undefined && { capacite: body.capacite }),
-        ...(body.organisateur !== undefined && { organisateur: body.organisateur }),
-        ...(body.description !== undefined && { description: body.description }),
-        ...(body.image !== undefined && { image: body.image }),
-        ...(body.badge !== undefined && { badge: body.badge }),
-        ...(body.badgeColor !== undefined && { badgeColor: body.badgeColor }),
-        ...(body.artistes !== undefined && { artistes: body.artistes }),
-        ...(body.duree !== undefined && { duree: body.duree }),
-        ...(body.programme !== undefined && { programme: body.programme }),
-        ...(body.isActive !== undefined && { isActive: body.isActive }),
-      },
+      data: body, // Prisma ignore automatiquement les champs undefined si vous passez l'objet directement
     });
+    
     return NextResponse.json({ data: { evenement } });
-  } catch {
+  } catch (e: any) {
+    if (e.message === "UNAUTHORIZED" || e.message === "FORBIDDEN") {
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
 
-// DELETE — supprimer un événement (admin)
+// DELETE — supprimer un événement (admin uniquement)
 export async function DELETE(_req: NextRequest, { params }: Params) {
-  const session = await getServerSession(authOptions);
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes((session.user as AdminUser)?.role)) {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
-  }
   try {
+    await requireAdmin();
+
     const { slug } = await params;
     await prisma.evenement.delete({ where: { slug } });
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (e: any) {
+    if (e.message === "UNAUTHORIZED" || e.message === "FORBIDDEN") {
+      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    }
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
