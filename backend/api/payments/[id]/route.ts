@@ -38,7 +38,9 @@ export async function PATCH(req: NextRequest, { params }: Params) {
 
     // Mettre à jour le statut de paiement de la réservation liée
     if (parsed.data.status === "PAID") {
-      const updateData = { paymentStatus: "PAID" };
+      // Correction ici : ajout de 'as const' pour satisfaire le typage strict de Prisma
+      const updateData = { paymentStatus: "PAID" as const };
+      
       if (payment.studioBookingId) await prisma.studioBooking.update({ where: { id: payment.studioBookingId }, data: updateData });
       if (payment.excursionBookingId) await prisma.excursionBooking.update({ where: { id: payment.excursionBookingId }, data: updateData });
       if (payment.eventRequestId) await prisma.eventRequest.update({ where: { id: payment.eventRequestId }, data: updateData });
