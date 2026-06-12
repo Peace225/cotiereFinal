@@ -597,6 +597,21 @@ model Review {
   @@map("reviews")
 }
 
+model MarketProduit {
+  id        String   @id @default(cuid())
+  label     String
+  desc      String?
+  prix      Int
+  unite     String
+  categorie String
+  images    String[]
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("marketProduit")
+}
+
 model BlockedDate {
   id          String   @id @default(cuid())
   serviceType String
