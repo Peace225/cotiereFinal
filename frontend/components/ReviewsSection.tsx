@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useMemo } from "react";
 import { Star, MessageSquare, ThumbsUp, RefreshCw, Send } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { supabase } from "../../lib/supabase"; // 👈 Ajuste le chemin relatif pointant vers ton fichier supabaseClient
 import Link from "next/link";
 
 interface Review {
@@ -80,7 +81,9 @@ function ReviewCard({ review }: { review: Review }) {
 }
 
 export default function ReviewsSection({ serviceType, excursionId, title = "Avis clients" }: ReviewsSectionProps) {
-  const { data: session } = useSession();
+  // Remplacement de Next-Auth par la session Supabase Auth
+  const [user, setUser] = useState<any>(null);
+  
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -89,6 +92,21 @@ export default function ReviewsSection({ serviceType, excursionId, title = "Avis
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
+
+  // Gestion de la session utilisateur avec Supabase
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      setUser(session?.user || null);
+    };
+    checkUser();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   function loadReviews() {
     setLoading(true);
@@ -153,7 +171,7 @@ export default function ReviewsSection({ serviceType, excursionId, title = "Avis
               <p className="text-sm text-gray-500 mt-1">{reviews.length} avis vérifié{reviews.length > 1 ? "s" : ""}</p>
             )}
           </div>
-          {session ? (
+          {user ? (
             !submitted ? (
               <button
                 onClick={() => setShowForm(!showForm)}

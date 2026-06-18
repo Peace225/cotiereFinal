@@ -1,97 +1,94 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+"use client";
 
-const services = [
-  { title: "CÔTIÈRE HBL Studio+", desc: "Production vidéo & photo, streaming, drone, régie mobile.", href: "/services/studio", image: "/Images/hbl.png", accent: "#3b82f6" },
-  { title: "CÔTIÈRE Tourisme & Voyage", desc: "Excursions guidées multilingues, balades en bateau.", href: "/services/tourisme", image: "/Images/cotiere-tourisme-voyage.png", accent: "#10b981" },
-  { title: "CÔTIÈRE Hébergement", desc: "Chambres, résidences meublées, restaurant africain & européen.", href: "/services/hebergement", image: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?w=600&q=80", accent: "#f59e0b" },
-  { title: "CÔTIÈRE Music & Management", desc: "Studio d'enregistrement, mixage, mastering, management.", href: "/services/music", image: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?w=600&q=80", accent: "#ec4899" },
-  { title: "Guichet Unique de l'Industrie Événementielle & Audiovisuelle", desc: "Tentes, tables, sono, groupe électrogène, équipements nautiques.", href: "/services/location", image: "/Images/guichet-unique.png", accent: "#14b8a6" },
-  { title: "CÔTIÈRE MÉDIAS", desc: "TV, FM, Magazine & INFO+ — le groupe multimédia du littoral.", href: "/services/medias", image: "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&q=80", accent: "#ef4444" },
-  { title: "CÔTIÈRE Market & Distribution", desc: "Attiéké, poissons, fruits de mer — produits locaux frais.", href: "/services/market", image: "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=600&q=80", accent: "#84cc16" },
-  { title: "Tout Le Monde A Droit À La Pub", desc: "Documents administratifs en langue locale Dida-Avikam.", href: "/services/afrouba", image: "/Images/pub.jpeg", accent: "#6366f1" },
-  { title: "CÔTIÈRE Collectivités", desc: "Coaching, accompagnement institutionnel, développement local.", href: "/services/collectivites", image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80", accent: "#64748b" },
-  { title: "CÔTIÈRE Opportunités", desc: "Offres d'emploi, appels d'offres et opportunités d'affaires du littoral.", href: "/services/opportunites", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80", accent: "#f97316" },
-  { title: "Le RDV Des Événements À Venir", desc: "Festivals, galas, conférences, fêtes culturelles et tournois sportifs du littoral ivoirien.", href: "/services/rdv", image: "/Images/rdv.jpeg", accent: "#8b5cf6" },
+import { useRef } from "react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+const categories = [
+  // L'URL pointe maintenant vers la page de recherche avec le paramètre de filtre
+  { title: "Hôtels", desc: "20 juin-1er juil., 2 adultes", href: "/recherche?type=hotel", image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80", count: "53 disponibles" },
+  { title: "Résidences meublées", desc: "20 juin-1er juil., 2 adultes", href: "/recherche?type=residence", image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80", count: "150 disponibles" },
+  { title: "Restaurants & Gastronomie", desc: "Réservez votre table", href: "/recherche?type=restaurant", image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80", count: "45 ouverts" },
+  { title: "Complexes hôteliers", desc: "20 juin-1er juil., 2 adultes", href: "/recherche?type=complexe", image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80", count: "12 disponibles" },
+  { title: "Villas privées", desc: "20 juin-1er juil., 2 adultes", href: "/recherche?type=villa", image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80", count: "7 disponibles" },
+  { title: "Studios HBL+", desc: "Production photo & vidéo", href: "/recherche?type=studio", image: "/images/hbl.png", count: "3 studios" },
 ];
 
-export default function ServicesGrid() {
+export default function ServicesGridPremium() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({
+        left: direction === "left" ? -280 : 280,
+        behavior: "smooth"
+      });
+    }
+  };
+
   return (
-    <section id="services" className="relative py-16 sm:py-24 lg:py-32 bg-[#fafafa] overflow-hidden">
-      {/* fond */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(201,168,76,0.08),transparent_60%)]" />
-        <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#c9a84c]/30 to-transparent" />
-      </div>
+    <section className="py-8 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative">
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header mobile-first */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#c9a84c]/20 shadow-sm mb-5">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#c9a84c] opacity-60" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#c9a84c]" />
-            </span>
-            <span className="text- font-semibold tracking-[0.18em] uppercase text-[#9a7d2e]">Nos expertises</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-[1.1] mb-4">
-            Tout le littoral,
-            <span className="block mt-1 bg-gradient-to-r from-[#0c4a6e] via-slate-800 to-[#0c4a6e] bg-clip-text text-transparent">dans un seul groupe</span>
+        <div className="mb-3">
+          {/* h2 ultra-minimaliste conservé selon tes réglages */}
+          <h2 className="!text-[18px] md:!text-[20px] font-bold text-slate-900">
+            Abidjan : recherchez par type d'établissement
           </h2>
-          <p className="text-slate-600 text-base sm:text-lg px-4">
-            12 pôles métiers pensés pour le tourisme, la culture et l'économie locale ivoirienne.
-          </p>
         </div>
 
-        {/* Grid responsive */}
-        <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-          {services.map((s) => (
-            <Link key={s.title} href={s.href} className="group block touch-manipulation">
-              <article className="relative h-full bg-white rounded-3xl border border-slate-200/70 overflow-hidden transition-all duration-300 active:scale-[0.98] sm:hover:-translate-y-1.5 sm:hover:shadow-xl">
-                {/* halo */}
-                <div className="absolute -inset-px opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl blur-2xl pointer-events-none" style={{ background: `radial-gradient(400px circle at 50% 0%, ${s.accent}20, transparent 60%)` }} />
+        <div className="relative group">
+          <button
+            onClick={() => scroll("left")}
+            className="absolute -left-3 top-[38%] -translate-y-1/2 z-10 p-1 bg-white/90 backdrop-blur rounded-full shadow border border-slate-200 text-slate-600 hover:text-[#003b95] opacity-0 group-hover:opacity-100 hidden md:flex transition-all"
+            aria-label="Gauche"
+          >
+            <ChevronLeft size={14} strokeWidth={2.5} />
+          </button>
 
-                {/* Image */}
-                <div className="relative h-40 sm:h-44 overflow-hidden">
-                  <img src={s.image} alt={s.title} loading="lazy" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/20 to-transparent" />
-                  <div className="absolute top-3 left-3 w-8 h-8 rounded-xl bg-white/90 backdrop-blur flex items-center justify-center shadow-md">
-                    <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: s.accent }} />
+          <div
+            ref={scrollRef}
+            className="flex overflow-x-auto snap-x snap-mandatory gap-3 pb-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          >
+            {categories.map((cat) => (
+              <Link
+                href={cat.href}
+                key={cat.title}
+                className="snap-start shrink-0 w-[210px] md:w-[230px] group"
+              >
+                <div className="flex flex-col">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-slate-100">
+                    <img
+                      src={cat.image}
+                      alt={cat.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+
+                  <div className="pt-1.5">
+                    {/* h3 ultra-fin conservé */}
+                    <h3 className="!text-[14px] font-medium text-slate-900 leading-tight">
+                      {cat.title}
+                    </h3>
+                    <p className="text-[12px] text-slate-500 leading-snug mt-0.5 line-clamp-1">
+                      {cat.desc}
+                    </p>
+                    <p className="text-[10px] text-slate-400 mt-1 font-medium uppercase tracking-wide">
+                      {cat.count}
+                    </p>
                   </div>
                 </div>
-
-                {/* Content */}
-                <div className="p-4 sm:p-5">
-                  <h3 className="font-bold text-slate-900 text- leading-snug mb-2 line-clamp-2 min-h- group-active:text-[#0c4a6e]">
-                    {s.title}
-                  </h3>
-                  <p className="text-slate-500 text- leading-relaxed line-clamp-2 min-h-">
-                    {s.desc}
-                  </p>
-
-                  <div className="flex items-center justify-between mt-4 pt-4 border-t border-slate-100">
-                    <span className="text- font-semibold" style={{ color: s.accent }}>Découvrir</span>
-                    <div className="w-7 h-7 rounded-full bg-slate-100 group-active:bg-[#c9a84c] flex items-center justify-center transition-colors">
-                      <ArrowRight size={14} className="text-slate-500 group-active:text-white" />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="absolute bottom-0 left-0 right-0 h- scale-x-0 group-hover:scale-x-100 transition-transform origin-left" style={{ backgroundColor: s.accent }} />
-              </article>
-            </Link>
-          ))}
-        </div>
-
-        {/* CTA mobile full-width */}
-        <div className="mt-14 sm:mt-20 text-center px-4">
-          <div className="inline-flex w-full sm:w-auto flex-col sm:flex-row items-center gap-3 sm:gap-4 p-1.5 sm:p-2 bg-white rounded-2xl sm:rounded-full shadow-lg border border-slate-200">
-            <span className="hidden sm:block pl-5 pr-2 text-sm text-slate-600">Prêt à lancer votre projet?</span>
-            <Link href="/reservation" className="w-full sm:w-auto bg-[#0c4a6e] active:bg-[#083854] text-white font-semibold px-6 py-3.5 rounded-xl sm:rounded-full text- flex items-center justify-center gap-2 min-h- touch-manipulation">
-              Réserver maintenant
-              <ArrowRight size={16} />
-            </Link>
+              </Link>
+            ))}
           </div>
+
+          <button
+            onClick={() => scroll("right")}
+            className="absolute -right-3 top-[38%] -translate-y-1/2 z-10 p-1 bg-white/90 backdrop-blur rounded-full shadow border border-slate-200 text-slate-600 hover:text-[#003b95] opacity-0 group-hover:opacity-100 hidden md:flex transition-all"
+            aria-label="Droite"
+          >
+            <ChevronRight size={14} strokeWidth={2.5} />
+          </button>
         </div>
       </div>
     </section>

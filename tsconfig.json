@@ -43,7 +43,10 @@
       "@/components/frontend/EventRequestForm": ["./frontend/components/EventRequestForm"],
       "@/components/ui/*": ["./frontend/ui/*"],
       "@/components/Providers": ["./frontend/Providers"],
-      "@/lib/*": ["./lib/*"]
+      "@/lib/*": ["./lib/*"],
+      "@/components/HeroSection": ["./frontend/components/HeroSection"],
+      "@/components/ResultatsRecherche": ["./frontend/components/ResultatsRecherche"],
+      "@/components/SectionGrid": ["./frontend/components/SectionGrid"],
     }
   },
   "include": [

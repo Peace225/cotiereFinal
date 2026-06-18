@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
+    "@supabase/auth-helpers-nextjs": "^0.15.0",
     "@supabase/ssr": "^0.12.0",
     "@supabase/supabase-js": "^2.108.1",
     "bcryptjs": "^2.4.3",
@@ -38,6 +39,10 @@
     "eslint-config-next": "16.2.2",
     "prisma": "^5.22.0",
     "tailwindcss": "^4",
+    "ts-node": "^10.9.2",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }
