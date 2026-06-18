@@ -3,14 +3,10 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
-
-// --- MODÈLES ---
-// Suppression de @@schema("public") partout, car c'est le défaut.
-// Suppression de multiSchema, car Supabase gère l'auth séparément.
 
 model Evenement {
   id           String   @id @default(cuid())
@@ -70,22 +66,21 @@ model RdvInscription {
 }
 
 model User {
-  id               String   @id @default(cuid())
-  email            String   @unique
-  password         String?
-  firstName        String
-  lastName         String
-  phone            String?
-  whatsapp         String?
-  nationality      String?
-  role             Role     @default(CLIENT)
-  emailVerified    Boolean  @default(false)
-  emailVerifyToken String?
-  resetToken       String?
-  resetTokenExpiry DateTime?
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
-  
+  id                String             @id @default(cuid())
+  email             String             @unique
+  password          String?
+  firstName         String
+  lastName          String
+  phone             String?
+  whatsapp          String?
+  nationality       String?
+  role              Role               @default(CLIENT)
+  emailVerified     Boolean            @default(false)
+  emailVerifyToken  String?
+  resetToken        String?
+  resetTokenExpiry  DateTime?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
   equipmentRentals  EquipmentRental[]
   eventRequests     EventRequest[]
   excursionBookings ExcursionBooking[]
@@ -100,35 +95,598 @@ model User {
   @@map("users")
 }
 
-// ... (Garde tous tes autres modèles de la même manière, SANS @@schema et SANS @@map s'ils n'en ont pas besoin)
+model EquipmentRental {
+  id                     String                   @id @default(cuid())
+  reference              String                   @unique
+  userId                 String?
+  clientFirstName        String
+  clientLastName         String
+  clientEmail            String
+  clientPhone            String
+  startDate              DateTime                 @db.Date
+  endDate                DateTime                 @db.Date
+  daysCount              Int
+  deliveryAddress        String?
+  selfPickup             Boolean                  @default(false)
+  withDelivery           Boolean                  @default(false)
+  withInstall            Boolean                  @default(false)
+  withInsurance          Boolean                  @default(false)
+  equipmentTotal         Int
+  optionsTotal           Int                      @default(0)
+  insuranceAmount        Int                      @default(0)
+  depositAmount          Int
+  totalAmount            Int
+  status                 BookingStatus            @default(PENDING)
+  returnStatus           String?
+  returnDate             DateTime?
+  penaltyAmount          Int?
+  contractPdfUrl         String?
+  adminNotes             String?
+  paymentStatus          PaymentStatus            @default(UNPAID)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime
+  equipment_rental_items equipment_rental_items[]
+  user                   User?                    @relation(fields: [userId], references: [id])
+  notifications          Notification[]
+  payments               Payment[]
+
+  @@map("equipment_rentals")
+}
+
+model EventRequest {
+  id              String         @id @default(cuid())
+  reference       String         @unique
+  userId          String?
+  clientFirstName String
+  clientLastName  String
+  clientEmail     String
+  clientPhone     String
+  eventType       String
+  eventDate       DateTime
+  eventLocation   String
+  guestCount      Int
+  budget          String?
+  services        String[]
+  attachments     String[]
+  description     String?
+  status          BookingStatus  @default(PENDING)
+  quotePdfUrl     String?
+  adminNotes      String?
+  paymentStatus   PaymentStatus  @default(UNPAID)
+  totalAmount     Int?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime
+  user            User?          @relation(fields: [userId], references: [id])
+  notifications   Notification[]
+  payments        Payment[]
+
+  @@map("event_requests")
+}
+
+model ExcursionBooking {
+  id                 String         @id @default(cuid())
+  reference          String         @unique
+  excursionId        String
+  userId             String?
+  clientFirstName    String
+  clientLastName     String
+  clientEmail        String
+  clientPhone        String
+  clientNationality  String?
+  bookingDate        DateTime       @db.Date
+  timeSlot           String
+  guideLanguage      String         @default("FR")
+  adultsCount        Int
+  childrenCount      Int            @default(0)
+  specialRequests    String?
+  conditionsAccepted Boolean        @default(false)
+  selectedOptions    Json?
+  adultsTotal        Int
+  childrenTotal      Int
+  optionsTotal       Int            @default(0)
+  totalAmount        Int
+  status             BookingStatus  @default(PENDING)
+  voucherPdfUrl      String?
+  adminNotes         String?
+  paymentStatus      PaymentStatus  @default(UNPAID)
+  depositAmount      Int?
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime
+  excursions         excursions     @relation(fields: [excursionId], references: [id])
+  user               User?          @relation(fields: [userId], references: [id])
+  notifications      Notification[]
+  payments           Payment[]
+
+  @@map("excursion_bookings")
+}
+
+model HotelBooking {
+  id              String         @id @default(cuid())
+  reference       String         @unique
+  roomId          String
+  userId          String?
+  clientFirstName String
+  clientLastName  String
+  clientEmail     String
+  clientPhone     String
+  checkIn         DateTime       @db.Date
+  checkOut        DateTime       @db.Date
+  nightsCount     Int
+  guestsCount     Int
+  mealPlan        String?
+  roomTotal       Int
+  mealTotal       Int            @default(0)
+  totalAmount     Int
+  status          BookingStatus  @default(PENDING)
+  voucherPdfUrl   String?
+  adminNotes      String?
+  paymentStatus   PaymentStatus  @default(UNPAID)
+  depositAmount   Int
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime
+  rooms           rooms          @relation(fields: [roomId], references: [id])
+  user            User?          @relation(fields: [userId], references: [id])
+  notifications   Notification[]
+  payments        Payment[]
+
+  @@map("hotel_bookings")
+}
+
+model MediaAdRequest {
+  id            String         @id @default(cuid())
+  reference     String         @unique
+  userId        String?
+  clientName    String
+  clientEmail   String
+  clientPhone   String
+  companyName   String?
+  mediaType     String
+  adType        String
+  duration      String?
+  startDate     DateTime?
+  endDate       DateTime?
+  budget        String?
+  description   String?
+  status        BookingStatus  @default(PENDING)
+  quotePdfUrl   String?
+  adminNotes    String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime
+  user          User?          @relation(fields: [userId], references: [id])
+  notifications Notification[]
+
+  @@map("media_ad_requests")
+}
+
+model MusicBooking {
+  id                 String         @id @default(cuid())
+  reference          String         @unique
+  userId             String?
+  clientFirstName    String
+  clientLastName     String
+  clientEmail        String
+  clientPhone        String
+  artistName         String?
+  projectDescription String?
+  demoUrl            String?
+  sessionDate        DateTime
+  sessionDuration    String
+  serviceType        String
+  totalAmount        Int?
+  status             BookingStatus  @default(PENDING)
+  adminNotes         String?
+  paymentStatus      PaymentStatus  @default(UNPAID)
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime
+  user               User?          @relation(fields: [userId], references: [id])
+  notifications      Notification[]
+  payments           Payment[]
+
+  @@map("music_bookings")
+}
+
+model Notification {
+  id                 String            @id @default(cuid())
+  userId             String?
+  type               NotificationType
+  subject            String
+  content            String
+  isRead             Boolean           @default(false)
+  sentAt             DateTime?
+  studioBookingId    String?
+  excursionBookingId String?
+  equipmentRentalId  String?
+  hotelBookingId     String?
+  musicBookingId     String?
+  eventRequestId     String?
+  mediaRequestId     String?
+  createdAt          DateTime          @default(now())
+  equipment_rentals  EquipmentRental?  @relation(fields: [equipmentRentalId], references: [id])
+  event_requests     EventRequest?     @relation(fields: [eventRequestId], references: [id])
+  excursion_bookings ExcursionBooking? @relation(fields: [excursionBookingId], references: [id])
+  hotel_bookings     HotelBooking?     @relation(fields: [hotelBookingId], references: [id])
+  media_ad_requests  MediaAdRequest?   @relation(fields: [mediaRequestId], references: [id])
+  music_bookings     MusicBooking?     @relation(fields: [musicBookingId], references: [id])
+  studio_bookings    StudioBooking?    @relation(fields: [studioBookingId], references: [id])
+  user               User?             @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+model Payment {
+  id                 String            @id @default(cuid())
+  reference          String            @unique
+  userId             String?
+  amount             Int
+  method             PaymentMethod
+  status             PaymentStatus     @default(UNPAID)
+  transactionId      String?
+  phoneNumber        String?
+  studioBookingId    String?
+  excursionBookingId String?
+  equipmentRentalId  String?
+  hotelBookingId     String?
+  musicBookingId     String?
+  eventRequestId     String?
+  receiptPdfUrl      String?
+  paidAt             DateTime?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime
+  equipment_rentals  EquipmentRental?  @relation(fields: [equipmentRentalId], references: [id])
+  event_requests     EventRequest?     @relation(fields: [eventRequestId], references: [id])
+  excursion_bookings ExcursionBooking? @relation(fields: [excursionBookingId], references: [id])
+  hotel_bookings     HotelBooking?     @relation(fields: [hotelBookingId], references: [id])
+  music_bookings     MusicBooking?     @relation(fields: [musicBookingId], references: [id])
+  studio_bookings    StudioBooking?    @relation(fields: [studioBookingId], references: [id])
+  user               User?             @relation(fields: [userId], references: [id])
+
+  @@map("payments")
+}
+
+model Review {
+  id          String      @id @default(cuid())
+  userId      String
+  excursionId String?
+  serviceType String
+  rating      Int
+  comment     String?
+  isApproved  Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  excursions  excursions? @relation(fields: [excursionId], references: [id])
+  user        User        @relation(fields: [userId], references: [id])
+
+  @@map("reviews")
+}
+
+model StudioBooking {
+  id                String         @id @default(cuid())
+  reference         String         @unique
+  userId            String?
+  clientFirstName   String
+  clientLastName    String
+  clientEmail       String
+  clientPhone       String
+  clientWhatsapp    String?
+  clientAddress     String?
+  eventType         String
+  eventDate         DateTime
+  eventTimeSlot     String
+  eventLocation     String
+  eventDuration     String
+  guestCount        Int?
+  description       String?
+  services          String[]
+  attachments       String[]
+  estimatedPriceMin Int?
+  estimatedPriceMax Int?
+  status            BookingStatus  @default(PENDING)
+  adminNotes        String?
+  quotePdfUrl       String?
+  paymentStatus     PaymentStatus  @default(UNPAID)
+  depositAmount     Int?
+  totalAmount       Int?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime
+  notifications     Notification[]
+  payments          Payment[]
+  user              User?          @relation(fields: [userId], references: [id])
+
+  @@map("studio_bookings")
+}
 
 model VilleContenu {
-  id          String   @id @default(cuid())
-  ville       String
-  categorie   String
-  nom         String
-  description String?
-  adresse     String?
-  telephone   String?
-  whatsapp    String?
-  siteWeb     String?
-  image       String?
-  prix        String?
-  note        Float?
-  
-  partner_id  String?  // Garde ce champ pour le RLS
-  
-  isTopDestination Boolean @default(false)
-  isActive         Boolean @default(true)
+  id               String   @id @default(cuid())
+  ville            String
+  categorie        String
+  nom              String
+  description      String?
+  adresse          String?
+  telephone        String?
+  whatsapp         String?
+  siteWeb          String?
+  image            String?
+  prix             String?
+  note             Float?
+  isActive         Boolean  @default(true)
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  isTopDestination Boolean  @default(false)
+  partner_id       String?  @db.Uuid
 
   @@index([ville, categorie])
-  @@index([partner_id])
   @@map("ville_contenus")
 }
 
-// --- ENUMS (Pas besoin de @@schema ici non plus) ---
+model afrouba_requests {
+  id              String        @id
+  reference       String        @unique
+  clientFirstName String
+  clientLastName  String
+  clientEmail     String
+  clientPhone     String
+  documentType    String
+  attachments     String[]
+  description     String?
+  status          BookingStatus @default(PENDING)
+  adminNotes      String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime
+}
+
+model afrouba_supports {
+  id          String   @id
+  nom         String
+  categorie   String
+  description String
+  prix        String   @default("Sur devis")
+  image       String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model blocked_dates {
+  id          String   @id
+  serviceType String
+  serviceId   String?
+  date        DateTime @db.Date
+  reason      String?
+  createdAt   DateTime @default(now())
+}
+
+model collectivite_annuaire {
+  id        String   @id
+  nom       String
+  type      String
+  ville     String
+  region    String
+  telephone String?
+  email     String?
+  adresse   String?
+  siteWeb   String?
+  horaires  String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model collectivite_services {
+  id          String   @id
+  nom         String
+  categorie   String
+  description String
+  image       String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model equipment {
+  id                     String                   @id
+  name                   String
+  slug                   String                   @unique
+  description            String?
+  category               String
+  totalStock             Int
+  pricePerDay            Int
+  depositValue           Int
+  images                 String[]
+  techSheetUrl           String?
+  isActive               Boolean                  @default(true)
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime
+  equipment_rental_items equipment_rental_items[]
+}
+
+model equipment_rental_items {
+  id                String          @id
+  rentalId          String
+  equipmentId       String
+  quantity          Int
+  pricePerDay       Int
+  subtotal          Int
+  equipment         equipment       @relation(fields: [equipmentId], references: [id])
+  equipment_rentals EquipmentRental @relation(fields: [rentalId], references: [id])
+}
+
+model excursion_availability {
+  id          String   @id
+  excursionId String
+  date        DateTime @db.Date
+  timeSlot    String
+  totalSlots  Int
+  bookedSlots Int      @default(0)
+  isBlocked   Boolean  @default(false)
+  blockReason String?
+
+  @@unique([excursionId, date, timeSlot])
+}
+
+model excursion_options {
+  id             String     @id
+  excursionId    String
+  label          String
+  pricePerPerson Int
+  isActive       Boolean    @default(true)
+  excursions     excursions @relation(fields: [excursionId], references: [id])
+}
+
+model excursion_time_slots {
+  id          String     @id
+  excursionId String
+  startTime   String
+  endTime     String
+  isActive    Boolean    @default(true)
+  excursions  excursions @relation(fields: [excursionId], references: [id])
+}
+
+model excursions {
+  id                   String                 @id
+  title                String
+  slug                 String                 @unique
+  description          String
+  duration             String
+  difficulty           String?
+  maxParticipants      Int                    @default(20)
+  priceAdult           Int
+  priceChild           Int
+  images               String[]
+  isActive             Boolean                @default(true)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime
+  excursion_bookings   ExcursionBooking[]
+  excursion_options    excursion_options[]
+  excursion_time_slots excursion_time_slots[]
+  reviews              Review[]
+}
+
+model info_prestations {
+  id          String   @id
+  nom         String
+  categorie   String?
+  description String?
+  prix        String?
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model marketProduit {
+  id        String   @id
+  label     String
+  desc      String?
+  prix      Int
+  unite     String
+  categorie String
+  images    String[]
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
+model media_supports {
+  id          String   @id
+  nom         String
+  categorie   String
+  description String?
+  image       String?
+  badge       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model musique_services {
+  id          String   @id
+  nom         String
+  categorie   String
+  prix        String   @default("Sur devis")
+  description String?
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model opportunite_secteurs {
+  id          String   @id
+  nom         String
+  categorie   String
+  couleur     String
+  description String
+  image       String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model room_availability {
+  id        String   @id
+  roomId    String
+  date      DateTime @db.Date
+  isBlocked Boolean  @default(false)
+  price     Int?
+  rooms     rooms    @relation(fields: [roomId], references: [id])
+
+  @@unique([roomId, date])
+}
+
+model rooms {
+  id                String              @id
+  name              String
+  slug              String              @unique
+  description       String?
+  type              String
+  capacity          Int
+  pricePerNight     Int
+  images            String[]
+  amenities         String[]
+  isActive          Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime
+  city              String              @default("cotiere")
+  isFeatured        Boolean             @default(false)
+  isPopular         Boolean             @default(false)
+  isWeekend         Boolean             @default(false)
+  quartier          String?
+  rating            Float               @default(0)
+  hotel_bookings    HotelBooking[]
+  room_availability room_availability[]
+}
+
+model site_content {
+  id        String   @id
+  key       String   @unique
+  value     String
+  type      String   @default("text")
+  updatedAt DateTime
+}
+
+model studio_services {
+  id          String   @id
+  label       String
+  description String?
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
+model vehicules {
+  id          String   @id
+  nom         String
+  categorie   String
+  description String?
+  prix        String   @default("Sur devis")
+  caution     String   @default("Aucune")
+  places      Int      @default(5)
+  image       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime
+}
+
 enum Role {
   CLIENT
   ADMIN
