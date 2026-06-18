@@ -2,13 +2,13 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth"; // ← Chemin réel et corrigé de votre auth NextAuth
+import { getSession } from "@/lib/auth"; // ← Importation de getSession depuis votre module d'authentification
 
 /**
  * Récupère les services/contenus associés au partenaire (prestataire) connecté.
  */
 export async function getPartnerServices() {
-  const session = await auth();
+  const session = await getSession(); // ← Utilisation de getSession
   
   if (!session?.user?.id) {
     throw new Error("Non autorisé");
@@ -29,7 +29,7 @@ export async function getPartnerServices() {
  * Action serveur pour ajouter/créer un nouveau service.
  */
 export async function createServiceAction(formData: FormData) {
-  const session = await auth();
+  const session = await getSession(); // ← Utilisation de getSession
   
   if (!session?.user?.id) {
     throw new Error("Non autorisé");
@@ -51,13 +51,13 @@ export async function createServiceAction(formData: FormData) {
       categorie,
       partner_id: session.user.id,
       isActive: true,
-      description: formData.get("description") as string || null,
-      adresse: formData.get("adresse") as string || null,
-      telephone: formData.get("telephone") as string || null,
-      whatsapp: formData.get("whatsapp") as string || null,
-      siteWeb: formData.get("siteWeb") as string || null,
-      image: formData.get("image") as string || null,
-      prix: formData.get("prix") as string || null,
+      description: (formData.get("description") as string) || null,
+      adresse: (formData.get("adresse") as string) || null,
+      telephone: (formData.get("telephone") as string) || null,
+      whatsapp: (formData.get("whatsapp") as string) || null,
+      siteWeb: (formData.get("siteWeb") as string) || null,
+      image: (formData.get("image") as string) || null,
+      prix: (formData.get("prix") as string) || null,
     },
   });
 }
