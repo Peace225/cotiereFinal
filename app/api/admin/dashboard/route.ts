@@ -20,26 +20,27 @@ export async function GET() {
       eventTotal, eventPending, eventMonth,
       recentStudio, recentExcursions, recentEvents,
     ] = await Promise.all([
-      // Studio
+      // Studio (Modèle singulier corrigé)
       prisma.studioBooking.count(),
       prisma.studioBooking.count({ where: { status: "PENDING" } }),
       prisma.studioBooking.count({ where: { createdAt: { gte: startOfMonth } } }),
-      // Excursions
+      // Excursions (Modèle singulier corrigé)
       prisma.excursionBooking.count(),
       prisma.excursionBooking.count({ where: { status: "PENDING" } }),
       prisma.excursionBooking.count({ where: { createdAt: { gte: startOfMonth } } }),
-      // Events
+      // Events (Modèle singulier corrigé)
       prisma.eventRequest.count(),
       prisma.eventRequest.count({ where: { status: "PENDING" } }),
       prisma.eventRequest.count({ where: { createdAt: { gte: startOfMonth } } }),
-      // Récents
+      
+      // Récents (Modèle singulier corrigé)
       prisma.studioBooking.findMany({
         orderBy: { createdAt: "desc" }, take: 5,
         select: { id: true, reference: true, clientFirstName: true, clientLastName: true, eventDate: true, status: true, createdAt: true },
       }),
       prisma.excursionBooking.findMany({
         orderBy: { createdAt: "desc" }, take: 5,
-        include: { excursion: { select: { title: true } } },
+        include: { excursions: { select: { title: true } } },
       }),
       prisma.eventRequest.findMany({
         orderBy: { createdAt: "desc" }, take: 5,

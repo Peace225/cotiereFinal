@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { RefreshCw, CheckCircle, Clock, TrendingUp, Users, ListChecks } from "lucide-react";
@@ -366,3 +366,5 @@ export default function ReservationsAdminPage() {
     </div>
   );
 }
+
+

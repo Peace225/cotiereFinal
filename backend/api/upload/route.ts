@@ -15,7 +15,7 @@ async function uploadToCloudinary(file: File): Promise<string> {
   const apiKey = process.env.CLOUDINARY_API_KEY;
   const apiSecret = process.env.CLOUDINARY_API_SECRET;
 
-  if (!cloudName || !apiKey || !apiSecret) throw new Error("Cloudinary non configuré");
+  if (!cloudName || !apiKey || !apiSecret) throw new Error("Cloudinary non configurÃ©");
 
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
@@ -45,7 +45,7 @@ async function uploadToCloudinary(file: File): Promise<string> {
   
   const data = await res.json();
   if (data.secure_url) return data.secure_url;
-  throw new Error("Upload échoué");
+  throw new Error("Upload Ã©chouÃ©");
 }
 
 export async function POST(req: NextRequest) {
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
 
     for (const file of files) {
       if (!ALLOWED_TYPES.includes(file.type)) {
-        errors.push(`${file.name} : format non supporté`);
+        errors.push(`${file.name} : format non supportÃ©`);
         continue;
       }
       if (file.size > MAX_SIZE) {
@@ -81,3 +81,4 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+

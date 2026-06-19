@@ -1,27 +1,64 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { ok, notFound, forbidden, serverError } from "@/lib/api-response";
+import { ok, badRequest, serverError, forbidden } from "@/lib/api-response";
 import { requireAdmin } from "@/lib/auth";
 
-type Params = { params: Promise<{ id: string }> };
+const DEFAULT_SUPPORTS = [
+  { nom: "Flyer A5", categorie: "print", prix: "15000", description: "Flyer recto", image: "/images/flyer.jpg" },
+  { nom: "Carte de visite", categorie: "print", prix: "10000", description: "100 ex", image: "/images/carte.jpg" },
+  { nom: "Bâche 2x1", categorie: "grand-format", prix: "25000", description: "Bâche PVC", image: "/images/bache.jpg" },
+];
 
-export async function PATCH(req: NextRequest, { params }: Params) {
-  try { await requireAdmin(); } catch { return forbidden(); }
+export async function GET() {
   try {
-    const { id } = await params;
-    const data = await req.json();
-    const support = await prisma.afroubaSupport.update({ where: { id }, data });
-    return ok(support);
+    let supports = await prisma.afrouba_supports.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: "asc" },
+    });
+
+    if (supports.length === 0) {
+      const now = new Date();
+      const data = DEFAULT_SUPPORTS.map(s => ({
+        id: crypto.randomUUID(),
+        nom: s.nom,
+        categorie: s.categorie,
+        prix: s.prix,
+        description: s.description,
+        image: s.image,
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+      }));
+      await prisma.afrouba_supports.createMany({ data });
+      supports = await prisma.afrouba_supports.findMany({
+        where: { isActive: true },
+        orderBy: { createdAt: "asc" },
+      });
+    }
+
+    return ok({ supports });
   } catch (e) { return serverError(e); }
 }
 
-export async function DELETE(_req: NextRequest, { params }: Params) {
+export async function POST(req: NextRequest) {
   try { await requireAdmin(); } catch { return forbidden(); }
   try {
-    const { id } = await params;
-    const support = await prisma.afroubaSupport.findUnique({ where: { id } });
-    if (!support) return notFound("Support introuvable");
-    await prisma.afroubaSupport.update({ where: { id }, data: { isActive: false } });
-    return ok({ message: "Support supprimé" });
+    const body = await req.json();
+    if (!body.nom) return badRequest("Nom requis");
+    
+    const support = await prisma.afrouba_supports.create({
+      data: {
+        id: crypto.randomUUID(),
+        nom: body.nom,
+        categorie: body.categorie || "autre",
+        prix: body.prix || "0",
+        description: body.description || "",
+        image: body.image || "",
+        isActive: true,
+        createdAt: new Date(), // ✅ LA CORRECTION EST ICI
+        updatedAt: new Date(),
+      },
+    });
+    return ok({ support });
   } catch (e) { return serverError(e); }
 }

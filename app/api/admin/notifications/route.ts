@@ -5,8 +5,8 @@ import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic'; 
 
-// Fonction helper pour obtenir un client Supabase "connecté" 
-// UNIQUEMENT pour la lecture des données (sans gestion complexe des cookies)
+// Fonction helper pour obtenir un client Supabase "connectÃ©" 
+// UNIQUEMENT pour la lecture des donnÃ©es (sans gestion complexe des cookies)
 async function getSupabaseClient() {
   const cookieStore = await cookies();
   
@@ -16,7 +16,7 @@ async function getSupabaseClient() {
     {
       cookies: {
         getAll() { return cookieStore.getAll() },
-        setAll() { /* Ignoré dans les API routes de données */ }
+        setAll() { /* IgnorÃ© dans les API routes de donnÃ©es */ }
       }
     }
   );
@@ -24,13 +24,13 @@ async function getSupabaseClient() {
 
 export async function GET() {
   try {
-    // 1. On vérifie la sécurité via le fichier central
+    // 1. On vÃ©rifie la sÃ©curitÃ© via le fichier central
     await requireAdmin(); 
     
-    // 2. On récupère le client pour les requêtes de données
+    // 2. On rÃ©cupÃ¨re le client pour les requÃªtes de donnÃ©es
     const supabase = await getSupabaseClient();
     
-    // 3. REQUÊTE CORRIGÉE : Utilisation du snake_case pour les relations
+    // 3. REQUÃŠTE CORRIGÃ‰E : Utilisation du snake_case pour les relations
     const { data: notifications, error } = await supabase
       .from('notifications')
       .select(`*, studio_bookings(clientFirstName, clientLastName), event_requests(clientFirstName, clientLastName), excursion_bookings(clientFirstName, clientLastName), hotel_bookings(clientFirstName, clientLastName), music_bookings(clientFirstName, clientLastName)`)
@@ -39,7 +39,7 @@ export async function GET() {
       .limit(50);
 
     if (error) {
-      console.error("Erreur Postgres détaillée:", error);
+      console.error("Erreur Postgres dÃ©taillÃ©e:", error);
       throw error;
     }
 
@@ -47,8 +47,8 @@ export async function GET() {
 
     return NextResponse.json({ data: { notifications, unreadCount } });
   } catch (e: any) {
-    if (e.message === "UNAUTHORIZED") return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
-    if (e.message === "FORBIDDEN") return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (e.message === "UNAUTHORIZED") return NextResponse.json({ error: "Non autorisÃ©" }, { status: 401 });
+    if (e.message === "FORBIDDEN") return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
     console.error("API Notifications Error:", e);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
@@ -62,10 +62,12 @@ export async function PATCH() {
     const { error } = await supabase.from('notifications').update({ isRead: true }).eq('isRead', false);
     if (error) throw error;
     
-    return NextResponse.json({ message: "Tout marqué comme lu" });
+    return NextResponse.json({ message: "Tout marquÃ© comme lu" });
   } catch (e: any) {
-    if (e.message === "UNAUTHORIZED") return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
-    if (e.message === "FORBIDDEN") return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+    if (e.message === "UNAUTHORIZED") return NextResponse.json({ error: "Non autorisÃ©" }, { status: 401 });
+    if (e.message === "FORBIDDEN") return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+
+

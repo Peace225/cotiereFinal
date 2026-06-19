@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Plus, CheckCircle, Pencil, Trash2, X, Building2, Clock, RefreshCw } from "lucide-react";
@@ -402,3 +402,5 @@ export default function AdminHebergementPage() {
     </div>
   );
 }
+
+

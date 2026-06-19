@@ -26,8 +26,8 @@ const STATUS_COLORS: Record<string, string> = {
   COMPLETED: "bg-blue-100 text-blue-700 border-blue-200",
 };
 const STATUS_LABELS: Record<string, string> = {
-  PENDING: "En attente", CONFIRMED: "Confirmé", REFUSED: "Refusé",
-  CANCELLED: "Annulé", COMPLETED: "Terminé",
+  PENDING: "En attente", CONFIRMED: "ConfirmÃ©", REFUSED: "RefusÃ©",
+  CANCELLED: "AnnulÃ©", COMPLETED: "TerminÃ©",
 };
 const MEDIA_COLORS: Record<string, string> = {
   TV: "bg-blue-100 text-blue-700",
@@ -103,7 +103,7 @@ export default function AdminMediasPage() {
         });
         const data = await res.json();
         if (res.ok) setCatalogueSupports(prev => prev.map(s => s.id === editId ? data.data : s));
-        else alert(`Erreur ${res.status} : ${data.error ?? "Impossible de modifier le support."}\nVérifiez que vous êtes connecté en tant qu'admin.`);
+        else alert(`Erreur ${res.status} : ${data.error ?? "Impossible de modifier le support."}\nVÃ©rifiez que vous Ãªtes connectÃ© en tant qu'admin.`);
       } else {
         const res = await fetch("/api/medias/supports", {
           method: "POST",
@@ -112,13 +112,13 @@ export default function AdminMediasPage() {
         });
         const data = await res.json();
         if (res.ok) setCatalogueSupports(prev => [...prev, data.data]);
-        else alert(`Erreur ${res.status} : ${data.error ?? "Impossible d'ajouter le support."}\nVérifiez que vous êtes connecté en tant qu'admin.`);
+        else alert(`Erreur ${res.status} : ${data.error ?? "Impossible d'ajouter le support."}\nVÃ©rifiez que vous Ãªtes connectÃ© en tant qu'admin.`);
       }
       setShowModal(false);
       setForm(emptySupportForm);
       setEditId(null);
     } catch {
-      alert("Erreur réseau. Vérifiez votre connexion et réessayez.");
+      alert("Erreur rÃ©seau. VÃ©rifiez votre connexion et rÃ©essayez.");
     }
     setSaving(false);
   }
@@ -160,7 +160,7 @@ export default function AdminMediasPage() {
             <div className="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center">
               <Tv size={20} className="text-blue-600" />
             </div>
-            <h1 className="text-2xl font-black text-[#0c4a6e]">CÔTIÈRE Médias</h1>
+            <h1 className="text-2xl font-black text-[#0c4a6e]">CÃ”TIÃˆRE MÃ©dias</h1>
           </div>
           <div className="flex gap-2 flex-wrap">
             <button
@@ -207,7 +207,7 @@ export default function AdminMediasPage() {
                   <div className="flex gap-2">
                     <button onClick={() => toggleActive(s)}
                       className={`flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg transition-colors ${s.isActive ? "bg-orange-100 text-orange-600 hover:bg-orange-200" : "bg-green-100 text-green-600 hover:bg-green-200"}`}>
-                      <CheckCircle size={13} /> {s.isActive ? "Désactiver" : "Activer"}
+                      <CheckCircle size={13} /> {s.isActive ? "DÃ©sactiver" : "Activer"}
                     </button>
                     <button onClick={() => openEdit(s)}
                       className="flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors">
@@ -233,7 +233,7 @@ export default function AdminMediasPage() {
               {[
                 { label: "Total demandes", value: requests.length, color: "text-blue-500", bg: "bg-blue-50", icon: Tv, filterVal: "ALL" },
                 { label: "En attente", value: requests.filter(r => r.status === "PENDING").length, color: "text-yellow-500", bg: "bg-yellow-50", icon: Tv, filterVal: "PENDING" },
-                { label: "Confirmées", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50", icon: Tv, filterVal: "CONFIRMED" },
+                { label: "ConfirmÃ©es", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50", icon: Tv, filterVal: "CONFIRMED" },
                 { label: "TV", value: requests.filter(r => r.mediaType === "TV").length, color: "text-blue-500", bg: "bg-blue-50", icon: Tv, filterVal: "" },
               ].map(s => {
                 const isActive = s.filterVal && filter === s.filterVal;
@@ -264,16 +264,16 @@ export default function AdminMediasPage() {
                 className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
                 <option value="ALL">Tous les statuts</option>
                 <option value="PENDING">En attente</option>
-                <option value="CONFIRMED">Confirmés</option>
-                <option value="COMPLETED">Terminés</option>
-                <option value="REFUSED">Refusés</option>
+                <option value="CONFIRMED">ConfirmÃ©s</option>
+                <option value="COMPLETED">TerminÃ©s</option>
+                <option value="REFUSED">RefusÃ©s</option>
               </select>
               <select value={mediaFilter} onChange={e => setMediaFilter(e.target.value)}
                 className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
                 <option value="ALL">Tous les supports</option>
-                <option value="TV">CÔTIÈRE TV</option>
-                <option value="RADIO">CÔTIÈRE FM</option>
-                <option value="MAGAZINE">CÔTIÈRE MAGAZINE</option>
+                <option value="TV">CÃ”TIÃˆRE TV</option>
+                <option value="RADIO">CÃ”TIÃˆRE FM</option>
+                <option value="MAGAZINE">CÃ”TIÃˆRE MAGAZINE</option>
                 <option value="DIGITAL">Digital</option>
               </select>
               <button onClick={load} className="flex items-center gap-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
@@ -285,26 +285,26 @@ export default function AdminMediasPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
                 <div className="w-1 h-5 bg-[#c9a84c] rounded-full" />
-                <h2 className="font-bold text-[#0c4a6e]">Demandes publicitaires CÔTIÈRE MÉDIAS</h2>
-                <span className="ml-auto text-xs text-gray-400">{filtered.length} résultat(s)</span>
+                <h2 className="font-bold text-[#0c4a6e]">Demandes publicitaires CÃ”TIÃˆRE MÃ‰DIAS</h2>
+                <span className="ml-auto text-xs text-gray-400">{filtered.length} rÃ©sultat(s)</span>
                 <ExportButton
                   data={filtered.map(r => ({
                     reference: r.reference?.slice(-8) ?? r.id.slice(-8),
                     client: r.clientName,
-                    entreprise: r.companyName ?? "—",
+                    entreprise: r.companyName ?? "â€”",
                     telephone: r.clientPhone,
                     email: r.clientEmail,
                     support: r.mediaType,
                     type_pub: r.adType,
-                    budget: r.budget ?? "—",
+                    budget: r.budget ?? "â€”",
                     statut: r.status,
                     date: new Date(r.createdAt).toLocaleDateString("fr-FR"),
                   }))}
                   columns={[
-                    { key: "reference", label: "Référence" },
+                    { key: "reference", label: "RÃ©fÃ©rence" },
                     { key: "client", label: "Client" },
                     { key: "entreprise", label: "Entreprise" },
-                    { key: "telephone", label: "Téléphone" },
+                    { key: "telephone", label: "TÃ©lÃ©phone" },
                     { key: "email", label: "Email" },
                     { key: "support", label: "Support" },
                     { key: "type_pub", label: "Type pub" },
@@ -322,13 +322,13 @@ export default function AdminMediasPage() {
                   <RefreshCw size={32} className="animate-spin mx-auto mb-3" /> Chargement...
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="py-16 text-center text-gray-400">Aucune demande trouvée.</div>
+                <div className="py-16 text-center text-gray-400">Aucune demande trouvÃ©e.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b border-gray-100">
                       <tr>
-                        {["Réf.", "Client", "Contact", "Support", "Type de pub", "Budget", "Date", "Statut", "Action"].map(h => (
+                        {["RÃ©f.", "Client", "Contact", "Support", "Type de pub", "Budget", "Date", "Statut", "Action"].map(h => (
                           <th key={h} className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">{h}</th>
                         ))}
                       </tr>
@@ -358,12 +358,12 @@ export default function AdminMediasPage() {
                           <td className="px-4 py-3">
                             <a href="/services/medias" target="_blank" rel="noopener noreferrer" className="hover:underline">
                               <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${MEDIA_COLORS[r.mediaType] ?? "bg-gray-100 text-gray-600"}`}>
-                                {r.mediaType} ↗
+                                {r.mediaType} â†—
                               </span>
                             </a>
                           </td>
                           <td className="px-4 py-3 text-xs text-gray-600">{r.adType}</td>
-                          <td className="px-4 py-3 text-xs font-semibold text-[#0c4a6e]">{r.budget || "—"}</td>
+                          <td className="px-4 py-3 text-xs font-semibold text-[#0c4a6e]">{r.budget || "â€”"}</td>
                           <td className="px-4 py-3 text-xs text-gray-500">
                             {new Date(r.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
                           </td>
@@ -398,24 +398,24 @@ export default function AdminMediasPage() {
         )}
       </div>
 
-      {/* Modal Ajouter un support média */}
+      {/* Modal Ajouter un support mÃ©dia */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col overflow-hidden">
             <div className="flex items-center justify-between p-6 border-b border-gray-100 shrink-0">
-              <h3 className="font-bold text-[#0c4a6e] text-lg">Ajouter un support média</h3>
+              <h3 className="font-bold text-[#0c4a6e] text-lg">Ajouter un support mÃ©dia</h3>
               <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
             </div>
             <div className="p-6 space-y-4 overflow-y-auto">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Nom du support *</label>
-                <input type="text" placeholder="CÔTIÈRE TV" value={form.nom}
+                <input type="text" placeholder="CÃ”TIÃˆRE TV" value={form.nom}
                   onChange={e => setForm(f => ({ ...f, nom: e.target.value }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
-                <input type="text" placeholder="Télévision / Radio / Magazine..." value={form.categorie}
+                <label className="block text-sm font-medium text-gray-700 mb-1">CatÃ©gorie</label>
+                <input type="text" placeholder="TÃ©lÃ©vision / Radio / Magazine..." value={form.categorie}
                   onChange={e => setForm(f => ({ ...f, categorie: e.target.value }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
               </div>
@@ -443,3 +443,5 @@ export default function AdminMediasPage() {
     </div>
   );
 }
+
+

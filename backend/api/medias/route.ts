@@ -21,6 +21,7 @@ export async function GET() {
   try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
+    // ✅ CORRIGÉ : media_ad_requests -> mediaAdRequest
     const requests = await prisma.mediaAdRequest.findMany({ 
       orderBy: { createdAt: "desc" } 
     });
@@ -35,6 +36,7 @@ export async function POST(req: NextRequest) {
     const parsed = schema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
     
+    // ✅ CORRIGÉ : media_ad_requests -> mediaAdRequest
     const request = await prisma.mediaAdRequest.create({
       data: {
         reference: `MED-${Date.now().toString(36).toUpperCase()}`,

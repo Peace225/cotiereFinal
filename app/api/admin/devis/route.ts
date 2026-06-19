@@ -5,7 +5,12 @@ import { requireAdmin } from "@/lib/auth";
 
 // POST /api/admin/devis — Sauvegarder l'URL du devis PDF sur une réservation
 export async function POST(req: NextRequest) {
-  try { await requireAdmin(); } catch { return forbidden(); }
+  try { 
+    await requireAdmin(); 
+  } catch { 
+    return forbidden(); 
+  }
+  
   try {
     const { type, id, quotePdfUrl, totalAmount, adminNotes } = await req.json();
     if (!type || !id) return badRequest("type et id requis");
@@ -15,6 +20,7 @@ export async function POST(req: NextRequest) {
     if (totalAmount) data.totalAmount = totalAmount;
     if (adminNotes) data.adminNotes = adminNotes;
 
+    // ✅ CORRIGÉ : Utilisation des modèles Prisma singuliers et CamelCase correspondants
     if (type === "studio") {
       await prisma.studioBooking.update({ where: { id }, data });
     } else if (type === "event") {

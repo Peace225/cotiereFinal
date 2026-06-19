@@ -3,7 +3,7 @@ import { ok, serverError, forbidden } from "@/lib/api-response";
 import { requireAdmin } from "@/lib/auth";
 
 const SEED_DATA = [
-  // ── ABIDJAN ──────────────────────────────────────────────────
+  // ── ABIDJAN ──────────────────────────────────────────────────────────────────
   { ville: "abidjan", categorie: "hotels", nom: "Hôtel Ivoire", description: "Hôtel de luxe 5 étoiles au cœur d'Abidjan, avec piscine, spa et restaurants gastronomiques.", adresse: "Boulevard de France, Cocody, Abidjan", telephone: "+22527222000", prix: "À partir de 120 000 FCFA/nuit", note: 4.8, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "abidjan", categorie: "hotels", nom: "Sofitel Abidjan Hôtel Ivoire", description: "Hôtel de prestige avec vue panoramique sur la lagune Ébrié.", adresse: "Cocody, Abidjan", telephone: "+22527200000", prix: "À partir de 150 000 FCFA/nuit", note: 4.9, image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80" },
   { ville: "abidjan", categorie: "residences", nom: "Résidence Les Cocotiers", description: "Appartements meublés climatisés avec cuisine équipée, idéaux pour longs séjours.", adresse: "Marcory, Abidjan", telephone: "+22507112233", prix: "À partir de 45 000 FCFA/nuit", note: 4.2, image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80" },
@@ -16,7 +16,7 @@ const SEED_DATA = [
   { ville: "abidjan", categorie: "transport", nom: "UTB - Union des Transports de Bouaké", description: "Compagnie de bus reliant Abidjan aux principales villes du littoral.", adresse: "Gare routière de Yopougon, Abidjan", telephone: "+22527213000", prix: "À partir de 3 000 FCFA", note: 3.8, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
   { ville: "abidjan", categorie: "transport", nom: "SOTRA - Société des Transports Abidjanais", description: "Réseau de bus urbains couvrant toute l'agglomération abidjanaise.", adresse: "Treichville, Abidjan", telephone: "+22527213100", prix: "200 – 500 FCFA", note: 3.5, image: "https://images.unsplash.com/photo-1570125909232-eb263c188f7e?w=600&q=80" },
 
-  // ── GRAND-BASSAM ─────────────────────────────────────────────
+  // ── GRAND-BASSAM ────────────────────────────────────────────────────────────
   { ville: "grand-bassam", categorie: "hotels", nom: "Hôtel de la Plage", description: "Hôtel colonial face à l'océan, dans le quartier historique de Grand-Bassam.", adresse: "Quartier France, Grand-Bassam", telephone: "+22527301234", prix: "À partir de 35 000 FCFA/nuit", note: 4.3, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "grand-bassam", categorie: "hotels", nom: "Étoile du Sud", description: "Hôtel-restaurant avec piscine et accès direct à la plage.", adresse: "Grand-Bassam", telephone: "+22527302345", prix: "À partir de 28 000 FCFA/nuit", note: 4.1, image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80" },
   { ville: "grand-bassam", categorie: "residences", nom: "Villa Bassam", description: "Villa meublée avec jardin tropical, idéale pour familles et groupes.", adresse: "Grand-Bassam", telephone: "+22507223344", prix: "À partir de 50 000 FCFA/nuit", note: 4.4, image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80" },
@@ -26,7 +26,7 @@ const SEED_DATA = [
   { ville: "grand-bassam", categorie: "sites", nom: "Quartier France Historique", description: "Quartier colonial classé au patrimoine mondial de l'UNESCO. Architecture du XIXe siècle.", adresse: "Quartier France, Grand-Bassam", telephone: "", prix: "Entrée libre", note: 4.8, image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" },
   { ville: "grand-bassam", categorie: "transport", nom: "Taxi-brousse Abidjan-Bassam", description: "Service de taxi collectif reliant Abidjan à Grand-Bassam toute la journée.", adresse: "Gare de Bassam, Grand-Bassam", telephone: "+22507667788", prix: "1 500 FCFA", note: 3.7, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── ASSINIE-MAFIA ─────────────────────────────────────────────
+  // ── ASSINIE-MAFIA ───────────────────────────────────────────────────────────
   { ville: "assinie-mafia", categorie: "hotels", nom: "Hôtel Assinie Beach", description: "Resort balnéaire avec bungalows sur la plage, piscine et sports nautiques.", adresse: "Assinie-Mafia", telephone: "+22527401234", prix: "À partir de 60 000 FCFA/nuit", note: 4.6, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "assinie-mafia", categorie: "residences", nom: "Villa Lagune d'Aby", description: "Villa de luxe entre océan et lagune, avec ponton privé et vue panoramique.", adresse: "Assinie-Mafia", telephone: "+22507334455", prix: "À partir de 80 000 FCFA/nuit", note: 4.8, image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80" },
   { ville: "assinie-mafia", categorie: "plages", nom: "Plage d'Assinie", description: "L'une des plus belles plages de Côte d'Ivoire, sable blanc et eaux turquoise.", adresse: "Assinie-Mafia", telephone: "", prix: "Entrée libre", note: 4.9, image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" },
@@ -34,43 +34,43 @@ const SEED_DATA = [
   { ville: "assinie-mafia", categorie: "sites", nom: "Lagune d'Aby", description: "Lagune aux eaux calmes, idéale pour la pêche, le kayak et les balades en pirogue.", adresse: "Assinie-Mafia", telephone: "", prix: "Excursion à partir de 5 000 FCFA", note: 4.7, image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80" },
   { ville: "assinie-mafia", categorie: "transport", nom: "Navette Assinie Express", description: "Service de navette depuis Abidjan vers Assinie-Mafia, départs quotidiens.", adresse: "Assinie-Mafia", telephone: "+22507889900", prix: "3 000 FCFA", note: 4.0, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── JACQUEVILLE ───────────────────────────────────────────────
+  // ── JACQUEVILLE ─────────────────────────────────────────────────────────────
   { ville: "jacqueville", categorie: "hotels", nom: "Hôtel de Jacqueville", description: "Hôtel simple et accueillant face à la plage, idéal pour découvrir l'île.", adresse: "Jacqueville", telephone: "+22527501234", prix: "À partir de 20 000 FCFA/nuit", note: 3.9, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
-  { ville: "jacqueville", categorie: "plages", nom: "Plage de Jacqueville", description: "Plage sauvage et préservée, peu fréquentée, idéale pour la tranquillité.", adresse: "Jacqueville", telephone: "", prix: "Entrée libre", note: 4.5, image: "https://images.unsplash.com/photo-1471922694854-ff1b63b20054?w=600&q=80" },
+  { ville: "jacqueville", categorie: "plages", nom: "Plage de Jacqueville", description: "Plage sauvage et préservée, peu fréquente, idéale pour la tranquillité.", adresse: "Jacqueville", telephone: "", prix: "Entrée libre", note: 4.5, image: "https://images.unsplash.com/photo-1471922694854-ff1b63b20054?w=600&q=80" },
   { ville: "jacqueville", categorie: "restaurants", nom: "Chez Mamie Adjoua", description: "Restaurant local avec cuisine ivoirienne traditionnelle, poisson frais du jour.", adresse: "Jacqueville", telephone: "+22507112233", prix: "2 000 – 8 000 FCFA", note: 4.2, image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" },
   { ville: "jacqueville", categorie: "sites", nom: "Pont de Jacqueville", description: "Pont reliant l'île au continent, offrant une vue magnifique sur la lagune Ébrié.", adresse: "Jacqueville", telephone: "", prix: "Entrée libre", note: 4.3, image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80" },
   { ville: "jacqueville", categorie: "transport", nom: "Taxi collectif Jacqueville", description: "Taxis collectifs reliant Jacqueville à Abidjan via le pont.", adresse: "Jacqueville", telephone: "+22507334455", prix: "1 000 FCFA", note: 3.6, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── DABOU ─────────────────────────────────────────────────────
+  // ── DABOU ───────────────────────────────────────────────────────────────────
   { ville: "dabou", categorie: "hotels", nom: "Hôtel La Lagune", description: "Hôtel au bord de la lagune Ébrié avec vue panoramique et restaurant.", adresse: "Dabou", telephone: "+22527601234", prix: "À partir de 22 000 FCFA/nuit", note: 4.0, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "dabou", categorie: "plages", nom: "Plage de Dabou", description: "Plage tranquille sur la lagune, idéale pour la pêche et les balades.", adresse: "Dabou", telephone: "", prix: "Entrée libre", note: 3.9, image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" },
   { ville: "dabou", categorie: "restaurants", nom: "Restaurant du Port", description: "Spécialités de poissons et fruits de mer frais du port de Dabou.", adresse: "Port de Dabou", telephone: "+22507445566", prix: "3 000 – 12 000 FCFA", note: 4.1, image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" },
   { ville: "dabou", categorie: "sites", nom: "Marché de Dabou", description: "Grand marché traditionnel avec artisanat local, pagnes et produits frais.", adresse: "Centre-ville, Dabou", telephone: "", prix: "Entrée libre", note: 4.0, image: "https://images.unsplash.com/photo-1566127992631-137a642a90f4?w=600&q=80" },
   { ville: "dabou", categorie: "transport", nom: "Bus Abidjan-Dabou", description: "Liaisons régulières entre Abidjan et Dabou, départs toutes les heures.", adresse: "Gare routière de Dabou", telephone: "+22507556677", prix: "1 500 FCFA", note: 3.7, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── GRAND-LAHOU ───────────────────────────────────────────────
+  // ── GRAND-LAHOU ─────────────────────────────────────────────────────────────
   { ville: "grand-lahou", categorie: "hotels", nom: "Hôtel du Fleuve", description: "Hôtel au bord du fleuve Bandama, ambiance paisible et nature préservée.", adresse: "Grand-Lahou", telephone: "+22527701234", prix: "À partir de 18 000 FCFA/nuit", note: 3.8, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "grand-lahou", categorie: "plages", nom: "Plage de Grand-Lahou", description: "Plage sauvage à l'embouchure du Bandama, paysage unique entre fleuve et océan.", adresse: "Grand-Lahou", telephone: "", prix: "Entrée libre", note: 4.6, image: "https://images.unsplash.com/photo-1471922694854-ff1b63b20054?w=600&q=80" },
   { ville: "grand-lahou", categorie: "restaurants", nom: "Chez Konan", description: "Restaurant local avec poissons grillés et cuisine ivoirienne traditionnelle.", adresse: "Grand-Lahou", telephone: "+22507112233", prix: "2 500 – 10 000 FCFA", note: 4.0, image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" },
-  { ville: "grand-lahou", categorie: "sites", nom: "Embouchure du Bandama", description: "Site naturel exceptionnel où le fleuve Bandama rejoint l'océan Atlantique.", adresse: "Grand-Lahou", telephone: "", prix: "Excursion à partir de 3 000 FCFA", note: 4.7, image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80" },
+  { ville: "grand-lahou", categorie: "sites", nom: "Embouchure du Bandama", description: "Site natural exceptionnel où le fleuve Bandama rejoint l'océan Atlantique.", adresse: "Grand-Lahou", telephone: "", prix: "Excursion à partir de 3 000 FCFA", note: 4.7, image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80" },
   { ville: "grand-lahou", categorie: "sites", nom: "Lagune Tadio", description: "Lagune aux eaux calmes, idéale pour la pêche et les balades en pirogue.", adresse: "Grand-Lahou", telephone: "", prix: "Pirogue à partir de 2 000 FCFA", note: 4.5, image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80" },
   { ville: "grand-lahou", categorie: "transport", nom: "Taxi-brousse Grand-Lahou", description: "Service de taxi collectif reliant Grand-Lahou à Abidjan et Fresco.", adresse: "Gare routière, Grand-Lahou", telephone: "+22507334455", prix: "2 500 FCFA", note: 3.5, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── FRESCO ────────────────────────────────────────────────────
+  // ── FRESCO ──────────────────────────────────────────────────────────────────
   { ville: "fresco", categorie: "hotels", nom: "Auberge de Fresco", description: "Auberge simple et authentique au cœur de Fresco, accueil chaleureux.", adresse: "Fresco", telephone: "+22527801234", prix: "À partir de 15 000 FCFA/nuit", note: 3.7, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "fresco", categorie: "plages", nom: "Plage Sauvage de Fresco", description: "L'une des plus belles plages vierges de Côte d'Ivoire. Nature préservée, aucune construction.", adresse: "Fresco", telephone: "", prix: "Entrée libre", note: 4.9, image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" },
   { ville: "fresco", categorie: "restaurants", nom: "Maquis de la Plage", description: "Maquis local avec poissons frais grillés et attiéké, vue sur l'océan.", adresse: "Plage de Fresco", telephone: "+22507445566", prix: "2 000 – 8 000 FCFA", note: 4.2, image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" },
   { ville: "fresco", categorie: "sites", nom: "Village de Pêcheurs de Fresco", description: "Village authentique de pêcheurs artisanaux, découverte des traditions locales.", adresse: "Fresco", telephone: "", prix: "Entrée libre", note: 4.4, image: "https://images.unsplash.com/photo-1566127992631-137a642a90f4?w=600&q=80" },
   { ville: "fresco", categorie: "transport", nom: "Transport Fresco-Sassandra", description: "Liaisons en taxi-brousse entre Fresco et les villes voisines.", adresse: "Fresco", telephone: "+22507556677", prix: "3 000 FCFA", note: 3.4, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── SASSANDRA ─────────────────────────────────────────────────
+  // ── SASSANDRA ───────────────────────────────────────────────────────────────
   { ville: "sassandra", categorie: "hotels", nom: "Hôtel Les Rochers", description: "Hôtel pittoresque face aux rochers de Sassandra, vue imprenable sur l'océan.", adresse: "Sassandra", telephone: "+22527901234", prix: "À partir de 25 000 FCFA/nuit", note: 4.3, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "sassandra", categorie: "plages", nom: "Plage des Rochers", description: "Plage unique avec formations rocheuses spectaculaires, idéale pour la photographie.", adresse: "Sassandra", telephone: "", prix: "Entrée libre", note: 4.7, image: "https://images.unsplash.com/photo-1471922694854-ff1b63b20054?w=600&q=80" },
   { ville: "sassandra", categorie: "restaurants", nom: "Restaurant du Port de Sassandra", description: "Fruits de mer frais du port, spécialités locales et ambiance maritime.", adresse: "Port de Sassandra", telephone: "+22507112233", prix: "4 000 – 18 000 FCFA", note: 4.4, image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80" },
   { ville: "sassandra", categorie: "sites", nom: "Rochers de Sassandra", description: "Formation rocheuse naturelle emblématique de Sassandra, site touristique incontournable.", adresse: "Sassandra", telephone: "", prix: "Entrée libre", note: 4.8, image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80" },
   { ville: "sassandra", categorie: "transport", nom: "Bus Abidjan-Sassandra", description: "Liaisons quotidiennes entre Abidjan et Sassandra, confortables et fiables.", adresse: "Gare routière, Sassandra", telephone: "+22507334455", prix: "5 000 FCFA", note: 3.8, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── SAN-PEDRO ─────────────────────────────────────────────────
+  // ── SAN-PEDRO ───────────────────────────────────────────────────────────────
   { ville: "san-pedro", categorie: "hotels", nom: "Hôtel Balmer", description: "Hôtel de référence à San-Pédro, piscine, restaurant et accès à la plage.", adresse: "San-Pédro", telephone: "+22534711234", prix: "À partir de 40 000 FCFA/nuit", note: 4.4, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "san-pedro", categorie: "hotels", nom: "Hôtel Atlantique", description: "Hôtel moderne face à l'océan avec vue panoramique sur le port.", adresse: "San-Pédro", telephone: "+22534712345", prix: "À partir de 35 000 FCFA/nuit", note: 4.2, image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80" },
   { ville: "san-pedro", categorie: "plages", nom: "Plage de San-Pédro", description: "Grande plage de sable fin avec vagues idéales pour le surf.", adresse: "San-Pédro", telephone: "", prix: "Entrée libre", note: 4.5, image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" },
@@ -78,25 +78,25 @@ const SEED_DATA = [
   { ville: "san-pedro", categorie: "sites", nom: "Port Autonome de San-Pédro", description: "2ème port de Côte d'Ivoire, visite guidée disponible pour découvrir les activités portuaires.", adresse: "San-Pédro", telephone: "+22534710000", prix: "Visite sur demande", note: 4.3, image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80" },
   { ville: "san-pedro", categorie: "transport", nom: "Air Côte d'Ivoire - San-Pédro", description: "Vols réguliers entre Abidjan et San-Pédro, 1h de vol.", adresse: "Aéroport de San-Pédro", telephone: "+22534710100", prix: "À partir de 45 000 FCFA", note: 4.2, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── GRAND-BEREBY ──────────────────────────────────────────────
+  // ── GRAND-BEREBY ────────────────────────────────────────────────────────────
   { ville: "grand-bereby", categorie: "hotels", nom: "Écolodge de Grand-Béréby", description: "Écolodge en pleine nature, bungalows en bois face à l'océan.", adresse: "Grand-Béréby", telephone: "+22507112233", prix: "À partir de 30 000 FCFA/nuit", note: 4.6, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "grand-bereby", categorie: "plages", nom: "Plages Vierges de Grand-Béréby", description: "Plages sauvages parmi les plus préservées d'Afrique de l'Ouest.", adresse: "Grand-Béréby", telephone: "", prix: "Entrée libre", note: 4.9, image: "https://images.unsplash.com/photo-1471922694854-ff1b63b20054?w=600&q=80" },
   { ville: "grand-bereby", categorie: "sites", nom: "Forêt Tropicale de Grand-Béréby", description: "Forêt dense avec biodiversité exceptionnelle, randonnées guidées disponibles.", adresse: "Grand-Béréby", telephone: "+22507334455", prix: "Guide à partir de 5 000 FCFA", note: 4.7, image: "https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80" },
   { ville: "grand-bereby", categorie: "transport", nom: "Transport San-Pédro - Grand-Béréby", description: "Taxis collectifs reliant San-Pédro à Grand-Béréby.", adresse: "Grand-Béréby", telephone: "+22507556677", prix: "3 500 FCFA", note: 3.5, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── TABOU ─────────────────────────────────────────────────────
+  // ── TABOU ───────────────────────────────────────────────────────────────────
   { ville: "tabou", categorie: "hotels", nom: "Hôtel de Tabou", description: "Hôtel simple et accueillant, porte d'entrée vers les plages sauvages du Grand-Ouest.", adresse: "Tabou", telephone: "+22534801234", prix: "À partir de 15 000 FCFA/nuit", note: 3.6, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "tabou", categorie: "plages", nom: "Plage de Tabou", description: "Plage sauvage et préservée à la frontière libérienne, nature intacte.", adresse: "Tabou", telephone: "", prix: "Entrée libre", note: 4.5, image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" },
   { ville: "tabou", categorie: "sites", nom: "Frontière Côte d'Ivoire - Libéria", description: "Point de passage frontalier, site historique et culturel.", adresse: "Tabou", telephone: "", prix: "Entrée libre", note: 3.8, image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80" },
   { ville: "tabou", categorie: "transport", nom: "Bus Tabou-San-Pédro", description: "Liaisons quotidiennes entre Tabou et San-Pédro.", adresse: "Gare routière, Tabou", telephone: "+22507112233", prix: "4 000 FCFA", note: 3.4, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── ABOISSO ───────────────────────────────────────────────────
+  // ── ABOISSO ─────────────────────────────────────────────────────────────────
   { ville: "aboisso", categorie: "hotels", nom: "Hôtel du Comoé", description: "Hôtel au bord du fleuve Comoé, idéal pour les amateurs de nature.", adresse: "Aboisso", telephone: "+22527201234", prix: "À partir de 20 000 FCFA/nuit", note: 3.9, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "aboisso", categorie: "restaurants", nom: "Maquis Chez Adjoua", description: "Cuisine ivoirienne traditionnelle, spécialités du Sud-Comoé.", adresse: "Aboisso", telephone: "+22507334455", prix: "2 000 – 8 000 FCFA", note: 4.1, image: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" },
   { ville: "aboisso", categorie: "sites", nom: "Fleuve Comoé", description: "Fleuve majestueux traversant Aboisso, excursions en pirogue et pêche.", adresse: "Aboisso", telephone: "", prix: "Pirogue à partir de 2 000 FCFA", note: 4.4, image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&q=80" },
   { ville: "aboisso", categorie: "transport", nom: "Bus Abidjan-Aboisso", description: "Liaisons fréquentes entre Abidjan et Aboisso, 2h de trajet.", adresse: "Gare routière, Aboisso", telephone: "+22507556677", prix: "2 000 FCFA", note: 3.8, image: "https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?w=600&q=80" },
 
-  // ── ADIAKE ────────────────────────────────────────────────────
+  // ── ADIAKE ──────────────────────────────────────────────────────────────────
   { ville: "adiake", categorie: "hotels", nom: "Hôtel Lagune Aby", description: "Hôtel au bord de la lagune Aby, pêche et balades en pirogue.", adresse: "Adiaké", telephone: "+22527251234", prix: "À partir de 18 000 FCFA/nuit", note: 3.8, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80" },
   { ville: "adiake", categorie: "plages", nom: "Plage d'Adiaké", description: "Plage tranquille sur la lagune Aby, idéale pour la pêche artisanale.", adresse: "Adiaké", telephone: "", prix: "Entrée libre", note: 4.0, image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80" },
   { ville: "adiake", categorie: "sites", nom: "Villages Lacustres d'Adiaké", description: "Villages traditionnels construits sur pilotis au-dessus de la lagune Aby.", adresse: "Adiaké", telephone: "", prix: "Visite guidée à partir de 3 000 FCFA", note: 4.6, image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80" },
@@ -105,9 +105,14 @@ const SEED_DATA = [
 
 // POST /api/admin/seed-villes — Seed initial des contenus par ville (admin uniquement)
 export async function POST() {
-  try { await requireAdmin(); } catch { return forbidden(); }
+  try { 
+    await requireAdmin(); 
+  } catch { 
+    return forbidden(); 
+  }
+  
   try {
-    // Vérifier si déjà seedé
+    // ✅ CORRIGÉ : Utilisation du modèle singulier 'villeContenu'
     const count = await prisma.villeContenu.count();
     if (count > 0) {
       return ok({ message: `Déjà seedé (${count} entrées existantes). Supprimez d'abord les données pour re-seeder.` });

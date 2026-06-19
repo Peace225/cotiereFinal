@@ -11,7 +11,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const body = await req.json();
-    const support = await prisma.mediaSupport.update({ where: { id }, data: body });
+    // ✅ CORRECTION : Utilisation de media_supports
+    const support = await prisma.media_supports.update({ where: { id }, data: body });
     return ok(support);
   } catch (e) {
     return serverError(e);
@@ -23,9 +24,12 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params;
-    const support = await prisma.mediaSupport.findUnique({ where: { id } });
+    // ✅ CORRECTION : Utilisation de media_supports
+    const support = await prisma.media_supports.findUnique({ where: { id } });
     if (!support) return notFound("Support introuvable");
-    await prisma.mediaSupport.update({ where: { id }, data: { isActive: false } });
+    
+    // ✅ CORRECTION : Utilisation de media_supports
+    await prisma.media_supports.update({ where: { id }, data: { isActive: false } });
     return ok({ message: "Support supprimé" });
   } catch (e) {
     return serverError(e);

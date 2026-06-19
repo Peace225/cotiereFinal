@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { MapPin, Heart, Check, Map, ChevronDown, Utensils, Camera, Music, Hotel, Home, Building2, Palmtree, Star } from "lucide-react";
+import { MapPin, Heart, Check, Map, ChevronDown, Utensils, Camera, Music, Hotel, Home, Building2, Palmtree } from "lucide-react";
 
 export const dynamic = 'force-dynamic';
 
@@ -30,20 +30,27 @@ export default async function DestinationPage({ params, searchParams }: { params
 
   const searchTerm = city.nom.replace('-', ' ');
 
-  const rooms = await prisma.room.findMany({
-    where: { OR: [{ city: { contains: searchTerm, mode: 'insensitive' } }, { quartier: { contains: searchTerm, mode: 'insensitive' } }] }
+  // Utilisation de prisma.rooms pointant vers votre modèle Prisma pluriel exact
+  const rooms = await prisma.rooms.findMany({
+    where: { 
+      OR: [
+        { city: { contains: searchTerm, mode: 'insensitive' } }, 
+        { quartier: { contains: searchTerm, mode: 'insensitive' } }
+      ] 
+    }
   });
 
+  // ✅ CORRIGÉ : Utilisation du modèle singulier 'villeContenu' au lieu de 'ville_contenus'
   const autresLieux = await prisma.villeContenu.findMany({
     where: { ville: { contains: searchTerm, mode: 'insensitive' } }
   });
 
   const normalizedRooms = rooms.map(room => ({
-    id: room.id, name: room.name, category: 'hebergement', typeLabel: room.type || 'Hébergement',
-    image: (room.images && room.images.length > 0)? room.images[0] : "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800",
-    location: room.quartier || room.city || city.nom, rating: room.rating || 8.5,
-    price: room.pricePerNight? `XOF ${room.pricePerNight.toLocaleString()}` : 'Sur demande',
-    priceContext: '1 nuit, 2 adultes', link: `/services/hotel/${room.slug || room.id}`,
+    id: room.id, name: room.name, category: 'hebergement', typeLabel: (room as any).type || 'Hébergement',
+    image: (room.images && (room.images as string[]).length > 0) ? (room.images as string[])[0] : "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=800",
+    location: (room as any).quartier || (room as any).city || city.nom, rating: (room as any).rating || 8.5,
+    price: (room as any).pricePerNight ? `XOF ${(room as any).pricePerNight.toLocaleString()}` : 'Sur demande',
+    priceContext: '1 nuit, 2 adultes', link: `/services/hotel/${(room as any).slug || room.id}`,
     features: ['Annulation gratuite', 'Petit-déjeuner inclus']
   }));
 
@@ -56,8 +63,8 @@ export default async function DestinationPage({ params, searchParams }: { params
     features: [lieu.description?.substring(0, 50) || 'Lieu incontournable']
   }));
 
-  const allItems = [...normalizedRooms,...normalizedAutres];
-  const displayedItems = type === 'tout'? allItems : allItems.filter(item => item.category === type);
+  const allItems = [...normalizedRooms, ...normalizedAutres];
+  const displayedItems = type === 'tout' ? allItems : allItems.filter(item => item.category === type);
 
   const counts = {
     tout: allItems.length,
@@ -102,10 +109,10 @@ export default async function DestinationPage({ params, searchParams }: { params
             const Icon = cat.icon;
             return (
               <Link key={cat.id} href={`/destinations/${slug}?type=${cat.id}`}
-                className={`flex items-center gap-2 py-4 border-b-2 whitespace-nowrap transition ${active? 'border-[#003580] text-[#003580]' : 'border-transparent text-gray-600 hover:text-black'}`}>
+                className={`flex items-center gap-2 py-4 border-b-2 whitespace-nowrap transition ${active ? 'border-[#003580] text-[#003580]' : 'border-transparent text-gray-600 hover:text-black'}`}>
                 <Icon className="w-4 h-4" />
                 <span className="font-medium text-sm">{cat.label}</span>
-                <span className={`text-xs px-1.5 py-0.5 rounded ${active? 'bg-[#003580]/10 text-[#003580]' : 'bg-gray-100'}`}>{cat.count}</span>
+                <span className={`text-xs px-1.5 py-0.5 rounded ${active ? 'bg-[#003580]/10 text-[#003580]' : 'bg-gray-100'}`}>{cat.count}</span>
               </Link>
             )
           })}
@@ -194,7 +201,7 @@ export default async function DestinationPage({ params, searchParams }: { params
                     </div>
 
                     <div className="mt-4 space-y-1.5">
-                      {item.features.slice(0,2).map((f, i) => (
+                      {item.features.slice(0, 2).map((f, i) => (
                         <div key={i} className="flex items-center gap-2 text-sm text-[#008009]">
                           <Check className="w-4 h-4" /> <span className="font-medium">{f}</span>
                         </div>
@@ -203,7 +210,7 @@ export default async function DestinationPage({ params, searchParams }: { params
                   </div>
                 </div>
 
-                {/* PRIX - colonne droite style Booking */}
+                {/* PRIX - colonne droite */}
                 <div className="md:w-[220px] p-5 border-t md:border-t-0 md:border-l border-gray-100 flex flex-col justify-between bg-[#fbfcff]">
                   <div className="text-right">
                     <div className="text-xs text-gray-500">{item.priceContext}</div>
@@ -222,7 +229,7 @@ export default async function DestinationPage({ params, searchParams }: { params
           </div>
 
           {displayedItems.length === 0 && (
-            <div className="bg-white rounded-2xl border p-12 text-center">
+            <div className="bg-white rounded-2xl border border-gray-200 p-12 text-center shadow-sm">
               <p className="text-gray-600">Aucun résultat pour ce filtre.</p>
             </div>
           )}

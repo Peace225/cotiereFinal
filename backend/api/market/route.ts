@@ -22,11 +22,11 @@ export async function GET(req: NextRequest) {
 }
 
 export async function POST(req: NextRequest) {
-  // Sécurité : Vérification via votre fonction Supabase
+  // SÃ©curitÃ© : VÃ©rification via votre fonction Supabase
   try {
     await requireAdmin();
   } catch {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+    return NextResponse.json({ error: "Non autorisÃ©" }, { status: 401 });
   }
 
   try {
@@ -54,3 +54,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+

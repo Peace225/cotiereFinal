@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 
-// Force le rendu dynamique pour éviter les erreurs de génération statique au build
+// Force le rendu dynamique pour Ã©viter les erreurs de gÃ©nÃ©ration statique au build
 export const dynamic = 'force-dynamic';
 
 type DbSupport = {
@@ -11,16 +11,16 @@ type DbSupport = {
 };
 
 const packs = [
-  { label: "Pack Starter", price: "75 000 FCFA", desc: "Idéal pour les petits commerces et artisans", included: ["1 spot radio (30s) × 10 passages", "1 post sponsorisé Facebook/Instagram", "Conception du visuel incluse"], featured: false },
-  { label: "Pack Visibilité", price: "200 000 FCFA", desc: "Pour les PME et commerçants du littoral", included: ["1 spot TV (30s) × 5 passages", "1 spot radio × 20 passages", "Campagne réseaux sociaux 7 jours", "SMS marketing 500 contacts", "Conception complète incluse"], featured: true },
-  { label: "Pack Premium", price: "Sur devis", desc: "Pour les grandes entreprises et institutions", included: ["Campagne multi-supports illimitée", "Spot TV + Radio + Web", "Affichage physique", "Reporting mensuel", "Accompagnement stratégique"], featured: false },
+  { label: "Pack Starter", price: "75 000 FCFA", desc: "IdÃ©al pour les petits commerces et artisans", included: ["1 spot radio (30s) Ã— 10 passages", "1 post sponsorisÃ© Facebook/Instagram", "Conception du visuel incluse"], featured: false },
+  { label: "Pack VisibilitÃ©", price: "200 000 FCFA", desc: "Pour les PME et commerÃ§ants du littoral", included: ["1 spot TV (30s) Ã— 5 passages", "1 spot radio Ã— 20 passages", "Campagne rÃ©seaux sociaux 7 jours", "SMS marketing 500 contacts", "Conception complÃ¨te incluse"], featured: true },
+  { label: "Pack Premium", price: "Sur devis", desc: "Pour les grandes entreprises et institutions", included: ["Campagne multi-supports illimitÃ©e", "Spot TV + Radio + Web", "Affichage physique", "Reporting mensuel", "Accompagnement stratÃ©gique"], featured: false },
 ];
 
 const etapes = [
-  { num: "01", title: "Contactez-nous", desc: "Décrivez votre activité et vos objectifs de visibilité." },
-  { num: "02", title: "Devis personnalisé", desc: "Nous vous proposons un plan de communication adapté à votre budget." },
-  { num: "03", title: "Création des supports", desc: "Notre équipe crée vos visuels, spots et contenus publicitaires." },
-  { num: "04", title: "Diffusion & suivi", desc: "Vos publicités sont diffusées et nous vous envoyons un rapport." },
+  { num: "01", title: "Contactez-nous", desc: "DÃ©crivez votre activitÃ© et vos objectifs de visibilitÃ©." },
+  { num: "02", title: "Devis personnalisÃ©", desc: "Nous vous proposons un plan de communication adaptÃ© Ã  votre budget." },
+  { num: "03", title: "CrÃ©ation des supports", desc: "Notre Ã©quipe crÃ©e vos visuels, spots et contenus publicitaires." },
+  { num: "04", title: "Diffusion & suivi", desc: "Vos publicitÃ©s sont diffusÃ©es et nous vous envoyons un rapport." },
 ];
 
 export default function AfroubaPage() {
@@ -60,9 +60,9 @@ export default function AfroubaPage() {
     try {
       await fetch("/api/afrouba", {
         method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ clientFirstName: form.firstName, clientLastName: form.lastName, clientPhone: form.phone, clientEmail: form.email, documentType: form.support, description: `Budget: ${form.budget || "Non précisé"} | ${form.description}` }),
+        body: JSON.stringify({ clientFirstName: form.firstName, clientLastName: form.lastName, clientPhone: form.phone, clientEmail: form.email, documentType: form.support, description: `Budget: ${form.budget || "Non prÃ©cisÃ©"} | ${form.description}` }),
       });
-      const msg = encodeURIComponent(`DEMANDE PUBLICITÉ — ${form.support}\nClient: ${form.firstName} ${form.lastName}\nTel: ${form.phone}`);
+      const msg = encodeURIComponent(`DEMANDE PUBLICITÃ‰ â€” ${form.support}\nClient: ${form.firstName} ${form.lastName}\nTel: ${form.phone}`);
       if (typeof window !== "undefined") window.open(`https://wa.me/2250747722931?text=${msg}`, "_blank");
       setSent(true);
     } catch {}
@@ -72,8 +72,8 @@ export default function AfroubaPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <section className="bg-[#0c4a6e] text-white py-20 px-4 text-center">
-        <h1 className="text-4xl font-bold mb-4">Tout Le Monde A Droit À La Pub</h1>
-        <p className="max-w-2xl mx-auto text-lg opacity-90">TV, Radio, Web, SMS et Affichage pour booster votre visibilité sur le littoral.</p>
+        <h1 className="text-4xl font-bold mb-4">Tout Le Monde A Droit Ã€ La Pub</h1>
+        <p className="max-w-2xl mx-auto text-lg opacity-90">TV, Radio, Web, SMS et Affichage pour booster votre visibilitÃ© sur le littoral.</p>
       </section>
 
       <div className="max-w-7xl mx-auto py-16 px-4">
@@ -107,3 +107,4 @@ export default function AfroubaPage() {
     </div>
   );
 }
+

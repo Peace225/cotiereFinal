@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
     },
   })
 
-  // Création du client Supabase pour le middleware
+  // CrÃ©ation du client Supabase pour le middleware
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -29,12 +29,12 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // Récupération de la session utilisateur
+  // RÃ©cupÃ©ration de la session utilisateur
   const { data: { user } } = await supabase.auth.getUser()
 
   // Protection des routes admin
   if (request.nextUrl.pathname.startsWith("/admin")) {
-    // 1. Si non connecté, redirection vers la page de connexion
+    // 1. Si non connectÃ©, redirection vers la page de connexion
     if (!user) {
       const url = request.nextUrl.clone()
       url.pathname = '/connexion'
@@ -42,7 +42,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
-    // 2. Vérification du rôle dans votre table 'users'
+    // 2. VÃ©rification du rÃ´le dans votre table 'users'
     const { data: profile } = await supabase
       .from('users')
       .select('role')
@@ -51,7 +51,7 @@ export async function middleware(request: NextRequest) {
 
     const role = profile?.role
 
-    // 3. Si l'utilisateur n'est pas ADMIN ou SUPER_ADMIN, accès refusé
+    // 3. Si l'utilisateur n'est pas ADMIN ou SUPER_ADMIN, accÃ¨s refusÃ©
     if (role !== "ADMIN" && role !== "SUPER_ADMIN") {
       return NextResponse.redirect(new URL("/?error=forbidden", request.url))
     }
@@ -63,3 +63,4 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: ["/admin/:path*"],
 }
+

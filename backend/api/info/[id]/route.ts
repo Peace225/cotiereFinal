@@ -11,7 +11,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const body = await req.json();
-    const prestation = await prisma.infoPrestation.update({ where: { id }, data: body });
+    // ✅ CORRIGÉ : info_prestation -> info_prestations
+    const prestation = await prisma.info_prestations.update({ where: { id }, data: body });
     return ok(prestation);
   } catch (e) {
     return serverError(e);
@@ -23,9 +24,12 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params;
-    const prestation = await prisma.infoPrestation.findUnique({ where: { id } });
+    // ✅ CORRIGÉ : info_prestation -> info_prestations
+    const prestation = await prisma.info_prestations.findUnique({ where: { id } });
     if (!prestation) return notFound("Prestation introuvable");
-    await prisma.infoPrestation.update({ where: { id }, data: { isActive: false } });
+    
+    // ✅ CORRIGÉ : info_prestation -> info_prestations
+    await prisma.info_prestations.update({ where: { id }, data: { isActive: false } });
     return ok({ message: "Prestation supprimée" });
   } catch (e) {
     return serverError(e);

@@ -13,7 +13,7 @@ const ALLOWED_DOC_TYPES = [
 ];
 const ALLOWED_TYPES = [...ALLOWED_IMAGE_TYPES, ...ALLOWED_DOC_TYPES];
 
-// Upload vers Cloudinary si configuré (images uniquement), sinon stockage local
+// Upload vers Cloudinary si configurÃ© (images uniquement), sinon stockage local
 async function uploadFile(file: File): Promise<string> {
   const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
   const apiKey = process.env.CLOUDINARY_API_KEY;
@@ -59,7 +59,7 @@ async function uploadFile(file: File): Promise<string> {
 // POST /api/upload
 export async function POST(req: NextRequest) {
   try {
-    // Vérifier l'authentification
+    // VÃ©rifier l'authentification
     const session = await getSession();
     if (!session) return unauthorized();
 
@@ -67,14 +67,14 @@ export async function POST(req: NextRequest) {
     const files = formData.getAll("files") as File[];
 
     if (!files || files.length === 0) return badRequest("Aucun fichier fourni");
-    if (files.length > 10) return badRequest("Maximum 10 fichiers à la fois");
+    if (files.length > 10) return badRequest("Maximum 10 fichiers Ã  la fois");
 
     const urls: string[] = [];
     const errors: string[] = [];
 
     for (const file of files) {
       if (!ALLOWED_TYPES.includes(file.type)) {
-        errors.push(`${file.name} : format non supporté (JPG, PNG, WEBP, PDF, DOC, DOCX)`);
+        errors.push(`${file.name} : format non supportÃ© (JPG, PNG, WEBP, PDF, DOC, DOCX)`);
         continue;
       }
       if (file.size > MAX_SIZE) {
@@ -95,3 +95,5 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+
+

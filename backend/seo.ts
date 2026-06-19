@@ -32,3 +32,5 @@ export function buildMeta(opts: {
     alternates: { canonical: url },
   };
 }
+
+

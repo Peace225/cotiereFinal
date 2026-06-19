@@ -29,7 +29,7 @@ export default function MotDePasseOubliePage() {
         setSent(true);
       }
     } catch {
-      setError("Erreur de connexion. Veuillez réessayer.");
+      setError("Erreur de connexion. Veuillez rÃ©essayer.");
     }
 
     setLoading(false);
@@ -41,7 +41,7 @@ export default function MotDePasseOubliePage() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <Link href="/" className="inline-block">
-              <span className="text-[#c9a84c] font-black text-2xl">CÔTIÈRE</span>
+              <span className="text-[#c9a84c] font-black text-2xl">CÃ”TIÃˆRE</span>
               <span className="text-[#0c4a6e] font-light text-sm ml-1">MEDIA GROUP</span>
             </Link>
           </div>
@@ -50,15 +50,15 @@ export default function MotDePasseOubliePage() {
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <CheckCircle size={32} className="text-green-600" />
             </div>
-            <h1 className="text-2xl font-bold text-[#0c4a6e] mb-2">Email envoyé !</h1>
+            <h1 className="text-2xl font-bold text-[#0c4a6e] mb-2">Email envoyÃ© !</h1>
             <p className="text-gray-600 text-sm mb-6">
-              Si un compte existe avec l'adresse <strong>{email}</strong>, vous recevrez un email avec les instructions pour réinitialiser votre mot de passe.
+              Si un compte existe avec l'adresse <strong>{email}</strong>, vous recevrez un email avec les instructions pour rÃ©initialiser votre mot de passe.
             </p>
             <Link
               href="/connexion"
               className="inline-flex items-center gap-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white font-bold py-3 px-6 rounded-xl transition-colors"
             >
-              Retour à la connexion
+              Retour Ã  la connexion
               <ArrowRight size={16} />
             </Link>
           </div>
@@ -72,12 +72,12 @@ export default function MotDePasseOubliePage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <span className="text-[#c9a84c] font-black text-2xl">CÔTIÈRE</span>
+            <span className="text-[#c9a84c] font-black text-2xl">CÃ”TIÃˆRE</span>
             <span className="text-[#0c4a6e] font-light text-sm ml-1">MEDIA GROUP</span>
           </Link>
-          <h1 className="text-2xl font-bold text-[#0c4a6e] mt-4">Mot de passe oublié</h1>
+          <h1 className="text-2xl font-bold text-[#0c4a6e] mt-4">Mot de passe oubliÃ©</h1>
           <p className="text-gray-500 text-sm mt-1">
-            Entrez votre email pour recevoir un lien de réinitialisation
+            Entrez votre email pour recevoir un lien de rÃ©initialisation
           </p>
         </div>
 
@@ -130,7 +130,7 @@ export default function MotDePasseOubliePage() {
               href="/connexion"
               className="text-sm text-[#38bdf8] hover:underline font-medium"
             >
-              ← Retour à la connexion
+              â† Retour Ã  la connexion
             </Link>
           </div>
         </div>
@@ -138,3 +138,5 @@ export default function MotDePasseOubliePage() {
     </div>
   );
 }
+
+

@@ -18,7 +18,7 @@ const roomSchema = z.object({
 // GET /api/rooms — Liste des chambres actives
 export async function GET() {
   try {
-    const rooms = await prisma.room.findMany({
+    const rooms = await prisma.rooms.findMany({
       where: { isActive: true },
       orderBy: { pricePerNight: "asc" },
     });
@@ -39,11 +39,18 @@ export async function POST(req: NextRequest) {
     const d = parsed.data;
     const slug = d.slug || d.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "") + "-" + Date.now();
 
-    const room = await prisma.room.create({
-      data: { ...d, slug },
+    // ✅ CORRECTION : Injection automatique de l'id et de la date updatedAt (requis par le schéma Prisma)
+    const room = await prisma.rooms.create({
+      data: { 
+        ...d, 
+        id: crypto.randomUUID(),
+        updatedAt: new Date(),
+        slug 
+      },
     });
     return created(room);
   } catch (e) {
     return serverError(e);
   }
 }
+

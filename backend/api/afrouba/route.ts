@@ -13,7 +13,7 @@ const schema = z.object({
   description: z.string().optional(),
 });
 
-// GET est protégé : seuls les admins peuvent consulter la liste des demandes
+// GET est protÃ©gÃ© : seuls les admins peuvent consulter la liste des demandes
 export async function GET() {
   try {
     await requireAdmin();
@@ -22,7 +22,7 @@ export async function GET() {
   }
 
   try {
-    const requests = await prisma.afroubaRequest.findMany({ orderBy: { createdAt: "desc" } });
+    const requests = await prisma.afrouba_requests.findMany({ orderBy: { createdAt: "desc" } });
     return ok({ requests });
   } catch (e) { return serverError(e); }
 }
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
     
     const d = parsed.data;
-    const request = await prisma.afroubaRequest.create({
+    const request = await prisma.afrouba_requests.create({
       data: {
         reference: `AFR-${Date.now().toString(36).toUpperCase()}`,
         clientFirstName: d.clientFirstName,
@@ -50,3 +50,4 @@ export async function POST(req: NextRequest) {
     return created(request);
   } catch (e) { return serverError(e); }
 }
+

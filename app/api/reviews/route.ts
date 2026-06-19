@@ -9,7 +9,7 @@ const schema = z.object({
   serviceType: z.string().min(2),
   rating: z.number().int().min(1).max(5),
   comment: z.string().max(500).optional(),
-  // Pour les non-connectés
+  // Pour les non-connectÃ©s
   guestName: z.string().optional(),
 });
 
@@ -50,9 +50,11 @@ export async function POST(req: NextRequest) {
         serviceType: parsed.data.serviceType,
         rating: parsed.data.rating,
         comment: parsed.data.comment,
-        isApproved: false, // modération admin requise
+        isApproved: false, // modÃ©ration admin requise
       },
     });
     return created(review);
   } catch (e) { return serverError(e); }
 }
+
+

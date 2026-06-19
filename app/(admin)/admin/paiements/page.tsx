@@ -69,7 +69,7 @@ export default function AdminPaiementsPage() {
           {[
             { label: "Total paiements", value: payments.length, color: "text-blue-500", bg: "bg-blue-50", icon: ListChecks, filterVal: "ALL" },
             { label: "En attente", value: pending, color: "text-yellow-500", bg: "bg-yellow-50", icon: Clock, filterVal: "UNPAID" },
-            { label: "CA confirmé", value: totalPaid > 0 ? totalPaid.toLocaleString("fr-FR") + " FCFA" : "0 FCFA", color: "text-green-500", bg: "bg-green-50", icon: CheckCircle, filterVal: "PAID" },
+            { label: "CA confirmÃ©", value: totalPaid > 0 ? totalPaid.toLocaleString("fr-FR") + " FCFA" : "0 FCFA", color: "text-green-500", bg: "bg-green-50", icon: CheckCircle, filterVal: "PAID" },
           ].map(s => {
             const isActive = filter === s.filterVal;
             const Icon = s.icon;
@@ -109,18 +109,18 @@ export default function AdminPaiementsPage() {
                 reference: p.reference ?? p.id,
                 montant: p.amount.toLocaleString("fr-FR") + " FCFA",
                 methode: METHOD_LABELS[p.method] ?? p.method,
-                numero: p.phoneNumber ?? "—",
+                numero: p.phoneNumber ?? "â€”",
                 statut: STATUS_LABELS[p.status] ?? p.status,
                 date: new Date(p.createdAt).toLocaleDateString("fr-FR"),
-                date_paiement: p.paidAt ? new Date(p.paidAt).toLocaleDateString("fr-FR") : "—",
+                date_paiement: p.paidAt ? new Date(p.paidAt).toLocaleDateString("fr-FR") : "â€”",
               }))}
               columns={[
-                { key: "reference", label: "Référence" },
+                { key: "reference", label: "RÃ©fÃ©rence" },
                 { key: "montant", label: "Montant" },
-                { key: "methode", label: "Méthode" },
-                { key: "numero", label: "Numéro" },
+                { key: "methode", label: "MÃ©thode" },
+                { key: "numero", label: "NumÃ©ro" },
                 { key: "statut", label: "Statut" },
-                { key: "date", label: "Date création" },
+                { key: "date", label: "Date crÃ©ation" },
                 { key: "date_paiement", label: "Date paiement" },
               ]}
               filename={"paiements-" + new Date().toISOString().split("T")[0]}
@@ -150,7 +150,7 @@ export default function AdminPaiementsPage() {
                       <td className="px-4 py-3 font-mono text-xs text-gray-400">{p.reference}</td>
                       <td className="px-4 py-3 font-bold text-[#0c4a6e]">{p.amount.toLocaleString("fr-FR")} FCFA</td>
                       <td className="px-4 py-3 text-gray-600 text-xs">{METHOD_LABELS[p.method] ?? p.method}</td>
-                      <td className="px-4 py-3 text-gray-600 text-xs">{p.phoneNumber ?? "—"}</td>
+                      <td className="px-4 py-3 text-gray-600 text-xs">{p.phoneNumber ?? "â€”"}</td>
                       <td className="px-4 py-3">
                         <span className={`text-xs px-2.5 py-1 rounded-full font-semibold ${STATUS_COLORS[p.status]}`}>
                           {STATUS_LABELS[p.status]}
@@ -184,3 +184,5 @@ export default function AdminPaiementsPage() {
     </div>
   );
 }
+
+

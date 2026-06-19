@@ -39,7 +39,8 @@ export async function GET(req: NextRequest) {
       date: { gte: startDate, lte: endDate },
     };
 
-    const blocked = await prisma.blockedDate.findMany({ where });
+    // ✅ CORRIGÉ : Remplacement de 'blockedDate' par 'blocked_dates'
+    const blocked = await prisma.blocked_dates.findMany({ where });
     return ok(blocked);
   } catch (e) {
     return serverError(e);
@@ -59,7 +60,8 @@ export async function POST(req: NextRequest) {
     const parsed = blockSchema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
 
-    const blocked = await prisma.blockedDate.create({
+    // ✅ CORRIGÉ : Remplacement de 'blockedDate' par 'blocked_dates'
+    const blocked = await prisma.blocked_dates.create({
       data: { ...parsed.data, date: new Date(parsed.data.date) },
     });
 
@@ -82,7 +84,8 @@ export async function DELETE(req: NextRequest) {
     const id = searchParams.get("id");
     if (!id) return badRequest("ID requis");
 
-    await prisma.blockedDate.delete({ where: { id } });
+    // ✅ CORRIGÉ : Remplacement de 'blockedDate' par 'blocked_dates'
+    await prisma.blocked_dates.delete({ where: { id } });
     return ok({ message: "Date débloquée" });
   } catch (e) {
     return serverError(e);

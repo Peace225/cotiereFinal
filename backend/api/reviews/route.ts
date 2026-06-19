@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, created, badRequest, forbidden, serverError } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutÃ©e
 import { z } from "zod";
 
 const schema = z.object({
@@ -11,14 +11,14 @@ const schema = z.object({
   comment: z.string().max(500).optional(),
 });
 
-// GET /api/reviews — Catalogue public (ou liste complète pour admin)
+// GET /api/reviews â€” Catalogue public (ou liste complÃ¨te pour admin)
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const excursionId = searchParams.get("excursionId");
   const serviceType = searchParams.get("serviceType");
   const all = searchParams.get("all") === "true";
 
-  // Sécurisation : Seul un admin peut voir les avis non approuvés
+  // SÃ©curisation : Seul un admin peut voir les avis non approuvÃ©s
   if (all) {
     try { await requireAdmin(); } catch { return forbidden(); }
   }
@@ -37,14 +37,14 @@ export async function GET(req: NextRequest) {
   } catch (e) { return serverError(e); }
 }
 
-// POST /api/reviews — Soumission d'un avis
+// POST /api/reviews â€” Soumission d'un avis
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const parsed = schema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
 
-    // Note : On retire la dépendance à getSession() pour éviter le build error
+    // Note : On retire la dÃ©pendance Ã  getSession() pour Ã©viter le build error
     // Si votre frontend envoie l'ID utilisateur dans le corps, utilisez-le
     const userId = body.userId; 
     if (!userId) return badRequest("ID utilisateur requis");
@@ -62,3 +62,4 @@ export async function POST(req: NextRequest) {
     return created(review);
   } catch (e) { return serverError(e); }
 }
+

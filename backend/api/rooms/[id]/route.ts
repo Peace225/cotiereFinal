@@ -28,7 +28,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     const parsed = updateSchema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
 
-    const room = await prisma.room.update({ where: { id }, data: parsed.data });
+    const room = await prisma.rooms.update({ where: { id }, data: parsed.data });
     return ok(room);
   } catch (e) {
     return serverError(e);
@@ -42,7 +42,7 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params;
-    await prisma.room.update({ where: { id }, data: { isActive: false } });
+    await prisma.rooms.update({ where: { id }, data: { isActive: false } });
     return ok({ message: "Chambre désactivée" });
   } catch (e) {
     return serverError(e);

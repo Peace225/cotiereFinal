@@ -38,20 +38,26 @@ export async function POST(req: NextRequest) {
     const d = parsed.data;
     const ref = `PAY-${Date.now().toString(36).toUpperCase()}`;
 
-    // Créer le paiement en base avec statut UNPAID (en attente de confirmation manuelle)
+    // âœ… CORRECTION : Nettoyage des champs undefined pour satisfaire le typage strict de Prisma, 
+    // et injection des champs id et updatedAt obligatoires.
+    const paymentData: any = {
+      id: crypto.randomUUID(),
+      updatedAt: new Date(),
+      reference: ref,
+      amount: d.amount,
+      method: d.method,
+      status: "UNPAID",
+    };
+
+    if (d.phoneNumber) paymentData.phoneNumber = d.phoneNumber;
+    if (d.studioBookingId) paymentData.studioBookingId = d.studioBookingId;
+    if (d.excursionBookingId) paymentData.excursionBookingId = d.excursionBookingId;
+    if (d.eventRequestId) paymentData.eventRequestId = d.eventRequestId;
+    if (d.hotelBookingId) paymentData.hotelBookingId = d.hotelBookingId;
+    if (d.musicBookingId) paymentData.musicBookingId = d.musicBookingId;
+
     const payment = await prisma.payment.create({
-      data: {
-        reference: ref,
-        amount: d.amount,
-        method: d.method,
-        status: "UNPAID",
-        phoneNumber: d.phoneNumber,
-        studioBookingId: d.studioBookingId,
-        excursionBookingId: d.excursionBookingId,
-        eventRequestId: d.eventRequestId,
-        hotelBookingId: d.hotelBookingId,
-        musicBookingId: d.musicBookingId,
-      },
+      data: paymentData,
     });
 
     // Construire le message WhatsApp pour l'admin
@@ -65,7 +71,7 @@ export async function POST(req: NextRequest) {
       (d.phoneNumber ? `Numero paiement: ${d.phoneNumber}\n` : "") +
       `\nReference: ${ref}\n` +
       `\nVeuillez confirmer la reception du paiement dans l admin.\n` +
-      `CÔTIÈRE MEDIA GROUP`
+      `CÃ”TIÃˆRE MEDIA GROUP`
     );
 
     return created({
@@ -80,7 +86,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/payments — Liste (admin)
+// GET /api/payments â€” Liste (admin)
 export async function GET() {
   try { await requireAdmin(); } catch { return forbidden(); }
   try {

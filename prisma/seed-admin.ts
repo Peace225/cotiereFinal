@@ -9,7 +9,7 @@ async function main() {
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    console.log("Compte admin déjà existant :", email);
+    console.log("Compte admin dÃ©jÃ  existant :", email);
     return;
   }
 
@@ -25,12 +25,14 @@ async function main() {
     },
   });
 
-  console.log("✅ Compte admin créé :");
+  console.log("âœ… Compte admin crÃ©Ã© :");
   console.log("   Email    :", admin.email);
   console.log("   Mot de passe :", password);
-  console.log("   Rôle     :", admin.role);
+  console.log("   RÃ´le     :", admin.role);
 }
 
 main()
   .catch(console.error)
   .finally(() => prisma.$disconnect());
+
+

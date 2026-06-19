@@ -11,19 +11,12 @@ const blockSchema = z.object({
   reason: z.string().optional(),
 });
 
-// GET /api/admin/calendar?service=studio&month=2026-04
 export async function GET(req: NextRequest) {
-  try {
-    await requireAdmin();
-  } catch {
-    return forbidden();
-  }
-
+  try { await requireAdmin(); } catch { return forbidden(); }
   try {
     const { searchParams } = new URL(req.url);
     const service = searchParams.get("service");
     const month = searchParams.get("month");
-
     let startDate: Date, endDate: Date;
     if (month) {
       const [year, m] = month.split("-").map(Number);
@@ -33,58 +26,43 @@ export async function GET(req: NextRequest) {
       startDate = new Date();
       endDate = new Date(new Date().setMonth(new Date().getMonth() + 1));
     }
-
-    const where = {
-      ...(service ? { serviceType: service } : {}),
+    const where: any = {
+     ...(service? { serviceType: service } : {}),
       date: { gte: startDate, lte: endDate },
     };
-
-    const blocked = await prisma.blockedDate.findMany({ where });
+    const blocked = await prisma.blocked_dates.findMany({ where });
     return ok(blocked);
-  } catch (e) {
-    return serverError(e);
-  }
+  } catch (e) { return serverError(e); }
 }
 
-// POST /api/admin/calendar — Bloquer une date
 export async function POST(req: NextRequest) {
-  try {
-    await requireAdmin();
-  } catch {
-    return forbidden();
-  }
-
+  try { await requireAdmin(); } catch { return forbidden(); }
   try {
     const body = await req.json();
     const parsed = blockSchema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
-
-    const blocked = await prisma.blockedDate.create({
-      data: { ...parsed.data, date: new Date(parsed.data.date) },
+    const blocked = await prisma.blocked_dates.create({
+      data: {
+        id: crypto.randomUUID(),
+        serviceType: parsed.data.serviceType,
+        serviceId: parsed.data.serviceId,
+        date: new Date(parsed.data.date),
+        reason: parsed.data.reason,
+      },
     });
-
     return ok(blocked);
-  } catch (e) {
-    return serverError(e);
-  }
+  } catch (e) { return serverError(e); }
 }
 
-// DELETE /api/admin/calendar?id=xxx — Débloquer une date
 export async function DELETE(req: NextRequest) {
-  try {
-    await requireAdmin();
-  } catch {
-    return forbidden();
-  }
-
+  try { await requireAdmin(); } catch { return forbidden(); }
   try {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
     if (!id) return badRequest("ID requis");
-
-    await prisma.blockedDate.delete({ where: { id } });
+    await prisma.blocked_dates.delete({ where: { id } });
     return ok({ message: "Date débloquée" });
-  } catch (e) {
-    return serverError(e);
-  }
+  } catch (e) { return serverError(e); }
 }
+
+

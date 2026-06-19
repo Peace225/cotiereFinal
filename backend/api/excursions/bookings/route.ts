@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { excursionBookingSchema } from "@/lib/validations";
 import { generateReference } from "@/lib/reference";
 import { created, badRequest, ok, serverError, forbidden } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
+import { requireAdmin } from "@/lib/auth";
 import { sendExcursionBookingConfirmation, sendExcursionBookingAdminNotif } from "@/lib/email";
 
 // POST /api/excursions/bookings — Réserver une excursion (Public)
@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     const data = parsed.data;
 
     // Vérifier disponibilité
-    const availability = await prisma.excursionAvailability.findUnique({
+    const availability = await prisma.excursion_availability.findUnique({
       where: {
         excursionId_date_timeSlot: {
           excursionId: data.excursionId,
@@ -36,9 +36,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Récupérer les tarifs
-    const excursion = await prisma.excursion.findUnique({
+    const excursion = await prisma.excursions.findUnique({
       where: { id: data.excursionId },
-      include: { options: true },
+      include: { excursion_options: true },
     });
     if (!excursion) return badRequest("Excursion introuvable");
 
@@ -82,7 +82,8 @@ export async function POST(req: NextRequest) {
       });
 
       if (availability) {
-        await tx.excursionAvailability.update({
+        // ✅ CORRIGÉ : Remplacement de tx.excursionAvailability par tx.excursion_availability
+        await tx.excursion_availability.update({
           where: { id: availability.id },
           data: { bookedSlots: { increment: totalParticipants } },
         });
@@ -103,7 +104,6 @@ export async function POST(req: NextRequest) {
 
 // GET /api/excursions/bookings — Liste (Admin uniquement)
 export async function GET(req: NextRequest) {
-  // Sécurisation : Seuls les admins peuvent accéder à la liste des réservations
   try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
@@ -117,7 +117,7 @@ export async function GET(req: NextRequest) {
     const [bookings, total] = await Promise.all([
       prisma.excursionBooking.findMany({
         where,
-        include: { excursion: { select: { title: true } } },
+        include: { excursions: { select: { title: true } } },
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,
         take: limit,

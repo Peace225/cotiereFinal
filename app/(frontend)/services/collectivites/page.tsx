@@ -7,19 +7,19 @@ export const dynamic = 'force-dynamic';
 
 // --- Constantes ---
 const COLLECTIVITES = [
-  { nom: "Mairie d'Abidjan (Plateau)", type: "mairie", ville: "Abidjan", region: "Lagunes", telephone: "+22527213000", adresse: "Avenue Terrasson", horaires: "Lun–Ven 7h30–16h30" },
-  { nom: "Mairie de Grand-Bassam", type: "mairie", ville: "Grand-Bassam", region: "Sud-Comoé", telephone: "+22527301000", adresse: "Quartier France", horaires: "Lun–Ven 7h30–16h30" },
-  { nom: "Conseil Régional du Sud-Comoé", type: "conseil", ville: "Aboisso", region: "Sud-Comoé", telephone: "+22527200100", adresse: "Aboisso", horaires: "Lun–Ven 8h–17h" },
-  { nom: "Port Autonome de San-Pédro", type: "service", ville: "San-Pédro", region: "Bas-Sassandra", telephone: "+22534710000", email: "info@psp.ci", siteWeb: "https://www.psp.ci", horaires: "24h/24" }
+  { nom: "Mairie d'Abidjan (Plateau)", type: "mairie", ville: "Abidjan", region: "Lagunes", telephone: "+22527213000", adresse: "Avenue Terrasson", horaires: "Lunâ€“Ven 7h30â€“16h30" },
+  { nom: "Mairie de Grand-Bassam", type: "mairie", ville: "Grand-Bassam", region: "Sud-ComoÃ©", telephone: "+22527301000", adresse: "Quartier France", horaires: "Lunâ€“Ven 7h30â€“16h30" },
+  { nom: "Conseil RÃ©gional du Sud-ComoÃ©", type: "conseil", ville: "Aboisso", region: "Sud-ComoÃ©", telephone: "+22527200100", adresse: "Aboisso", horaires: "Lunâ€“Ven 8hâ€“17h" },
+  { nom: "Port Autonome de San-PÃ©dro", type: "service", ville: "San-PÃ©dro", region: "Bas-Sassandra", telephone: "+22534710000", email: "info@psp.ci", siteWeb: "https://www.psp.ci", horaires: "24h/24" }
 ];
 
-const TYPE_LABELS = { mairie: "Mairie", conseil: "Conseil Régional", service: "Service Public" };
+const TYPE_LABELS = { mairie: "Mairie", conseil: "Conseil RÃ©gional", service: "Service Public" };
 const TYPE_COLORS = {
   mairie: "bg-blue-100 text-blue-700 border-blue-200",
   conseil: "bg-purple-100 text-purple-700 border-purple-200",
   service: "bg-green-100 text-green-700 border-green-200",
 };
-const TYPE_ICONS = { mairie: "🏛️", conseil: "🏢", service: "⚙️" };
+const TYPE_ICONS = { mairie: "ðŸ›ï¸", conseil: "ðŸ¢", service: "âš™ï¸" };
 
 type DbService = { id: string; nom: string; categorie: string; description: string; image: string; };
 
@@ -35,7 +35,7 @@ export default function CollectivitesPage() {
   const [sent, setSent] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ... (Logique fetch et handlers inchangés)
+  // ... (Logique fetch et handlers inchangÃ©s)
 
   const filteredAnnuaire = annuaire.filter(c => {
     const matchVille = villeFilter === "Toutes" || c.ville === villeFilter;
@@ -47,7 +47,7 @@ export default function CollectivitesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <section className="relative text-white py-20 bg-[#0c4a6e] px-4">
-        <h1 className="text-4xl font-bold text-center">Collectivités & Services</h1>
+        <h1 className="text-4xl font-bold text-center">CollectivitÃ©s & Services</h1>
       </section>
 
       {/* Services */}
@@ -58,7 +58,7 @@ export default function CollectivitesPage() {
             <div key={s.id} className="bg-white p-6 rounded-2xl shadow-sm">
               <h3 className="font-bold text-lg">{s.nom}</h3>
               <p className="text-sm text-gray-500 mb-4">{s.description}</p>
-              <button onClick={() => setActive(s)} className="text-[#c9a84c] font-bold">En savoir plus →</button>
+              <button onClick={() => setActive(s)} className="text-[#c9a84c] font-bold">En savoir plus â†’</button>
             </div>
           ))}
         </div>}
@@ -80,3 +80,4 @@ export default function CollectivitesPage() {
     </div>
   );
 }
+

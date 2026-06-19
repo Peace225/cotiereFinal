@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const { token, password } = await req.json();
 
     if (!token || !password) return badRequest("Token et mot de passe requis");
-    if (password.length < 8) return badRequest("Le mot de passe doit contenir au moins 8 caractères");
+    if (password.length < 8) return badRequest("Le mot de passe doit contenir au moins 8 caractÃ¨res");
 
     const user = await prisma.user.findFirst({
       where: {
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    if (!user) return badRequest("Lien invalide ou expiré. Veuillez refaire une demande.");
+    if (!user) return badRequest("Lien invalide ou expirÃ©. Veuillez refaire une demande.");
 
     const hashed = await bcrypt.hash(password, 12);
 
@@ -31,8 +31,10 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return ok({ message: "Mot de passe réinitialisé avec succès." });
+    return ok({ message: "Mot de passe rÃ©initialisÃ© avec succÃ¨s." });
   } catch (e) {
     return serverError(e);
   }
 }
+
+

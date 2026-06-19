@@ -12,14 +12,22 @@ const DEFAULT_SUPPORTS = [
 // GET /api/medias/supports — Public
 export async function GET() {
   try {
-    let supports = await prisma.mediaSupport.findMany({
+    // ✅ CORRECTION : Utilisation de media_supports
+    let supports = await prisma.media_supports.findMany({
       where: { isActive: true },
       orderBy: { createdAt: "asc" },
     });
 
     if (supports.length === 0) {
-      await prisma.mediaSupport.createMany({ data: DEFAULT_SUPPORTS });
-      supports = await prisma.mediaSupport.findMany({
+      // ✅ CORRECTION : Injection de l'ID et de la date dans le tableau par défaut
+      await prisma.media_supports.createMany({
+        data: DEFAULT_SUPPORTS.map((support) => ({
+          ...support,
+          id: crypto.randomUUID(),
+          updatedAt: new Date(),
+        })),
+      });
+      supports = await prisma.media_supports.findMany({
         where: { isActive: true },
         orderBy: { createdAt: "asc" },
       });
@@ -40,8 +48,11 @@ export async function POST(req: NextRequest) {
     const { nom, categorie, description, image } = body;
     if (!nom) return badRequest("Nom requis");
 
-    const support = await prisma.mediaSupport.create({
+    // ✅ CORRECTION : Utilisation de media_supports + Injection id et updatedAt
+    const support = await prisma.media_supports.create({
       data: {
+        id: crypto.randomUUID(),
+        updatedAt: new Date(),
         nom,
         categorie: categorie || nom,
         description: description || nom,
@@ -55,3 +66,4 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+

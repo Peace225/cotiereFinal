@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireAdmin } from "@/lib/auth"; // VOTRE système Supabase uniquement
+import { requireAdmin } from "@/lib/auth"; // VOTRE systÃ¨me Supabase uniquement
 
 export async function POST(req: NextRequest) {
   try {
     await requireAdmin();
   } catch {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+    return NextResponse.json({ error: "Non autorisÃ©" }, { status: 401 });
   }
 
   try {
@@ -32,3 +32,4 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+

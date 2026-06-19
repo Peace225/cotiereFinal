@@ -25,15 +25,15 @@ export async function GET(
       endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
     }
 
-    // Récupérer l'excursion pour avoir maxParticipants
-    const excursion = await prisma.excursion.findUnique({
+    // âœ… CORRECTION ICI : prisma.excursions au lieu de prisma.excursions
+    const excursion = await prisma.excursions.findUnique({
       where: { id },
       select: { maxParticipants: true },
     });
 
     if (!excursion) return ok({ bookedDates: {} });
 
-    // Réservations confirmées ou en attente sur ce mois
+    // RÃ©servations confirmÃ©es ou en attente sur ce mois
     const bookings = await prisma.excursionBooking.findMany({
       where: {
         excursionId: id,
@@ -60,18 +60,18 @@ export async function GET(
     }
 
     // Convertir en format attendu par le calendrier
-    // On simule 4 "slots" basés sur le taux de remplissage
+    // On simule 4 "slots" basÃ©s sur le taux de remplissage
     const result: Record<string, string[]> = {};
     for (const [date, data] of Object.entries(bookedDates)) {
       const fillRate = data.count / excursion.maxParticipants;
       if (fillRate >= 1) {
-        // Complet — 4 slots fictifs
+        // Complet â€” 4 slots fictifs
         result[date] = ["s1", "s2", "s3", "s4"];
       } else if (fillRate >= 0.5) {
-        // Partiel — 2 slots fictifs
+        // Partiel â€” 2 slots fictifs
         result[date] = ["s1", "s2"];
       } else if (fillRate > 0) {
-        // Peu rempli — 1 slot fictif
+        // Peu rempli â€” 1 slot fictif
         result[date] = ["s1"];
       }
     }

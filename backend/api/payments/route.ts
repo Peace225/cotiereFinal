@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, created, badRequest, forbidden, serverError } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutÃ©e
 import { z } from "zod";
 
 const paymentSchema = z.object({
@@ -27,9 +27,9 @@ const METHOD_LABELS: Record<string, string> = {
   BANK_TRANSFER: "Virement bancaire",
 };
 
-// GET : Protégé - Liste des paiements (Admin uniquement)
+// GET : ProtÃ©gÃ© - Liste des paiements (Admin uniquement)
 export async function GET() {
-  // Sécurisation : Seuls les admins peuvent voir l'historique des transactions
+  // SÃ©curisation : Seuls les admins peuvent voir l'historique des transactions
   try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
@@ -76,7 +76,7 @@ export async function POST(req: NextRequest) {
       (d.phoneNumber ? `Numero paiement: ${d.phoneNumber}\n` : "") +
       `\nReference: ${ref}\n` +
       `\nVeuillez confirmer la reception du paiement dans l admin.\n` +
-      `CÔTIÈRE MEDIA GROUP`
+      `CÃ”TIÃˆRE MEDIA GROUP`
     );
 
     return created({
@@ -88,3 +88,4 @@ export async function POST(req: NextRequest) {
     });
   } catch (e) { return serverError(e); }
 }
+

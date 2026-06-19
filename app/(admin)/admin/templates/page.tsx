@@ -74,7 +74,7 @@ export default function AdminTemplatesPage() {
           </div>
           <div>
             <h1 className="text-2xl font-black text-[#0c4a6e]">Templates de messages</h1>
-            <p className="text-gray-500 text-sm">Personnalisez les messages WhatsApp envoyés aux clients</p>
+            <p className="text-gray-500 text-sm">Personnalisez les messages WhatsApp envoyÃ©s aux clients</p>
           </div>
         </div>
 
@@ -86,14 +86,14 @@ export default function AdminTemplatesPage() {
                 className={`w-full text-left p-4 rounded-xl border transition-all ${selected?.key === t.key ? "border-[#0c4a6e] bg-[#f0f9ff]" : "border-gray-200 bg-white hover:border-gray-300"}`}>
                 <div className="flex items-center justify-between mb-1">
                   <span className="font-semibold text-sm text-[#0c4a6e]">{t.label}</span>
-                  {t.isCustom && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">Modifié</span>}
+                  {t.isCustom && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">ModifiÃ©</span>}
                 </div>
                 <p className="text-xs text-gray-500 truncate">{t.subject}</p>
               </button>
             ))}
           </div>
 
-          {/* Éditeur */}
+          {/* Ã‰diteur */}
           {selected && (
             <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-4">
               <div className="flex items-center justify-between">
@@ -127,12 +127,12 @@ export default function AdminTemplatesPage() {
                 </div>
                 <textarea rows={10} value={form.content} onChange={e => setForm(f => ({ ...f, content: e.target.value }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] resize-none font-mono" />
-                <p className="text-xs text-gray-400 mt-1">Cliquez sur une variable pour l'insérer dans le message</p>
+                <p className="text-xs text-gray-400 mt-1">Cliquez sur une variable pour l'insÃ©rer dans le message</p>
               </div>
 
-              {/* Aperçu */}
+              {/* AperÃ§u */}
               <div className="bg-[#dcf8c6] rounded-xl p-4">
-                <p className="text-xs font-semibold text-gray-600 mb-2">Aperçu WhatsApp</p>
+                <p className="text-xs font-semibold text-gray-600 mb-2">AperÃ§u WhatsApp</p>
                 <p className="text-sm text-gray-800 whitespace-pre-line leading-relaxed">
                   {form.content
                     .replace("{{clientName}}", "Jean Kouame")
@@ -147,11 +147,11 @@ export default function AdminTemplatesPage() {
                 <button onClick={saveTemplate} disabled={saving}
                   className="flex items-center gap-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white font-bold px-5 py-2.5 rounded-xl transition-colors disabled:opacity-60 text-sm">
                   {saved ? <CheckCircle size={15} /> : saving ? <Save size={15} className="animate-pulse" /> : <Save size={15} />}
-                  {saved ? "Sauvegardé !" : saving ? "Sauvegarde..." : "Sauvegarder"}
+                  {saved ? "SauvegardÃ© !" : saving ? "Sauvegarde..." : "Sauvegarder"}
                 </button>
                 <button onClick={() => setForm({ subject: selected.subject, content: selected.content })}
                   className="flex items-center gap-2 border border-gray-200 text-gray-600 font-semibold px-4 py-2.5 rounded-xl hover:bg-gray-50 transition-colors text-sm">
-                  <RotateCcw size={14} /> Réinitialiser
+                  <RotateCcw size={14} /> RÃ©initialiser
                 </button>
               </div>
             </div>
@@ -161,4 +161,6 @@ export default function AdminTemplatesPage() {
     </div>
   );
 }
+
+
 

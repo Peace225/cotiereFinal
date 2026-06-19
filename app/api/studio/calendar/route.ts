@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { ok, serverError } from "@/lib/api-response";
 
 // GET /api/studio/calendar?month=2026-04
-// Retourne les dates déjà réservées (CONFIRMED ou PENDING) pour le mois donné
+// Retourne les dates dÃ©jÃ  rÃ©servÃ©es (CONFIRMED ou PENDING) pour le mois donnÃ©
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -47,3 +47,5 @@ export async function GET(req: NextRequest) {
     return serverError(e);
   }
 }
+
+

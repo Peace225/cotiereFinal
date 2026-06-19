@@ -12,7 +12,9 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const { status, adminNotes } = await req.json();
-    const request = await prisma.afroubaRequest.update({ 
+    
+    // ✅ CORRIGÉ : Utilisation du modèle pluriel afrouba_requests
+    const request = await prisma.afrouba_requests.update({ 
       where: { id }, 
       data: { status, adminNotes } 
     });
@@ -26,7 +28,9 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params;
-    await prisma.afroubaRequest.delete({ where: { id } });
+    
+    // ✅ CORRIGÉ : Utilisation du modèle pluriel afrouba_requests
+    await prisma.afrouba_requests.delete({ where: { id } });
     return ok({ message: "Supprimé" });
   } catch (e) { return serverError(e); }
 }

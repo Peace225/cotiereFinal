@@ -12,3 +12,4 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
     </CartProvider>
   );
 }
+

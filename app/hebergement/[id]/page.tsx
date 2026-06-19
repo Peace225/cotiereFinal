@@ -12,8 +12,8 @@ export default async function HebergementDetailPage({
 }) {
   const { id } = await params;
 
-  // 1. CORRECTION CRUCIALE : Recherche par ID ou par SLUG
-  const room = await prisma.room.findFirst({
+  // 1. CORRECTION CRUCIALE : Recherche par ID ou par SLUG avec le modèle pluriel
+  const room = await prisma.rooms.findFirst({
     where: {
       OR: [
         { slug: id },
@@ -32,7 +32,7 @@ export default async function HebergementDetailPage({
   const note = room.rating || 8.5;
   const prix = room.pricePerNight || 0;
   
-  // Requête Google Maps formatée
+  // Requête Google Maps formatée proprement
   const mapQuery = encodeURIComponent(`${room.name} ${room.city}`);
 
   return (
@@ -104,10 +104,11 @@ export default async function HebergementDetailPage({
                 <iframe
                   width="100%"
                   height="100%"
-                  frameBorder="0"
                   style={{ border: 0 }}
-                  src={`https://maps.google.com/maps?q=${mapQuery}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                  loading="lazy"
                   allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src={`https://www.google.com/maps/embed/v1/place?key=${process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}&q=${mapQuery}`}
                   title="Carte de l'hébergement"
                 ></iframe>
               </div>
@@ -141,7 +142,7 @@ export default async function HebergementDetailPage({
               </ul>
 
               <button className="w-full bg-[#006ce4] hover:bg-[#0057b8] text-white font-bold py-3.5 rounded-xl transition-colors duration-200 mb-3 shadow-md">
-                Vérifier les disponibilités
+                 Vérifier les disponibilités
               </button>
               
               <p className="text-center text-[11px] text-slate-500 font-medium">

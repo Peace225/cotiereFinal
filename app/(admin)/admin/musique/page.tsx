@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useState } from "react";
 import { CheckCircle, Trash2, Music, Clock, Pencil, Plus, X } from "lucide-react";
 import AdminNavbar from "@/components/admin/AdminNavbar";
@@ -360,3 +360,5 @@ export default function AdminMusiquePage() {
     </div>
   );
 }
+
+

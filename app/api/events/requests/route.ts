@@ -6,7 +6,7 @@ import { getSession, requireAdmin } from "@/lib/auth";
 import { created, badRequest, ok, serverError, forbidden } from "@/lib/api-response";
 import { sendEventRequestConfirmation, sendEventRequestAdminNotif } from "@/lib/email";
 
-// POST /api/events/requests — Soumettre une demande d'événement
+// POST /api/events/requests â€” Soumettre une demande d'Ã©vÃ©nement
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -18,8 +18,12 @@ export async function POST(req: NextRequest) {
 
     const request = await prisma.eventRequest.create({
       data: {
+        // âœ… CORRECTION ICI : Injection ID + updatedAt
+        id: crypto.randomUUID(),
+        updatedAt: new Date(),
         reference: generateReference("EVENT"),
-        userId: session?.user ? (session.user as { id: string }).id : undefined,
+        // âœ… CORRECTION ICI : Spread conditionnel pour Ã©viter le "undefined"
+        ...(session?.user ? { userId: (session.user as { id: string }).id } : {}),
         ...data,
         eventDate: new Date(data.eventDate),
         attachments: data.attachments ?? [],
@@ -38,7 +42,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/events/requests — Liste (admin)
+// GET /api/events/requests â€” Liste (admin)
 export async function GET(req: NextRequest) {
   try { await requireAdmin(); } catch { return forbidden(); }
   try {
@@ -64,3 +68,4 @@ export async function GET(req: NextRequest) {
     return serverError(e);
   }
 }
+

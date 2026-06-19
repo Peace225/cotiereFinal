@@ -9,11 +9,12 @@ type Params = { params: Promise<{ id: string }> };
 export async function GET(_req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
-    const excursion = await prisma.excursion.findUnique({
+    const excursion = await prisma.excursions.findUnique({
       where: { id },
       include: {
-        options: { where: { isActive: true } },
-        timeSlots: { where: { isActive: true } },
+        // ✅ CORRECTION : Utilisation des noms exacts du schéma
+        excursion_options: { where: { isActive: true } },
+        excursion_time_slots: { where: { isActive: true } },
         reviews: {
           where: { isApproved: true },
           include: { user: { select: { firstName: true, lastName: true } } },
@@ -40,7 +41,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const body = await req.json();
-    const excursion = await prisma.excursion.update({ where: { id }, data: body });
+    const excursion = await prisma.excursions.update({ where: { id }, data: body });
     return ok(excursion);
   } catch (e) {
     return serverError(e);
@@ -57,7 +58,7 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params;
-    await prisma.excursion.update({ where: { id }, data: { isActive: false } });
+    await prisma.excursions.update({ where: { id }, data: { isActive: false } });
     return ok({ message: "Excursion désactivée" });
   } catch (e) {
     return serverError(e);

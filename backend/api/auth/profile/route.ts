@@ -15,7 +15,7 @@ const updateProfileSchema = z.object({
   newPassword: z.string().min(8).optional(),
 });
 
-// GET /api/auth/profile — Récupérer le profil
+// GET /api/auth/profile â€” RÃ©cupÃ©rer le profil
 export async function GET() {
   try {
     const session = await getSession();
@@ -38,7 +38,7 @@ export async function GET() {
   }
 }
 
-// PATCH /api/auth/profile — Mettre à jour le profil
+// PATCH /api/auth/profile â€” Mettre Ã  jour le profil
 export async function PATCH(req: NextRequest) {
   try {
     const session = await getSession();
@@ -65,7 +65,7 @@ export async function PATCH(req: NextRequest) {
       await prisma.user.update({ where: { id: userId }, data: { password: hashed } });
     }
 
-    // Mettre à jour le profil
+    // Mettre Ã  jour le profil
     const updated = await prisma.user.update({
       where: { id: userId },
       data: profileData,
@@ -80,3 +80,5 @@ export async function PATCH(req: NextRequest) {
     return serverError(e);
   }
 }
+
+

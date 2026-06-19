@@ -1,4 +1,4 @@
-﻿import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 
@@ -9,10 +9,11 @@ function generateRef() {
 export async function GET() {
   const session = await getSession();
   if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
-    return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+    return NextResponse.json({ error: "Non autorisÃ©" }, { status: 401 });
   }
 
   try {
+    // âœ… CORRECTION : Utilisation de rdvInscription au lieu de rdv_inscriptions
     const inscriptions = await prisma.rdvInscription.findMany({
       orderBy: { createdAt: "desc" },
     });
@@ -25,11 +26,16 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    
+    // âœ… CORRECTION : Utilisation de rdvInscription au lieu de rdv_inscriptions
     const inscription = await prisma.rdvInscription.create({
       data: {
+        id: crypto.randomUUID(),
         reference: generateRef(),
         ...body,
         status: "PENDING",
+        createdAt: new Date(),
+        updatedAt: new Date(),
       },
     });
     return NextResponse.json({ data: { inscription } }, { status: 201 });
@@ -37,3 +43,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+

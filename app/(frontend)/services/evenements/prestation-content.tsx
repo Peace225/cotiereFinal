@@ -4,7 +4,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Check, Phone, ChevronRight, Clock, Star, Flower2, UtensilsCrossed, Music, Shield, Users, Sparkles } from "lucide-react";
 
-// Force le rendu dynamique pour éviter les erreurs de génération statique au build
+// Force le rendu dynamique pour Ã©viter les erreurs de gÃ©nÃ©ration statique au build
 export const dynamic = 'force-dynamic';
 
 type Prestation = {
@@ -17,136 +17,136 @@ type Prestation = {
 
 const PRESTATIONS: Record<string, Prestation> = {
   "decoration": {
-    title: "Décoration & Scénographie",
-    subtitle: "Fleurs · Mobilier · Mise en scène",
+    title: "DÃ©coration & ScÃ©nographie",
+    subtitle: "Fleurs Â· Mobilier Â· Mise en scÃ¨ne",
     icon: <Flower2 size={18} />,
     heroImage: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1600&q=80",
-    description: "Transformez chaque espace en décor de rêve",
-    longDesc: "Notre équipe de décorateurs et scénographes crée des ambiances uniques et personnalisées pour vos événements. Des compositions florales aux installations artistiques, en passant par le mobilier de prestige et les éclairages d'ambiance, nous concevons des décors qui reflètent votre personnalité et impressionnent vos invités. Chaque détail est pensé pour créer une atmosphère inoubliable.",
-    priceRange: "150 000 — 500 000 FCFA",
-    included: ["Consultation & moodboard personnalisé", "Compositions florales (fleurs fraîches ou artificielles)", "Mobilier de prestige (tables, chaises, canapés)", "Arches & structures décoratives", "Nappage & vaisselle décorative", "Éclairage d'ambiance LED", "Tapis rouge & allée d'honneur", "Installation & démontage compris"],
+    description: "Transformez chaque espace en dÃ©cor de rÃªve",
+    longDesc: "Notre Ã©quipe de dÃ©corateurs et scÃ©nographes crÃ©e des ambiances uniques et personnalisÃ©es pour vos Ã©vÃ©nements. Des compositions florales aux installations artistiques, en passant par le mobilier de prestige et les Ã©clairages d'ambiance, nous concevons des dÃ©cors qui reflÃ¨tent votre personnalitÃ© et impressionnent vos invitÃ©s. Chaque dÃ©tail est pensÃ© pour crÃ©er une atmosphÃ¨re inoubliable.",
+    priceRange: "150 000 â€” 500 000 FCFA",
+    included: ["Consultation & moodboard personnalisÃ©", "Compositions florales (fleurs fraÃ®ches ou artificielles)", "Mobilier de prestige (tables, chaises, canapÃ©s)", "Arches & structures dÃ©coratives", "Nappage & vaisselle dÃ©corative", "Ã‰clairage d'ambiance LED", "Tapis rouge & allÃ©e d'honneur", "Installation & dÃ©montage compris"],
     process: [
-      { step: "Consultation créative", desc: "Échange sur vos goûts, couleurs et thème souhaité" },
-      { step: "Moodboard & devis", desc: "Présentation visuelle du projet et devis détaillé" },
-      { step: "Installation", desc: "Mise en place le jour J par notre équipe" },
-      { step: "Démontage", desc: "Récupération du matériel après l'événement" },
+      { step: "Consultation crÃ©ative", desc: "Ã‰change sur vos goÃ»ts, couleurs et thÃ¨me souhaitÃ©" },
+      { step: "Moodboard & devis", desc: "PrÃ©sentation visuelle du projet et devis dÃ©taillÃ©" },
+      { step: "Installation", desc: "Mise en place le jour J par notre Ã©quipe" },
+      { step: "DÃ©montage", desc: "RÃ©cupÃ©ration du matÃ©riel aprÃ¨s l'Ã©vÃ©nement" },
     ],
     gallery: [
       "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80",
       "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&q=80",
       "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600&q=80",
     ],
-    useCases: ["Mariages & fiançailles", "Galas & soirées de prestige", "Baptêmes & communions", "Anniversaires", "Événements corporate", "Conférences & séminaires", "Expositions", "Lancements de produits"],
+    useCases: ["Mariages & fianÃ§ailles", "Galas & soirÃ©es de prestige", "BaptÃªmes & communions", "Anniversaires", "Ã‰vÃ©nements corporate", "ConfÃ©rences & sÃ©minaires", "Expositions", "Lancements de produits"],
   },
   "traiteur": {
     title: "Traiteur & Restauration",
-    subtitle: "Cuisine ivoirienne & internationale · Service à table",
+    subtitle: "Cuisine ivoirienne & internationale Â· Service Ã  table",
     icon: <UtensilsCrossed size={18} />,
     heroImage: "https://images.unsplash.com/photo-1555244162-803834f70033?w=1600&q=80",
-    description: "Une gastronomie à la hauteur de votre événement",
-    longDesc: "Notre service traiteur propose une cuisine raffinée alliant saveurs ivoiriennes et gastronomie internationale. De l'apéritif au dessert, nos chefs cuisinent avec des produits frais et locaux pour régaler vos convives. Nous gérons tout : la conception du menu, la préparation, le service à table et le nettoyage. Capacité de 50 à 2000 personnes.",
-    priceRange: "5 000 — 25 000 FCFA / personne",
-    included: ["Consultation & création du menu", "Cuisine avec produits frais locaux", "Personnel de service (serveurs, maîtres d'hôtel)", "Vaisselle & couverts professionnels", "Mise en place des tables", "Service à table ou buffet", "Cocktail & boissons (sur option)", "Nettoyage après service"],
+    description: "Une gastronomie Ã  la hauteur de votre Ã©vÃ©nement",
+    longDesc: "Notre service traiteur propose une cuisine raffinÃ©e alliant saveurs ivoiriennes et gastronomie internationale. De l'apÃ©ritif au dessert, nos chefs cuisinent avec des produits frais et locaux pour rÃ©galer vos convives. Nous gÃ©rons tout : la conception du menu, la prÃ©paration, le service Ã  table et le nettoyage. CapacitÃ© de 50 Ã  2000 personnes.",
+    priceRange: "5 000 â€” 25 000 FCFA / personne",
+    included: ["Consultation & crÃ©ation du menu", "Cuisine avec produits frais locaux", "Personnel de service (serveurs, maÃ®tres d'hÃ´tel)", "Vaisselle & couverts professionnels", "Mise en place des tables", "Service Ã  table ou buffet", "Cocktail & boissons (sur option)", "Nettoyage aprÃ¨s service"],
     process: [
-      { step: "Dégustation", desc: "Séance de dégustation pour valider le menu" },
+      { step: "DÃ©gustation", desc: "SÃ©ance de dÃ©gustation pour valider le menu" },
       { step: "Planification", desc: "Organisation logistique et commande des produits" },
-      { step: "Préparation", desc: "Cuisine le jour J par notre équipe de chefs" },
-      { step: "Service", desc: "Service professionnel pendant toute la durée du repas" },
+      { step: "PrÃ©paration", desc: "Cuisine le jour J par notre Ã©quipe de chefs" },
+      { step: "Service", desc: "Service professionnel pendant toute la durÃ©e du repas" },
     ],
     gallery: [
       "https://images.unsplash.com/photo-1555244162-803834f70033?w=600&q=80",
       "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80",
       "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80",
     ],
-    useCases: ["Mariages (50 à 2000 pers.)", "Galas & dîners de prestige", "Cocktails d'entreprise", "Buffets de conférence", "Baptêmes & anniversaires", "Déjeuners d'affaires", "Réceptions diplomatiques", "Événements culturels"],
+    useCases: ["Mariages (50 Ã  2000 pers.)", "Galas & dÃ®ners de prestige", "Cocktails d'entreprise", "Buffets de confÃ©rence", "BaptÃªmes & anniversaires", "DÃ©jeuners d'affaires", "RÃ©ceptions diplomatiques", "Ã‰vÃ©nements culturels"],
   },
   "sonorisation": {
-    title: "Sonorisation & Éclairage",
-    subtitle: "Son HD · Lumières LED · Scène professionnelle",
+    title: "Sonorisation & Ã‰clairage",
+    subtitle: "Son HD Â· LumiÃ¨res LED Â· ScÃ¨ne professionnelle",
     icon: <Music size={18} />,
     heroImage: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1600&q=80",
     description: "L'ambiance sonore et lumineuse parfaite",
-    longDesc: "Notre équipe technique installe et gère des systèmes de sonorisation et d'éclairage professionnels pour tous types d'événements. Des petites salles aux grandes scènes en plein air, nous disposons du matériel adapté : enceintes line array, consoles de mixage numériques, éclairages LED motorisés, lasers et machines à fumée. Un technicien son et un technicien lumière sont présents pendant toute la durée de l'événement.",
-    priceRange: "100 000 — 400 000 FCFA",
-    included: ["Système de sonorisation professionnel (line array)", "Console de mixage numérique", "Microphones (filaires & HF)", "Éclairages LED motorisés (moving heads)", "Projecteurs & wash lights", "Machine à fumée & effets spéciaux", "Technicien son dédié", "Technicien lumière dédié", "Installation & démontage"],
+    longDesc: "Notre Ã©quipe technique installe et gÃ¨re des systÃ¨mes de sonorisation et d'Ã©clairage professionnels pour tous types d'Ã©vÃ©nements. Des petites salles aux grandes scÃ¨nes en plein air, nous disposons du matÃ©riel adaptÃ© : enceintes line array, consoles de mixage numÃ©riques, Ã©clairages LED motorisÃ©s, lasers et machines Ã  fumÃ©e. Un technicien son et un technicien lumiÃ¨re sont prÃ©sents pendant toute la durÃ©e de l'Ã©vÃ©nement.",
+    priceRange: "100 000 â€” 400 000 FCFA",
+    included: ["SystÃ¨me de sonorisation professionnel (line array)", "Console de mixage numÃ©rique", "Microphones (filaires & HF)", "Ã‰clairages LED motorisÃ©s (moving heads)", "Projecteurs & wash lights", "Machine Ã  fumÃ©e & effets spÃ©ciaux", "Technicien son dÃ©diÃ©", "Technicien lumiÃ¨re dÃ©diÃ©", "Installation & dÃ©montage"],
     process: [
-      { step: "Repérage technique", desc: "Visite du lieu pour planifier l'installation" },
-      { step: "Installation", desc: "Mise en place du matériel son et lumière" },
-      { step: "Balance & tests", desc: "Réglages et tests avant l'événement" },
-      { step: "Gestion live", desc: "Techniciens présents pendant toute la durée" },
+      { step: "RepÃ©rage technique", desc: "Visite du lieu pour planifier l'installation" },
+      { step: "Installation", desc: "Mise en place du matÃ©riel son et lumiÃ¨re" },
+      { step: "Balance & tests", desc: "RÃ©glages et tests avant l'Ã©vÃ©nement" },
+      { step: "Gestion live", desc: "Techniciens prÃ©sents pendant toute la durÃ©e" },
     ],
     gallery: [
       "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80",
       "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80",
       "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=600&q=80",
     ],
-    useCases: ["Concerts & festivals", "Mariages & galas", "Conférences & séminaires", "Soirées dansantes", "Spectacles & shows", "Événements sportifs", "Cérémonies officielles", "Lancements de produits"],
+    useCases: ["Concerts & festivals", "Mariages & galas", "ConfÃ©rences & sÃ©minaires", "SoirÃ©es dansantes", "Spectacles & shows", "Ã‰vÃ©nements sportifs", "CÃ©rÃ©monies officielles", "Lancements de produits"],
   },
   "securite": {
-    title: "Sécurité Événementielle",
-    subtitle: "Agents formés · Contrôle d'accès · Gestion des foules",
+    title: "SÃ©curitÃ© Ã‰vÃ©nementielle",
+    subtitle: "Agents formÃ©s Â· ContrÃ´le d'accÃ¨s Â· Gestion des foules",
     icon: <Shield size={18} />,
     heroImage: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1600&q=80",
-    description: "La sécurité de vos invités, notre priorité",
-    longDesc: "Notre service de sécurité événementielle met à votre disposition des agents professionnels formés et expérimentés. Nous assurons le contrôle d'accès, la gestion des flux de personnes, la surveillance des biens et la sécurité rapprochée des personnalités. Nos équipes interviennent en tenue civile ou en uniforme selon vos préférences, avec une communication radio permanente.",
-    priceRange: "50 000 — 200 000 FCFA",
-    included: ["Agents de sécurité certifiés", "Contrôle d'accès & vérification des invitations", "Gestion des flux & placement des invités", "Surveillance périmétrique", "Communication radio entre agents", "Coordination avec les forces de l'ordre", "Rapport de sécurité post-événement", "Disponibilité 24h/24"],
+    description: "La sÃ©curitÃ© de vos invitÃ©s, notre prioritÃ©",
+    longDesc: "Notre service de sÃ©curitÃ© Ã©vÃ©nementielle met Ã  votre disposition des agents professionnels formÃ©s et expÃ©rimentÃ©s. Nous assurons le contrÃ´le d'accÃ¨s, la gestion des flux de personnes, la surveillance des biens et la sÃ©curitÃ© rapprochÃ©e des personnalitÃ©s. Nos Ã©quipes interviennent en tenue civile ou en uniforme selon vos prÃ©fÃ©rences, avec une communication radio permanente.",
+    priceRange: "50 000 â€” 200 000 FCFA",
+    included: ["Agents de sÃ©curitÃ© certifiÃ©s", "ContrÃ´le d'accÃ¨s & vÃ©rification des invitations", "Gestion des flux & placement des invitÃ©s", "Surveillance pÃ©rimÃ©trique", "Communication radio entre agents", "Coordination avec les forces de l'ordre", "Rapport de sÃ©curitÃ© post-Ã©vÃ©nement", "DisponibilitÃ© 24h/24"],
     process: [
-      { step: "Analyse des risques", desc: "Évaluation du site et des besoins en sécurité" },
-      { step: "Plan de sécurité", desc: "Élaboration du dispositif et positionnement des agents" },
-      { step: "Briefing équipe", desc: "Réunion de préparation avec tous les agents" },
-      { step: "Déploiement", desc: "Mise en place du dispositif le jour J" },
+      { step: "Analyse des risques", desc: "Ã‰valuation du site et des besoins en sÃ©curitÃ©" },
+      { step: "Plan de sÃ©curitÃ©", desc: "Ã‰laboration du dispositif et positionnement des agents" },
+      { step: "Briefing Ã©quipe", desc: "RÃ©union de prÃ©paration avec tous les agents" },
+      { step: "DÃ©ploiement", desc: "Mise en place du dispositif le jour J" },
     ],
     gallery: [
       "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=600&q=80",
       "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600&q=80",
       "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&q=80",
     ],
-    useCases: ["Concerts & festivals", "Mariages & galas", "Conférences & sommets", "Événements VIP", "Cérémonies officielles", "Événements sportifs", "Soirées privées", "Expositions & salons"],
+    useCases: ["Concerts & festivals", "Mariages & galas", "ConfÃ©rences & sommets", "Ã‰vÃ©nements VIP", "CÃ©rÃ©monies officielles", "Ã‰vÃ©nements sportifs", "SoirÃ©es privÃ©es", "Expositions & salons"],
   },
   "hotesses": {
-    title: "Hôtesses & Accueil",
-    subtitle: "Accueil professionnel · Bilingue · Tenue élégante",
+    title: "HÃ´tesses & Accueil",
+    subtitle: "Accueil professionnel Â· Bilingue Â· Tenue Ã©lÃ©gante",
     icon: <Users size={18} />,
     heroImage: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=1600&q=80",
-    description: "Un accueil chaleureux et professionnel pour vos invités",
-    longDesc: "Nos hôtesses et hôtes d'accueil professionnels assurent un accueil de qualité pour vos événements. Formés aux techniques d'accueil, bilingues (français/anglais) et présentés en tenue élégante, ils gèrent l'enregistrement des invités, la distribution des badges, l'orientation et l'assistance tout au long de l'événement. Disponibles pour tous types d'événements, de 2 à 50 personnes.",
-    priceRange: "25 000 — 100 000 FCFA",
-    included: ["Hôtesses/hôtes formés & expérimentés", "Tenue élégante fournie", "Bilingue français/anglais", "Gestion de la liste des invités", "Distribution des badges & programmes", "Orientation & assistance", "Vestiaire (sur option)", "Coordination avec l'équipe organisatrice"],
+    description: "Un accueil chaleureux et professionnel pour vos invitÃ©s",
+    longDesc: "Nos hÃ´tesses et hÃ´tes d'accueil professionnels assurent un accueil de qualitÃ© pour vos Ã©vÃ©nements. FormÃ©s aux techniques d'accueil, bilingues (franÃ§ais/anglais) et prÃ©sentÃ©s en tenue Ã©lÃ©gante, ils gÃ¨rent l'enregistrement des invitÃ©s, la distribution des badges, l'orientation et l'assistance tout au long de l'Ã©vÃ©nement. Disponibles pour tous types d'Ã©vÃ©nements, de 2 Ã  50 personnes.",
+    priceRange: "25 000 â€” 100 000 FCFA",
+    included: ["HÃ´tesses/hÃ´tes formÃ©s & expÃ©rimentÃ©s", "Tenue Ã©lÃ©gante fournie", "Bilingue franÃ§ais/anglais", "Gestion de la liste des invitÃ©s", "Distribution des badges & programmes", "Orientation & assistance", "Vestiaire (sur option)", "Coordination avec l'Ã©quipe organisatrice"],
     process: [
-      { step: "Briefing", desc: "Présentation de l'événement et des consignes spécifiques" },
-      { step: "Préparation", desc: "Mise en place du poste d'accueil et du matériel" },
-      { step: "Accueil", desc: "Réception et orientation des invités à leur arrivée" },
-      { step: "Assistance", desc: "Présence tout au long de l'événement" },
+      { step: "Briefing", desc: "PrÃ©sentation de l'Ã©vÃ©nement et des consignes spÃ©cifiques" },
+      { step: "PrÃ©paration", desc: "Mise en place du poste d'accueil et du matÃ©riel" },
+      { step: "Accueil", desc: "RÃ©ception et orientation des invitÃ©s Ã  leur arrivÃ©e" },
+      { step: "Assistance", desc: "PrÃ©sence tout au long de l'Ã©vÃ©nement" },
     ],
     gallery: [
       "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600&q=80",
       "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=600&q=80",
       "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600&q=80",
     ],
-    useCases: ["Conférences & séminaires", "Salons & expositions", "Galas & soirées", "Lancements de produits", "Événements corporate", "Mariages de prestige", "Réceptions diplomatiques", "Événements sportifs VIP"],
+    useCases: ["ConfÃ©rences & sÃ©minaires", "Salons & expositions", "Galas & soirÃ©es", "Lancements de produits", "Ã‰vÃ©nements corporate", "Mariages de prestige", "RÃ©ceptions diplomatiques", "Ã‰vÃ©nements sportifs VIP"],
   },
   "animation": {
     title: "Animation & Spectacles",
-    subtitle: "DJ · Artistes · Animateurs · Shows",
+    subtitle: "DJ Â· Artistes Â· Animateurs Â· Shows",
     icon: <Sparkles size={18} />,
     heroImage: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=1600&q=80",
-    description: "Des animations qui font vibrer vos invités",
-    longDesc: "Notre catalogue d'animations et de spectacles couvre tous les styles et tous les budgets. DJs professionnels, groupes de musique live, danseurs, comédiens, magiciens, cracheurs de feu, troupes de danse traditionnelle ivoirienne... Nous sélectionnons les meilleurs artistes pour créer des moments forts et inoubliables lors de votre événement.",
-    priceRange: "75 000 — 300 000 FCFA",
-    included: ["DJ professionnel avec matériel", "Artistes & performers sélectionnés", "Animateur/MC de soirée", "Coordination artistique", "Répétitions & briefing artistes", "Gestion des temps forts", "Effets spéciaux (fumée, confettis)", "Playlist personnalisée"],
+    description: "Des animations qui font vibrer vos invitÃ©s",
+    longDesc: "Notre catalogue d'animations et de spectacles couvre tous les styles et tous les budgets. DJs professionnels, groupes de musique live, danseurs, comÃ©diens, magiciens, cracheurs de feu, troupes de danse traditionnelle ivoirienne... Nous sÃ©lectionnons les meilleurs artistes pour crÃ©er des moments forts et inoubliables lors de votre Ã©vÃ©nement.",
+    priceRange: "75 000 â€” 300 000 FCFA",
+    included: ["DJ professionnel avec matÃ©riel", "Artistes & performers sÃ©lectionnÃ©s", "Animateur/MC de soirÃ©e", "Coordination artistique", "RÃ©pÃ©titions & briefing artistes", "Gestion des temps forts", "Effets spÃ©ciaux (fumÃ©e, confettis)", "Playlist personnalisÃ©e"],
     process: [
-      { step: "Sélection artistique", desc: "Choix des artistes selon votre thème et budget" },
+      { step: "SÃ©lection artistique", desc: "Choix des artistes selon votre thÃ¨me et budget" },
       { step: "Contrats & briefing", desc: "Signature des contrats et briefing des artistes" },
-      { step: "Répétition", desc: "Répétition technique le jour avant ou le matin J" },
-      { step: "Performance", desc: "Animation professionnelle pendant l'événement" },
+      { step: "RÃ©pÃ©tition", desc: "RÃ©pÃ©tition technique le jour avant ou le matin J" },
+      { step: "Performance", desc: "Animation professionnelle pendant l'Ã©vÃ©nement" },
     ],
     gallery: [
       "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&q=80",
       "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80",
       "https://images.unsplash.com/photo-1519167758481-83f550bb49b3?w=600&q=80",
     ],
-    useCases: ["Mariages & galas", "Soirées dansantes", "Anniversaires", "Événements corporate", "Concerts privés", "Festivals", "Cérémonies de remise de prix", "Fêtes de fin d'année"],
+    useCases: ["Mariages & galas", "SoirÃ©es dansantes", "Anniversaires", "Ã‰vÃ©nements corporate", "Concerts privÃ©s", "Festivals", "CÃ©rÃ©monies de remise de prix", "FÃªtes de fin d'annÃ©e"],
   },
 };
 
@@ -158,7 +158,7 @@ export default function EvenementPrestationPage() {
   if (!data) return (
     <div className="min-h-screen flex flex-col items-center justify-center gap-4">
       <p className="text-gray-500">Prestation introuvable.</p>
-      <Link href="/services/evenements" className="btn-primary">Retour aux événements</Link>
+      <Link href="/services/evenements" className="btn-primary">Retour aux Ã©vÃ©nements</Link>
     </div>
   );
 
@@ -168,7 +168,7 @@ export default function EvenementPrestationPage() {
         <div className="max-w-5xl mx-auto flex items-center gap-2 text-sm text-gray-500">
           <Link href="/" className="hover:text-[#0c4a6e] transition-colors">Accueil</Link>
           <ChevronRight size={14} />
-          <Link href="/services/evenements" className="hover:text-[#0c4a6e] transition-colors">Événements</Link>
+          <Link href="/services/evenements" className="hover:text-[#0c4a6e] transition-colors">Ã‰vÃ©nements</Link>
           <ChevronRight size={14} />
           <span className="text-[#0c4a6e] font-semibold truncate">{data.title}</span>
         </div>
@@ -225,3 +225,4 @@ export default function EvenementPrestationPage() {
     </div>
   );
 }
+

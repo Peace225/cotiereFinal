@@ -23,7 +23,7 @@ export default function ContactPage() {
       `*Email:* ${form.email || "Non fourni"}\n` +
       `*Sujet:* ${form.subject}\n\n` +
       `*Message:*\n${form.message}\n\n` +
-      `🌊 CÔTIÈRE MÉDIA GROUP`
+      `ðŸŒŠ CÃ”TIÃˆRE MÃ‰DIA GROUP`
     );
     
     window.open(`https://wa.me/2250747722931?text=${msg}`, "_blank");
@@ -33,7 +33,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-[#f0f9ff]">
-      {/* ... Hero Section reste inchangée ... */}
+      {/* ... Hero Section reste inchangÃ©e ... */}
       
       <section className="py-16">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -43,7 +43,7 @@ export default function ContactPage() {
             {/* Formulaire contact ... (votre code existant) ... */}
           </div>
 
-          {/* Carte Google Maps corrigée */}
+          {/* Carte Google Maps corrigÃ©e */}
           {isMounted && (
             <div className="mt-10 bg-white rounded-2xl shadow-sm overflow-hidden border border-gray-100">
               <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
@@ -51,9 +51,9 @@ export default function ContactPage() {
                 <h2 className="font-bold text-[#0a1628]">Nous trouver</h2>
               </div>
               <div className="relative w-full h-72">
-                {/* Remplacez l'URL src par votre vrai lien d'intégration Google Maps */}
+                {/* Remplacez l'URL src par votre vrai lien d'intÃ©gration Google Maps */}
                 <iframe
-                  title="Localisation CÔTIÈRE MEDIA GROUP"
+                  title="Localisation CÃ”TIÃˆRE MEDIA GROUP"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126848.435555... (votre code d'embed ici)"
                   width="100%"
                   height="100%"
@@ -70,3 +70,4 @@ export default function ContactPage() {
     </div>
   );
 }
+

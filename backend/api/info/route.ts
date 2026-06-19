@@ -13,14 +13,17 @@ const DEFAULT_PRESTATIONS = [
 // GET /api/info/prestations — Public
 export async function GET() {
   try {
-    let prestations = await prisma.infoPrestation.findMany({
+    // ✅ CORRIGÉ : info_prestation -> info_prestations
+    let prestations = await prisma.info_prestations.findMany({
       where: { isActive: true },
       orderBy: { createdAt: "asc" },
     });
 
     if (prestations.length === 0) {
-      await prisma.infoPrestation.createMany({ data: DEFAULT_PRESTATIONS });
-      prestations = await prisma.infoPrestation.findMany({
+      // ✅ CORRIGÉ : info_prestation -> info_prestations
+      await prisma.info_prestations.createMany({ data: DEFAULT_PRESTATIONS });
+      // ✅ CORRIGÉ : info_prestation -> info_prestations
+      prestations = await prisma.info_prestations.findMany({
         where: { isActive: true },
         orderBy: { createdAt: "asc" },
       });
@@ -41,7 +44,8 @@ export async function POST(req: NextRequest) {
     const { nom, categorie, description, prix, image } = body;
     if (!nom) return badRequest("Nom requis");
 
-    const prestation = await prisma.infoPrestation.create({
+    // ✅ CORRIGÉ : info_prestation -> info_prestations
+    const prestation = await prisma.info_prestations.create({
       data: {
         nom,
         categorie: categorie || nom,

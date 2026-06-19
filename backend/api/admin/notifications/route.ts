@@ -2,18 +2,19 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, serverError } from "@/lib/api-response";
 
-// GET — Toutes les notifications admin (non lues en premier)
+// GET â€” Toutes les notifications admin (non lues en premier)
 export async function GET() {
   try {
     const notifications = await prisma.notification.findMany({
       orderBy: [{ isRead: "asc" }, { createdAt: "desc" }],
       take: 50,
       include: {
-        studioBooking: { select: { clientFirstName: true, clientLastName: true } },
-        eventRequest: { select: { clientFirstName: true, clientLastName: true } },
-        excursionBooking: { select: { clientFirstName: true, clientLastName: true } },
-        hotelBooking: { select: { clientFirstName: true, clientLastName: true } },
-        musicBooking: { select: { clientFirstName: true, clientLastName: true } },
+        // âœ… CORRIGÃ‰ : Utilisation des noms de relations exacts dÃ©finis dans le schÃ©ma Prisma
+        studio_bookings: { select: { clientFirstName: true, clientLastName: true } },
+        event_requests: { select: { clientFirstName: true, clientLastName: true } },
+        excursion_bookings: { select: { clientFirstName: true, clientLastName: true } },
+        hotel_bookings: { select: { clientFirstName: true, clientLastName: true } },
+        music_bookings: { select: { clientFirstName: true, clientLastName: true } },
       },
     });
     const unreadCount = await prisma.notification.count({ where: { isRead: false } });
@@ -23,12 +24,13 @@ export async function GET() {
   }
 }
 
-// PATCH — Marquer tout comme lu
+// PATCH â€” Marquer tout comme lu
 export async function PATCH() {
   try {
     await prisma.notification.updateMany({ where: { isRead: false }, data: { isRead: true } });
-    return ok({ message: "Tout marqué comme lu" });
+    return ok({ message: "Tout marquÃ© comme lu" });
   } catch (e) {
     return serverError(e);
   }
 }
+

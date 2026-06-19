@@ -1,7 +1,8 @@
 "use client";
 
 import PropertyCard from "./PropertyCard";
-import type { Room } from "@prisma/client";
+// ✅ CORRIGÉ : Importation de 'rooms' avec l'alias 'Room'
+import type { rooms as Room } from "@prisma/client";
 
 interface SectionGridProps {
   title: string;

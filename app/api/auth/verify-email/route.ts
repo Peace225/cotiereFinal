@@ -8,15 +8,17 @@ export async function GET(req: NextRequest) {
     if (!token) return badRequest("Token manquant");
 
     const user = await prisma.user.findFirst({ where: { emailVerifyToken: token } });
-    if (!user) return badRequest("Token invalide ou expiré");
+    if (!user) return badRequest("Token invalide ou expirÃ©");
 
     await prisma.user.update({
       where: { id: user.id },
       data: { emailVerified: true, emailVerifyToken: null },
     });
 
-    return ok({ message: "Email vérifié avec succès" });
+    return ok({ message: "Email vÃ©rifiÃ© avec succÃ¨s" });
   } catch (e) {
     return serverError(e);
   }
 }
+
+

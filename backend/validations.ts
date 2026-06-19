@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-// ── Auth ──────────────────────────────────────────────────────
+// â”€â”€ Auth â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const registerSchema = z.object({
   firstName: z.string().min(2),
   lastName: z.string().min(2),
@@ -10,7 +10,7 @@ export const registerSchema = z.object({
   whatsapp: z.string().optional(),
 });
 
-// ── Studio+ ───────────────────────────────────────────────────
+// â”€â”€ Studio+ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const studioBookingSchema = z.object({
   clientFirstName: z.string().min(2),
   clientLastName: z.string().min(2),
@@ -40,7 +40,7 @@ export const studioStatusSchema = z.object({
   depositAmount: z.number().int().positive().optional(),
 });
 
-// ── Excursions ────────────────────────────────────────────────
+// â”€â”€ Excursions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const excursionBookingSchema = z.object({
   excursionId: z.string().cuid(),
   clientFirstName: z.string().min(2),
@@ -63,7 +63,7 @@ export const excursionBookingSchema = z.object({
   })).optional(),
 });
 
-// ── Event & Organisation ──────────────────────────────────────
+// â”€â”€ Event & Organisation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const eventRequestSchema = z.object({
   clientFirstName: z.string().min(2),
   clientLastName: z.string().min(2),
@@ -86,12 +86,12 @@ export const eventStatusSchema = z.object({
   totalAmount: z.number().int().positive().optional(),
 });
 
-// ── Paiement ──────────────────────────────────────────────────
+// â”€â”€ Paiement â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const paymentSchema = z.object({
   amount: z.number().int().positive(),
   method: z.enum(["ORANGE_MONEY", "MTN_MONEY", "MOOV_MONEY", "WAVE", "CASH", "BANK_TRANSFER"]),
   phoneNumber: z.string().optional(),
-  // Un seul de ces champs doit être renseigné
+  // Un seul de ces champs doit Ãªtre renseignÃ©
   studioBookingId: z.string().optional(),
   excursionBookingId: z.string().optional(),
   eventRequestId: z.string().optional(),
@@ -99,3 +99,5 @@ export const paymentSchema = z.object({
   musicBookingId: z.string().optional(),
   equipmentRentalId: z.string().optional(),
 });
+
+

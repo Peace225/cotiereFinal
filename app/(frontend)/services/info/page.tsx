@@ -8,19 +8,19 @@ type DbPrestation = {
 };
 
 const ICON_MAP: Record<string, React.ReactNode> = {
-  "Vidéo": <Video size={16} />,
+  "VidÃ©o": <Video size={16} />,
   "TV/Radio": <Mic2 size={16} />,
   "Live": <Calendar size={16} />,
   "Digital": <FileText size={16} />,
 };
 
 const actualites = [
-  { id: "grand-bassam-patrimoine", titre: "Grand-Bassam : le patrimoine UNESCO à l'honneur", date: "Avril 2026", image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80", categorie: "Patrimoine" },
+  { id: "grand-bassam-patrimoine", titre: "Grand-Bassam : le patrimoine UNESCO Ã  l'honneur", date: "Avril 2026", image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80", categorie: "Patrimoine" },
   { id: "tourisme-saison-record", titre: "Tourisme littoral : une saison record attendue", date: "Mars 2026", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80", categorie: "Tourisme" },
-  { id: "pecheurs-littoral", titre: "Les pêcheurs du littoral à l'honneur", date: "Mars 2026", image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80", categorie: "Culture" },
-  { id: "developpement-economique", titre: "Développement économique de la Côtière ivoirienne", date: "Février 2026", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80", categorie: "Économie" },
-  { id: "festival-musique-2026", titre: "Festival de musique du littoral 2026", date: "Février 2026", image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80", categorie: "Culture" },
-  { id: "nouvelles-infrastructures", titre: "Nouvelles infrastructures pour la Côtière", date: "Janvier 2026", image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80", categorie: "Infrastructure" },
+  { id: "pecheurs-littoral", titre: "Les pÃªcheurs du littoral Ã  l'honneur", date: "Mars 2026", image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80", categorie: "Culture" },
+  { id: "developpement-economique", titre: "DÃ©veloppement Ã©conomique de la CÃ´tiÃ¨re ivoirienne", date: "FÃ©vrier 2026", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80", categorie: "Ã‰conomie" },
+  { id: "festival-musique-2026", titre: "Festival de musique du littoral 2026", date: "FÃ©vrier 2026", image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80", categorie: "Culture" },
+  { id: "nouvelles-infrastructures", titre: "Nouvelles infrastructures pour la CÃ´tiÃ¨re", date: "Janvier 2026", image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80", categorie: "Infrastructure" },
 ];
 
 export default function InfoPage() {
@@ -62,7 +62,7 @@ export default function InfoPage() {
         }),
       });
       setSending(false); setSent(true);
-    } catch { setSending(false); setErr("Erreur lors de l'envoi. Réessayez."); }
+    } catch { setSending(false); setErr("Erreur lors de l'envoi. RÃ©essayez."); }
   }
 
   return (
@@ -74,12 +74,12 @@ export default function InfoPage() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <span className="text-[#c9a84c] text-sm font-semibold uppercase tracking-widest">Service Média</span>
-            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mt-2 mb-4">CÔTIÈRE INFO+</h1>
-            <p className="text-[#c9a84c] font-semibold text-lg mb-3">« La voix officielle du littoral Ivoirien »</p>
-            <p className="text-gray-100 text-lg leading-relaxed">Service d'information et de communication dédié au littoral ivoirien.</p>
+            <span className="text-[#c9a84c] text-sm font-semibold uppercase tracking-widest">Service MÃ©dia</span>
+            <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mt-2 mb-4">CÃ”TIÃˆRE INFO+</h1>
+            <p className="text-[#c9a84c] font-semibold text-lg mb-3">Â« La voix officielle du littoral Ivoirien Â»</p>
+            <p className="text-gray-100 text-lg leading-relaxed">Service d'information et de communication dÃ©diÃ© au littoral ivoirien.</p>
             <div className="flex gap-3 mt-8">
-              <a href="#actualites" className="btn-primary inline-flex">Nos actualités <ArrowRight size={18} /></a>
+              <a href="#actualites" className="btn-primary inline-flex">Nos actualitÃ©s <ArrowRight size={18} /></a>
               <a href="tel:+2250747722931" className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-bold px-5 py-3 rounded-xl hover:bg-white/20 transition-colors">
                 <Phone size={18} /> Nous contacter
               </a>
@@ -121,12 +121,12 @@ export default function InfoPage() {
         </div>
       </section>
 
-      {/* Actualités */}
+      {/* ActualitÃ©s */}
       <section id="actualites" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <span className="text-[#c9a84c] text-sm font-semibold uppercase tracking-widest">Actualités</span>
-            <h2 className="section-title mt-2">Les dernières nouvelles du littoral</h2>
+            <span className="text-[#c9a84c] text-sm font-semibold uppercase tracking-widest">ActualitÃ©s</span>
+            <h2 className="section-title mt-2">Les derniÃ¨res nouvelles du littoral</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {actualites.map((a) => (
@@ -151,8 +151,8 @@ export default function InfoPage() {
       {/* CTA */}
       <section className="py-16 bg-[#0c4a6e] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Vous avez un événement à couvrir ?</h2>
-          <p className="text-gray-300 mb-8">Contactez CÔTIÈRE INFO+ pour une couverture médiatique professionnelle.</p>
+          <h2 className="text-3xl font-bold mb-4">Vous avez un Ã©vÃ©nement Ã  couvrir ?</h2>
+          <p className="text-gray-300 mb-8">Contactez CÃ”TIÃˆRE INFO+ pour une couverture mÃ©diatique professionnelle.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/contact" className="btn-primary">Nous contacter <ArrowRight size={18} /></Link>
             <a href="tel:+2250747722931" className="flex items-center gap-2 bg-white/10 border border-white/30 text-white font-bold px-5 py-3 rounded-xl hover:bg-white/20 transition-colors">
@@ -173,10 +173,10 @@ export default function InfoPage() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               <div className="absolute bottom-4 left-5 right-12">
                 <span className="bg-[#c9a84c] text-white text-xs font-bold px-3 py-1 rounded-full flex items-center gap-1.5 w-fit mb-2">
-                  {ICON_MAP[active.categorie] ?? <FileText size={12} />} CÔTIÈRE INFO+
+                  {ICON_MAP[active.categorie] ?? <FileText size={12} />} CÃ”TIÃˆRE INFO+
                 </span>
                 <h2 className="text-lg font-black text-white leading-tight">{active.nom}</h2>
-                <p className="text-white/70 text-xs mt-0.5">{active.categorie} · {active.prix}</p>
+                <p className="text-white/70 text-xs mt-0.5">{active.categorie} Â· {active.prix}</p>
               </div>
               <button onClick={closeModal} className="absolute top-3 right-3 w-8 h-8 bg-black/40 hover:bg-black/60 rounded-full flex items-center justify-center text-white transition-colors">
                 <X size={16} />
@@ -187,8 +187,8 @@ export default function InfoPage() {
                 sent ? (
                   <div className="text-center py-8">
                     <CheckCircle size={52} className="text-green-500 mx-auto mb-4" />
-                    <h3 className="text-lg font-bold text-[#0c4a6e] mb-2">Demande envoyée !</h3>
-                    <p className="text-gray-500 text-sm mb-6">Notre équipe vous contactera sous 24h.</p>
+                    <h3 className="text-lg font-bold text-[#0c4a6e] mb-2">Demande envoyÃ©e !</h3>
+                    <p className="text-gray-500 text-sm mb-6">Notre Ã©quipe vous contactera sous 24h.</p>
                     <button onClick={closeModal} className="btn-primary justify-center">Fermer</button>
                   </div>
                 ) : (
@@ -197,20 +197,20 @@ export default function InfoPage() {
                       <button onClick={() => setShowForm(false)} className="flex items-center gap-1 text-sm text-gray-500 hover:text-[#0c4a6e] transition-colors">
                         <ChevronLeft size={16} /> Retour
                       </button>
-                      <h3 className="font-bold text-[#0c4a6e] text-sm">Demande — <span className="text-[#c9a84c]">{active.nom}</span></h3>
+                      <h3 className="font-bold text-[#0c4a6e] text-sm">Demande â€” <span className="text-[#c9a84c]">{active.nom}</span></h3>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-3">
                       <div className="grid grid-cols-2 gap-3">
-                        <div><label className="block text-xs font-semibold text-gray-600 mb-1">Prénom / Nom *</label>
-                          <input type="text" required value={form.firstName} onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))} placeholder="Jean Kouamé" className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c9a84c]" /></div>
-                        <div><label className="block text-xs font-semibold text-gray-600 mb-1">Téléphone *</label>
+                        <div><label className="block text-xs font-semibold text-gray-600 mb-1">PrÃ©nom / Nom *</label>
+                          <input type="text" required value={form.firstName} onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))} placeholder="Jean KouamÃ©" className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c9a84c]" /></div>
+                        <div><label className="block text-xs font-semibold text-gray-600 mb-1">TÃ©lÃ©phone *</label>
                           <input type="tel" required value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} placeholder="07 XX XX XX XX" className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c9a84c]" /></div>
                       </div>
                       <div><label className="block text-xs font-semibold text-gray-600 mb-1">Email</label>
                         <input type="email" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} placeholder="jean@email.com" className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c9a84c]" /></div>
                       <div><label className="block text-xs font-semibold text-gray-600 mb-1">Votre demande *</label>
                         <textarea required value={form.message} onChange={e => setForm(f => ({ ...f, message: e.target.value }))} rows={4} maxLength={500}
-                          placeholder={`Décrivez votre besoin pour "${active.nom}"...`}
+                          placeholder={`DÃ©crivez votre besoin pour "${active.nom}"...`}
                           className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c9a84c] resize-none" />
                         <p className="text-xs text-gray-400 text-right">{form.message.length}/500</p></div>
                       {err && <p className="text-red-500 text-xs bg-red-50 px-3 py-2 rounded-lg">{err}</p>}
@@ -220,7 +220,7 @@ export default function InfoPage() {
                         </button>
                         <a href="tel:+2250747722931" className="flex items-center gap-2 border border-[#0c4a6e]/20 text-[#0c4a6e] text-sm font-semibold px-4 rounded-xl hover:bg-[#0c4a6e]/5 transition-colors"><Phone size={14} /></a>
                       </div>
-                      <p className="text-xs text-gray-400 text-center flex items-center justify-center gap-1"><Clock size={10} /> Réponse sous 24h · Sans engagement</p>
+                      <p className="text-xs text-gray-400 text-center flex items-center justify-center gap-1"><Clock size={10} /> RÃ©ponse sous 24h Â· Sans engagement</p>
                     </form>
                   </>
                 )
@@ -240,7 +240,7 @@ export default function InfoPage() {
                       <Phone size={14} /> Appeler
                     </a>
                   </div>
-                  <p className="text-xs text-gray-400 text-center flex items-center justify-center gap-1"><Clock size={10} /> Réponse sous 24h · Devis gratuit & sans engagement</p>
+                  <p className="text-xs text-gray-400 text-center flex items-center justify-center gap-1"><Clock size={10} /> RÃ©ponse sous 24h Â· Devis gratuit & sans engagement</p>
                 </>
               )}
             </div>
@@ -250,3 +250,5 @@ export default function InfoPage() {
     </div>
   );
 }
+
+

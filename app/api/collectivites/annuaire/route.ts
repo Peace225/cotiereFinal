@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { ok, created, badRequest, forbidden, serverError } from "@/lib/api-response";
 import { requireAdmin } from "@/lib/auth";
 
-// GET /api/collectivites/annuaire — Public
+// GET /api/collectivites/annuaire â€” Public
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     if (ville) where.ville = ville;
     if (type) where.type = type;
 
-    const institutions = await prisma.collectiviteAnnuaire.findMany({
+    const institutions = await prisma.collectivite_annuaire.findMany({
       where,
       orderBy: [{ type: "asc" }, { ville: "asc" }],
     });
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST /api/collectivites/annuaire — Admin
+// POST /api/collectivites/annuaire â€” Admin
 export async function POST(req: NextRequest) {
   try { await requireAdmin(); } catch { return forbidden(); }
   try {
@@ -32,11 +32,25 @@ export async function POST(req: NextRequest) {
     const { nom, type, ville, region, telephone, email, adresse, siteWeb, horaires } = body;
     if (!nom || !type || !ville) return badRequest("Nom, type et ville requis");
 
-    const institution = await prisma.collectiviteAnnuaire.create({
-      data: { nom, type, ville, region: region || "", telephone, email, adresse, siteWeb, horaires },
+    const institution = await prisma.collectivite_annuaire.create({
+      data: { 
+        // âœ… CORRECTION : Ajout de l'ID et de la date de mise Ã  jour obligatoires
+        id: crypto.randomUUID(),
+        nom, 
+        type, 
+        ville, 
+        region: region || "", 
+        telephone, 
+        email, 
+        adresse, 
+        siteWeb, 
+        horaires,
+        updatedAt: new Date()
+      },
     });
     return created(institution);
   } catch (e) {
     return serverError(e);
   }
 }
+

@@ -10,7 +10,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const data = await req.json();
-    const service = await prisma.collectiviteService.update({ where: { id }, data });
+    const service = await prisma.collectivite_services.update({ where: { id }, data });
     return ok(service);
   } catch (e) { return serverError(e); }
 }
@@ -19,9 +19,10 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
   try { await requireAdmin(); } catch { return forbidden(); }
   try {
     const { id } = await params;
-    const service = await prisma.collectiviteService.findUnique({ where: { id } });
+    const service = await prisma.collectivite_services.findUnique({ where: { id } });
     if (!service) return notFound("Service introuvable");
-    await prisma.collectiviteService.update({ where: { id }, data: { isActive: false } });
-    return ok({ message: "Service supprimé" });
+    await prisma.collectivite_services.update({ where: { id }, data: { isActive: false } });
+    return ok({ message: "Service supprimÃ©" });
   } catch (e) { return serverError(e); }
 }
+

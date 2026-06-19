@@ -16,8 +16,8 @@ export async function POST(req: NextRequest) {
     const data = parsed.data;
     const session = await getSession();
 
-    // Vérifier disponibilité
-    const availability = await prisma.excursionAvailability.findUnique({
+    // ✅ CORRECTION 1 : excursion_availability
+    const availability = await prisma.excursion_availability.findUnique({
       where: {
         excursionId_date_timeSlot: {
           excursionId: data.excursionId,
@@ -36,10 +36,10 @@ export async function POST(req: NextRequest) {
         return badRequest("Plus assez de places disponibles");
     }
 
-    // Récupérer les tarifs de l'excursion
-    const excursion = await prisma.excursion.findUnique({
+    // ✅ CORRECTION 2 : excursions et excursion_options
+    const excursion = await prisma.excursions.findUnique({
       where: { id: data.excursionId },
-      include: { options: true },
+      include: { excursion_options: true },
     });
     if (!excursion) return badRequest("Excursion introuvable");
 
@@ -59,9 +59,12 @@ export async function POST(req: NextRequest) {
     const booking = await prisma.$transaction(async (tx) => {
       const b = await tx.excursionBooking.create({
         data: {
+          // ✅ CORRECTION 3 : id, updatedAt et sécurité userId
+          id: crypto.randomUUID(),
+          updatedAt: new Date(),
+          ...(session?.user ? { userId: (session.user as { id: string }).id } : {}),
           reference: generateReference("TOUR"),
           excursionId: data.excursionId,
-          userId: session?.user ? (session.user as { id: string }).id : undefined,
           clientFirstName: data.clientFirstName,
           clientLastName: data.clientLastName,
           clientEmail: data.clientEmail,
@@ -83,9 +86,9 @@ export async function POST(req: NextRequest) {
         },
       });
 
-      // Mettre à jour les quotas
+      // ✅ CORRECTION 4 : excursion_availability
       if (availability) {
-        await tx.excursionAvailability.update({
+        await tx.excursion_availability.update({
           where: { id: availability.id },
           data: { bookedSlots: { increment: totalParticipants } },
         });
@@ -126,7 +129,8 @@ export async function GET(req: NextRequest) {
     const [bookings, total] = await Promise.all([
       prisma.excursionBooking.findMany({
         where,
-        include: { excursion: { select: { title: true } } },
+        // ✅ CORRECTION 5 : excursions au lieu de excursion
+        include: { excursions: { select: { title: true } } },
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,
         take: limit,
@@ -139,3 +143,4 @@ export async function GET(req: NextRequest) {
     return serverError(e);
   }
 }
+

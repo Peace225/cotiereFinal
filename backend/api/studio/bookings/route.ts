@@ -3,10 +3,10 @@ import { prisma } from "@/lib/prisma";
 import { studioBookingSchema } from "@/lib/validations";
 import { generateReference } from "@/lib/reference";
 import { created, ok, badRequest, forbidden, serverError } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutÃ©e
 import { sendStudioBookingConfirmation, sendStudioBookingAdminNotif } from "@/lib/email";
 
-// POST /api/studio/bookings — Créer une réservation (Public)
+// POST /api/studio/bookings â€” CrÃ©er une rÃ©servation (Public)
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -54,9 +54,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/studio/bookings — Liste (Admin uniquement)
+// GET /api/studio/bookings â€” Liste (Admin uniquement)
 export async function GET(req: NextRequest) {
-  // Sécurisation : Seuls les admins peuvent voir les réservations
+  // SÃ©curisation : Seuls les admins peuvent voir les rÃ©servations
   try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
@@ -82,3 +82,4 @@ export async function GET(req: NextRequest) {
     return serverError(e);
   }
 }
+

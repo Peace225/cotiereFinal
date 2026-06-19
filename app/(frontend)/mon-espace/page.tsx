@@ -1,6 +1,6 @@
 "use client";
 
-// Force le rendu dynamique pour éviter les erreurs de pré-génération (Prerender error)
+// Force le rendu dynamique pour Ã©viter les erreurs de prÃ©-gÃ©nÃ©ration (Prerender error)
 export const dynamic = 'force-dynamic';
 
 import { useSession, signOut } from "next-auth/react";
@@ -13,7 +13,7 @@ import {
   Camera, Compass, Music, Package, PartyPopper, Edit3, Phone, Mail, Save, X
 } from "lucide-react";
 
-// ─── Types ────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 type BookingStatus = "PENDING" | "CONFIRMED" | "CANCELLED" | "REFUSED" | "COMPLETED";
 type PaymentStatus = "UNPAID" | "PARTIAL" | "PAID" | "REFUNDED";
 
@@ -45,20 +45,20 @@ interface UserProfile {
   nationality?: string;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────
+// â”€â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const STATUS_CONFIG: Record<BookingStatus, { label: string; color: string; bg: string; icon: React.ElementType }> = {
   PENDING:   { label: "En attente",  color: "text-amber-700",  bg: "bg-amber-50 border-amber-200",  icon: Clock },
-  CONFIRMED: { label: "Confirmée",   color: "text-green-700",  bg: "bg-green-50 border-green-200",  icon: CheckCircle },
-  CANCELLED: { label: "Annulée",     color: "text-gray-600",   bg: "bg-gray-50 border-gray-200",    icon: XCircle },
-  REFUSED:   { label: "Refusée",     color: "text-red-700",    bg: "bg-red-50 border-red-200",      icon: XCircle },
-  COMPLETED: { label: "Terminée",    color: "text-blue-700",   bg: "bg-blue-50 border-blue-200",    icon: CheckCircle },
+  CONFIRMED: { label: "ConfirmÃ©e",   color: "text-green-700",  bg: "bg-green-50 border-green-200",  icon: CheckCircle },
+  CANCELLED: { label: "AnnulÃ©e",     color: "text-gray-600",   bg: "bg-gray-50 border-gray-200",    icon: XCircle },
+  REFUSED:   { label: "RefusÃ©e",     color: "text-red-700",    bg: "bg-red-50 border-red-200",      icon: XCircle },
+  COMPLETED: { label: "TerminÃ©e",    color: "text-blue-700",   bg: "bg-blue-50 border-blue-200",    icon: CheckCircle },
 };
 
 const PAYMENT_CONFIG: Record<PaymentStatus, { label: string; color: string }> = {
-  UNPAID:   { label: "Non payé",    color: "text-red-600" },
-  PARTIAL:  { label: "Acompte versé", color: "text-amber-600" },
-  PAID:     { label: "Payé",        color: "text-green-600" },
-  REFUNDED: { label: "Remboursé",   color: "text-blue-600" },
+  UNPAID:   { label: "Non payÃ©",    color: "text-red-600" },
+  PARTIAL:  { label: "Acompte versÃ©", color: "text-amber-600" },
+  PAID:     { label: "PayÃ©",        color: "text-green-600" },
+  REFUNDED: { label: "RemboursÃ©",   color: "text-blue-600" },
 };
 
 const TYPE_ICONS: Record<string, React.ElementType> = {
@@ -71,7 +71,7 @@ const TYPE_ICONS: Record<string, React.ElementType> = {
 };
 
 function formatDate(d?: string): string {
-  if (!d) return "—";
+  if (!d) return "â€”";
   return new Date(d).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" });
 }
 
@@ -79,7 +79,7 @@ function getBookingDate(b: Booking): string {
   return formatDate(b.eventDate ?? b.sessionDate ?? b.bookingDate ?? b.checkIn ?? b.createdAt);
 }
 
-// ─── Composant carte réservation ──────────────────────────────
+// â”€â”€â”€ Composant carte rÃ©servation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function BookingCard({ booking }: { booking: Booking }) {
   const status = STATUS_CONFIG[booking.status] ?? STATUS_CONFIG.PENDING;
   const payment = booking.paymentStatus ? PAYMENT_CONFIG[booking.paymentStatus] : null;
@@ -132,7 +132,7 @@ function BookingCard({ booking }: { booking: Booking }) {
   );
 }
 
-// ─── Page principale ──────────────────────────────────────────
+// â”€â”€â”€ Page principale â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function MonEspacePage() {
   const sessionData = useSession();
   const session = sessionData?.data;
@@ -201,7 +201,7 @@ export default function MonEspacePage() {
       if (res.ok) {
         setProfile(d.data);
         setEditMode(false);
-        setProfileMsg("Profil mis à jour !");
+        setProfileMsg("Profil mis Ã  jour !");
         setTimeout(() => setProfileMsg(""), 3000);
       } else {
         setProfileMsg(d.error ?? "Erreur lors de la sauvegarde");
@@ -212,7 +212,7 @@ export default function MonEspacePage() {
     setSavingProfile(false);
   }
 
-  // Loading global ou non connecté
+  // Loading global ou non connectÃ©
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#f0f9ff]">
@@ -245,15 +245,15 @@ export default function MonEspacePage() {
               <p className="text-blue-200 text-sm">{user.email}</p>
             </div>
             <button onClick={() => signOut({ callbackUrl: "/" })} className="ml-auto flex items-center gap-2 text-sm text-blue-200 hover:text-white transition-colors">
-              <LogOut size={16} /> Déconnexion
+              <LogOut size={16} /> DÃ©connexion
             </button>
           </div>
           <div className="grid grid-cols-4 gap-3 mt-6">
             {[
               { label: "Total", value: stats.total, color: "text-white" },
               { label: "En attente", value: stats.pending, color: "text-amber-300" },
-              { label: "Confirmées", value: stats.confirmed, color: "text-green-300" },
-              { label: "Terminées", value: stats.completed, color: "text-blue-300" },
+              { label: "ConfirmÃ©es", value: stats.confirmed, color: "text-green-300" },
+              { label: "TerminÃ©es", value: stats.completed, color: "text-blue-300" },
             ].map(s => (
               <div key={s.label} className="bg-white/10 rounded-xl p-3 text-center">
                 <p className={`text-2xl font-bold ${s.color}`}>{s.value}</p>
@@ -265,7 +265,8 @@ export default function MonEspacePage() {
       </div>
       
       {/* ... Suite du rendu tabs et contenu ... */}
-      {/* (Reste du code identique à votre version) */}
+      {/* (Reste du code identique Ã  votre version) */}
     </div>
   );
 }
+

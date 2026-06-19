@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateReference } from "@/lib/reference";
 import { created, ok, badRequest, serverError, forbidden } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutÃ©e
 import { z } from "zod";
 
 const reservationSchema = z.object({
@@ -17,7 +17,7 @@ const reservationSchema = z.object({
   pageUrl: z.string().optional(),
 });
 
-// POST /api/reservations — Réservation générique (Public)
+// POST /api/reservations â€” RÃ©servation gÃ©nÃ©rique (Public)
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -53,9 +53,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/reservations — Liste des réservations (Admin uniquement)
+// GET /api/reservations â€” Liste des rÃ©servations (Admin uniquement)
 export async function GET() {
-  // Sécurisation : Seuls les admins peuvent voir les demandes
+  // SÃ©curisation : Seuls les admins peuvent voir les demandes
   try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
@@ -67,3 +67,4 @@ export async function GET() {
     return serverError(e);
   }
 }
+

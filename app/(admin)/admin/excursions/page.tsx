@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Plus, CheckCircle, XCircle, Pencil, Trash2, X, Compass, Clock } from "lucide-react";
@@ -420,3 +420,4 @@ export default function AdminExcursionsPage() {
     </div>
   );
 }
+

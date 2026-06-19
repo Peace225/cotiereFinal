@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const { firstName, lastName, email, password, phone, whatsapp } = parsed.data;
 
     const existing = await prisma.user.findUnique({ where: { email } });
-    if (existing) return badRequest("Cet email est déjà utilisé");
+    if (existing) return badRequest("Cet email est dÃ©jÃ  utilisÃ©");
 
     const hashed = await bcrypt.hash(password, 12);
 
@@ -27,3 +27,5 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+
+

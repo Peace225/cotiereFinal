@@ -22,7 +22,7 @@ export async function GET(
     const startDate = new Date(year, m - 1, 1);
     const endDate = new Date(year, m, 0, 23, 59, 59);
 
-    const excursion = await prisma.excursion.findUnique({
+    const excursion = await prisma.excursions.findUnique({
       where: { id },
       select: { maxParticipants: true },
     });

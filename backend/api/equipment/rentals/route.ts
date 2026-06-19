@@ -29,7 +29,8 @@ export async function GET() {
   try {
     const rentals = await prisma.equipmentRental.findMany({
       orderBy: { createdAt: "desc" },
-      include: { items: { include: { equipment: { select: { name: true } } } } },
+      // ✅ CORRIGÉ : Remplacement de 'equipmentRentalItems' par 'equipment_rental_items'
+      include: { equipment_rental_items: { include: { equipment: { select: { name: true } } } } },
     });
     return ok(rentals);
   } catch (e) { return serverError(e); }
@@ -86,9 +87,10 @@ export async function POST(req: NextRequest) {
           insuranceAmount,
           depositAmount,
           totalAmount,
-          items: { create: itemsData },
+          // ✅ CORRIGÉ : Remplacement de 'items' par 'equipment_rental_items' pour correspondre au modèle Prisma
+          equipment_rental_items: { create: itemsData },
         },
-        include: { items: true },
+        include: { equipment_rental_items: true },
       });
       return r;
     });

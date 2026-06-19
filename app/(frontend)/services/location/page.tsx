@@ -19,8 +19,8 @@ const DEFAULT_EQUIPMENT: Equipment[] = [
   { id: "s1", name: "Enceinte sono 500W", category: "Sono/Audio", totalStock: 10, pricePerDay: 15000, depositValue: 50000, images: ["https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"] },
   { id: "l1", name: "Projecteur LED 200W", category: "Eclairage", totalStock: 12, pricePerDay: 8000, depositValue: 30000, images: ["https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&q=80"] },
   { id: "l2", name: "Guirlandes lumineuses (10m)", category: "Eclairage", totalStock: 30, pricePerDay: 3000, depositValue: 8000, images: ["https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&q=80"] },
-  { id: "l3", name: "Jeux de lumières DJ", category: "Eclairage", totalStock: 6, pricePerDay: 12000, depositValue: 40000, images: ["https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=80"] },
-  { id: "e1", name: "Groupe électrogène 2kW", category: "Electricite", totalStock: 8, pricePerDay: 20000, depositValue: 80000, images: ["https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"] },
+  { id: "l3", name: "Jeux de lumiÃ¨res DJ", category: "Eclairage", totalStock: 6, pricePerDay: 12000, depositValue: 40000, images: ["https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=80"] },
+  { id: "e1", name: "Groupe Ã©lectrogÃ¨ne 2kW", category: "Electricite", totalStock: 8, pricePerDay: 20000, depositValue: 80000, images: ["https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80"] },
   { id: "d1", name: "Parasols", category: "Divers", totalStock: 30, pricePerDay: 3000, depositValue: 8000, images: ["https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80"] },
 ];
 
@@ -66,11 +66,11 @@ export default function LocationPage() {
     try {
       const itemsList = cart.map(i => `${i.equipment.name} x${i.quantity}`).join(", ");
 
-      // Vérifier si les équipements sont en BDD (IDs réels) ou par défaut (t1, c1, etc.)
+      // VÃ©rifier si les Ã©quipements sont en BDD (IDs rÃ©els) ou par dÃ©faut (t1, c1, etc.)
       const hasDefaultIds = cart.some(i => /^[a-z]\d+$/.test(i.equipment.id));
 
       if (hasDefaultIds) {
-        // Fallback : réservation générique via EventRequest
+        // Fallback : rÃ©servation gÃ©nÃ©rique via EventRequest
         await fetch("/api/reservations", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -106,7 +106,7 @@ export default function LocationPage() {
         });
       }
       const msg = encodeURIComponent(
-        `DEMANDE GUICHET UNIQUE - INDUSTRIE EVENEMENTIELLE\n\nClient: ${form.firstName} ${form.lastName}\nTel: ${form.phone}\nDu: ${form.startDate} Au: ${form.endDate}\nMateriel: ${itemsList}\nTotal: ${grandTotal.toLocaleString()} FCFA\nCaution: ${depositTotal.toLocaleString()} FCFA\n\n-- CÔTIÈRE MEDIA GROUP\n1er site officiel des villes et villages du littoral ivoirien\nTel: 07 47 72 29 31`
+        `DEMANDE GUICHET UNIQUE - INDUSTRIE EVENEMENTIELLE\n\nClient: ${form.firstName} ${form.lastName}\nTel: ${form.phone}\nDu: ${form.startDate} Au: ${form.endDate}\nMateriel: ${itemsList}\nTotal: ${grandTotal.toLocaleString()} FCFA\nCaution: ${depositTotal.toLocaleString()} FCFA\n\n-- CÃ”TIÃˆRE MEDIA GROUP\n1er site officiel des villes et villages du littoral ivoirien\nTel: 07 47 72 29 31`
       );
       window.open(`https://wa.me/2250747722931?text=${msg}`, "_blank");
       setSent(true);
@@ -123,8 +123,8 @@ export default function LocationPage() {
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4">
             <div className="flex-1 min-w-0">
-              <h1 className="text-2xl md:text-3xl font-bold mt-2 mb-3 leading-tight">Guichet Unique de l'Industrie Événementielle & Audiovisuelle</h1>
-              <p className="text-gray-200 text-sm md:text-base">Tentes, tables, chaises, sono, groupes électrogènes et plus encore pour vos événements.</p>
+              <h1 className="text-2xl md:text-3xl font-bold mt-2 mb-3 leading-tight">Guichet Unique de l'Industrie Ã‰vÃ©nementielle & Audiovisuelle</h1>
+              <p className="text-gray-200 text-sm md:text-base">Tentes, tables, chaises, sono, groupes Ã©lectrogÃ¨nes et plus encore pour vos Ã©vÃ©nements.</p>
               <a href="#catalogue" className="btn-primary mt-6 inline-flex">Voir le catalogue <ArrowRight size={18} /></a>
             </div>
             <div className="shrink-0 w-64 md:w-80 lg:w-96">
@@ -137,16 +137,16 @@ export default function LocationPage() {
       <section id="catalogue" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-            <h2 className="section-title">Catalogue de matériel</h2>
+            <h2 className="section-title">Catalogue de matÃ©riel</h2>
             {cart.length > 0 && (
               <button onClick={() => setShowForm(true)}
                 className="flex items-center gap-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white font-bold px-5 py-2.5 rounded-xl transition-colors shadow-md">
-                <ShoppingCart size={18} /> Panier ({cart.reduce((s, i) => s + i.quantity, 0)}) — {grandTotal.toLocaleString()} FCFA
+                <ShoppingCart size={18} /> Panier ({cart.reduce((s, i) => s + i.quantity, 0)}) â€” {grandTotal.toLocaleString()} FCFA
               </button>
             )}
           </div>
 
-          {/* Filtres catégories */}
+          {/* Filtres catÃ©gories */}
           <div className="flex gap-2 flex-wrap mb-6">
             {["Tous", ...CATEGORIES].map(cat => (
               <button key={cat} onClick={() => setActiveCategory(cat)}
@@ -183,7 +183,7 @@ export default function LocationPage() {
                     )}
                     <a href={"/services/location/" + eq.id}
                       className="mt-2 w-full flex items-center justify-center gap-1 text-sm font-semibold text-[#0c4a6e] border border-[#0c4a6e]/20 rounded-xl py-2 hover:bg-[#0c4a6e]/5 transition-colors">
-                      Voir détail <ArrowRight size={13} />
+                      Voir dÃ©tail <ArrowRight size={13} />
                     </a>
                   </div>
                 </div>
@@ -193,21 +193,21 @@ export default function LocationPage() {
         </div>
       </section>
 
-      {/* Section Prestations Événementielles */}
+      {/* Section Prestations Ã‰vÃ©nementielles */}
       <section className="py-16 bg-[#f0f9ff]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">
-            <span className="text-[#c9a84c] text-sm font-semibold uppercase tracking-widest">Industrie événementielle</span>
-            <h2 className="section-title mt-2">Nos prestations événementielles</h2>
-            <p className="text-gray-500 mt-2">Organisation complète de vos événements : mariages, galas, conférences, anniversaires.</p>
+            <span className="text-[#c9a84c] text-sm font-semibold uppercase tracking-widest">Industrie Ã©vÃ©nementielle</span>
+            <h2 className="section-title mt-2">Nos prestations Ã©vÃ©nementielles</h2>
+            <p className="text-gray-500 mt-2">Organisation complÃ¨te de vos Ã©vÃ©nements : mariages, galas, confÃ©rences, anniversaires.</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
             {[
-              { slug: "decoration",   image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400&q=80", label: "Décoration & scénographie" },
+              { slug: "decoration",   image: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=400&q=80", label: "DÃ©coration & scÃ©nographie" },
               { slug: "traiteur",     image: "https://images.unsplash.com/photo-1555244162-803834f70033?w=400&q=80", label: "Traiteur & restauration" },
-              { slug: "sonorisation", image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&q=80", label: "Sonorisation & éclairage" },
-              { slug: "securite",     image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=400&q=80", label: "Sécurité événementielle" },
-              { slug: "hotesses",     image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&q=80", label: "Hôtesses & accueil" },
+              { slug: "sonorisation", image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=400&q=80", label: "Sonorisation & Ã©clairage" },
+              { slug: "securite",     image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=400&q=80", label: "SÃ©curitÃ© Ã©vÃ©nementielle" },
+              { slug: "hotesses",     image: "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=400&q=80", label: "HÃ´tesses & accueil" },
               { slug: "animation",    image: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=80", label: "Animation & spectacles" },
             ].map((s) => (
               <a key={s.label} href={`/services/evenements/${s.slug}`}
@@ -226,7 +226,7 @@ export default function LocationPage() {
           </div>
           <div className="text-center">
             <a href="/services/evenements#demande" className="btn-primary inline-flex items-center gap-2">
-              Demander un devis événement <ArrowRight size={18} />
+              Demander un devis Ã©vÃ©nement <ArrowRight size={18} />
             </a>
           </div>
         </div>
@@ -243,17 +243,17 @@ export default function LocationPage() {
             {sent ? (
               <div className="p-8 text-center">
                 <CheckCircle size={48} className="text-green-500 mx-auto mb-4" />
-                <h4 className="font-bold text-[#0c4a6e] text-lg mb-2">Demande envoyée !</h4>
-                <p className="text-gray-500 text-sm">Notre équipe vous contactera sous 24h pour confirmer la disponibilité.</p>
+                <h4 className="font-bold text-[#0c4a6e] text-lg mb-2">Demande envoyÃ©e !</h4>
+                <p className="text-gray-500 text-sm">Notre Ã©quipe vous contactera sous 24h pour confirmer la disponibilitÃ©.</p>
                 <button onClick={() => { setShowForm(false); setSent(false); setCart([]); }} className="mt-4 btn-primary">Fermer</button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="overflow-y-auto px-5 py-4 space-y-4">
-                {/* Récap panier */}
+                {/* RÃ©cap panier */}
                 <div className="bg-gray-50 rounded-xl p-4 space-y-2">
                   {cart.map(i => (
                     <div key={i.equipment.id} className="flex items-center justify-between text-sm">
-                      <span className="text-gray-700">{i.equipment.name} × {i.quantity}</span>
+                      <span className="text-gray-700">{i.equipment.name} Ã— {i.quantity}</span>
                       <div className="flex items-center gap-3">
                         <span className="text-[#0c4a6e] font-semibold">{(i.quantity * i.equipment.pricePerDay * days).toLocaleString()} FCFA</span>
                         <button type="button" onClick={() => updateQty(i.equipment.id, -i.quantity)} className="text-red-400 hover:text-red-600"><X size={14} /></button>
@@ -265,7 +265,7 @@ export default function LocationPage() {
                 {/* Dates */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Date de début *</label>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Date de dÃ©but *</label>
                     <input required type="date" value={form.startDate} min={new Date().toISOString().split("T")[0]}
                       onChange={e => setForm(f => ({ ...f, startDate: e.target.value }))}
                       className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
@@ -277,12 +277,12 @@ export default function LocationPage() {
                       className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
                   </div>
                 </div>
-                {form.startDate && form.endDate && <p className="text-xs text-[#0c4a6e] font-semibold">Durée : {days} jour(s)</p>}
+                {form.startDate && form.endDate && <p className="text-xs text-[#0c4a6e] font-semibold">DurÃ©e : {days} jour(s)</p>}
 
                 {/* Infos client */}
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Prénom *</label>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">PrÃ©nom *</label>
                     <input required type="text" value={form.firstName} onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
                   </div>
                   <div>
@@ -292,7 +292,7 @@ export default function LocationPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-gray-700 mb-1">Téléphone *</label>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">TÃ©lÃ©phone *</label>
                     <input required type="tel" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
                   </div>
                   <div>
@@ -306,7 +306,7 @@ export default function LocationPage() {
                   {[
                     { key: "withDelivery", label: "Livraison/retour (+15 000 FCFA)" },
                     { key: "withInstall", label: "Installation sur place (+20 000 FCFA)" },
-                    { key: "withInsurance", label: "Assurance matériel (+5% du total)" },
+                    { key: "withInsurance", label: "Assurance matÃ©riel (+5% du total)" },
                   ].map(({ key, label }) => (
                     <label key={key} className="flex items-center gap-3 cursor-pointer">
                       <input type="checkbox" checked={(form as any)[key]} onChange={e => setForm(f => ({ ...f, [key]: e.target.checked }))} className="accent-[#c9a84c]" />
@@ -322,9 +322,9 @@ export default function LocationPage() {
                   </div>
                 )}
 
-                {/* Récap total */}
+                {/* RÃ©cap total */}
                 <div className="bg-[#f0f9ff] rounded-xl p-4 space-y-1 text-sm">
-                  <div className="flex justify-between"><span className="text-gray-600">Matériel ({days}j)</span><span className="font-semibold">{equipmentTotal.toLocaleString()} FCFA</span></div>
+                  <div className="flex justify-between"><span className="text-gray-600">MatÃ©riel ({days}j)</span><span className="font-semibold">{equipmentTotal.toLocaleString()} FCFA</span></div>
                   {optionsTotal > 0 && <div className="flex justify-between"><span className="text-gray-600">Options</span><span className="font-semibold">{optionsTotal.toLocaleString()} FCFA</span></div>}
                   {insuranceAmount > 0 && <div className="flex justify-between"><span className="text-gray-600">Assurance</span><span className="font-semibold">{insuranceAmount.toLocaleString()} FCFA</span></div>}
                   <div className="flex justify-between border-t border-gray-200 pt-2 mt-2">
@@ -347,4 +347,6 @@ export default function LocationPage() {
     </div>
   );
 }
+
+
 

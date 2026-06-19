@@ -6,7 +6,7 @@ import { getSession } from "@/lib/auth";
 import { created, badRequest, ok, serverError } from "@/lib/api-response";
 import { sendEventRequestConfirmation, sendEventRequestAdminNotif } from "@/lib/email";
 
-// POST /api/events/requests — Soumettre une demande d'événement
+// POST /api/events/requests â€” Soumettre une demande d'Ã©vÃ©nement
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/events/requests — Liste (admin)
+// GET /api/events/requests â€” Liste (admin)
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
@@ -63,3 +63,5 @@ export async function GET(req: NextRequest) {
     return serverError(e);
   }
 }
+
+

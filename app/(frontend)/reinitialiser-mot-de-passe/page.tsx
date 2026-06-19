@@ -17,7 +17,7 @@ function ResetPasswordForm() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!token) setError("Lien invalide. Veuillez refaire une demande de réinitialisation.");
+    if (!token) setError("Lien invalide. Veuillez refaire une demande de rÃ©initialisation.");
   }, [token]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -25,7 +25,7 @@ function ResetPasswordForm() {
     setError("");
 
     if (password.length < 8) {
-      setError("Le mot de passe doit contenir au moins 8 caractères.");
+      setError("Le mot de passe doit contenir au moins 8 caractÃ¨res.");
       return;
     }
     if (password !== confirm) {
@@ -48,7 +48,7 @@ function ResetPasswordForm() {
         setTimeout(() => router.push("/connexion"), 3000);
       }
     } catch {
-      setError("Erreur de connexion. Veuillez réessayer.");
+      setError("Erreur de connexion. Veuillez rÃ©essayer.");
     }
     setLoading(false);
   }
@@ -59,9 +59,9 @@ function ResetPasswordForm() {
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <CheckCircle size={32} className="text-green-600" />
         </div>
-        <h2 className="text-xl font-bold text-[#0c4a6e] mb-2">Mot de passe mis à jour !</h2>
+        <h2 className="text-xl font-bold text-[#0c4a6e] mb-2">Mot de passe mis Ã  jour !</h2>
         <p className="text-gray-500 text-sm mb-6">
-          Votre mot de passe a été réinitialisé avec succès. Vous allez être redirigé vers la page de connexion...
+          Votre mot de passe a Ã©tÃ© rÃ©initialisÃ© avec succÃ¨s. Vous allez Ãªtre redirigÃ© vers la page de connexion...
         </p>
         <Link
           href="/connexion"
@@ -84,7 +84,7 @@ function ResetPasswordForm() {
 
       {!token ? (
         <div className="text-center">
-          <p className="text-gray-500 text-sm mb-4">Ce lien est invalide ou a expiré.</p>
+          <p className="text-gray-500 text-sm mb-4">Ce lien est invalide ou a expirÃ©.</p>
           <Link href="/mot-de-passe-oublie" className="text-[#38bdf8] hover:underline text-sm font-medium">
             Faire une nouvelle demande
           </Link>
@@ -100,7 +100,7 @@ function ResetPasswordForm() {
               <input
                 type={showPassword ? "text" : "password"}
                 required
-                placeholder="Minimum 8 caractères"
+                placeholder="Minimum 8 caractÃ¨res"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] focus:border-transparent"
@@ -124,7 +124,7 @@ function ResetPasswordForm() {
               <input
                 type={showPassword ? "text" : "password"}
                 required
-                placeholder="Répétez le mot de passe"
+                placeholder="RÃ©pÃ©tez le mot de passe"
                 value={confirm}
                 onChange={(e) => setConfirm(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] focus:border-transparent"
@@ -158,9 +158,9 @@ function ResetPasswordForm() {
             disabled={loading}
             className="w-full bg-[#c9a84c] hover:bg-[#b8973b] disabled:opacity-60 text-white font-bold py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
           >
-            {loading ? "Mise à jour..." : (
+            {loading ? "Mise Ã  jour..." : (
               <>
-                <span>Réinitialiser le mot de passe</span>
+                <span>RÃ©initialiser le mot de passe</span>
                 <ArrowRight size={16} />
               </>
             )}
@@ -170,7 +170,7 @@ function ResetPasswordForm() {
 
       <div className="mt-6 text-center">
         <Link href="/connexion" className="text-sm text-[#38bdf8] hover:underline font-medium">
-          ← Retour à la connexion
+          â† Retour Ã  la connexion
         </Link>
       </div>
     </div>
@@ -183,11 +183,11 @@ export default function ResetPasswordPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <span className="text-[#c9a84c] font-black text-2xl">CÔTIÈRE</span>
+            <span className="text-[#c9a84c] font-black text-2xl">CÃ”TIÃˆRE</span>
             <span className="text-[#0c4a6e] font-light text-sm ml-1">MEDIA GROUP</span>
           </Link>
           <h1 className="text-2xl font-bold text-[#0c4a6e] mt-4">Nouveau mot de passe</h1>
-          <p className="text-gray-500 text-sm mt-1">Choisissez un mot de passe sécurisé</p>
+          <p className="text-gray-500 text-sm mt-1">Choisissez un mot de passe sÃ©curisÃ©</p>
         </div>
         <Suspense fallback={<div className="bg-white rounded-2xl p-8 text-center text-gray-400">Chargement...</div>}>
           <ResetPasswordForm />
@@ -196,3 +196,5 @@ export default function ResetPasswordPage() {
     </div>
   );
 }
+
+

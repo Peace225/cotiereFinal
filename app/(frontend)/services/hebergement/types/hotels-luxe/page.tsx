@@ -3,33 +3,33 @@ import Link from "next/link";
 import { ArrowLeft, ArrowRight, Star, Check, MapPin, Users, Wifi, Wind, Tv, Bath, Coffee, Car, ShowerHead, Flower2, Shirt, Phone, ShieldCheck } from "lucide-react";
 
 const ROOMS = [
-  { name: "Suite Présidentielle", price: "150 000", capacity: 2, surface: 80, image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80", features: ["Vue mer panoramique", "Jacuzzi privé", "Butler dédié"] },
-  { name: "Suite Royale", price: "120 000", capacity: 2, surface: 65, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80", features: ["Terrasse privée", "Baignoire balnéo", "Salon séparé"] },
+  { name: "Suite PrÃ©sidentielle", price: "150 000", capacity: 2, surface: 80, image: "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=600&q=80", features: ["Vue mer panoramique", "Jacuzzi privÃ©", "Butler dÃ©diÃ©"] },
+  { name: "Suite Royale", price: "120 000", capacity: 2, surface: 65, image: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=600&q=80", features: ["Terrasse privÃ©e", "Baignoire balnÃ©o", "Salon sÃ©parÃ©"] },
   { name: "Chambre Deluxe", price: "85 000", capacity: 2, surface: 45, image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80", features: ["Vue mer", "Literie grand luxe", "Mini-bar premium"] },
 ];
 
 const INCLUS = [
-  "Petit-déjeuner gastronomique inclus",
-  "Accès spa & piscine infinity",
+  "Petit-dÃ©jeuner gastronomique inclus",
+  "AccÃ¨s spa & piscine infinity",
   "Wifi fibre optique (500 Mbps)",
   "Service de conciergerie 24h/24",
-  "Navette aéroport incluse",
+  "Navette aÃ©roport incluse",
   "Parking voiturier",
   "Room service 24h/24",
-  "Coffre-fort numérique",
+  "Coffre-fort numÃ©rique",
   "Peignoirs & chaussons de luxe",
-  "Produits de bain Hermès / L'Occitane",
-  "Bouteille de champagne à l'arrivée",
-  "Ménage 2x/jour",
+  "Produits de bain HermÃ¨s / L'Occitane",
+  "Bouteille de champagne Ã  l'arrivÃ©e",
+  "MÃ©nage 2x/jour",
 ];
 
 const EQUIPEMENTS_SDB = [
-  { icon: <Bath size={15} />, label: "Baignoire balnéo" },
-  { icon: <ShowerHead size={15} />, label: "Douche à effet pluie" },
+  { icon: <Bath size={15} />, label: "Baignoire balnÃ©o" },
+  { icon: <ShowerHead size={15} />, label: "Douche Ã  effet pluie" },
   { icon: <Flower2 size={15} />, label: "Produits de bain premium" },
   { icon: <Shirt size={15} />, label: "Peignoirs & chaussons" },
-  { icon: <ShowerHead size={15} />, label: "Sèche-cheveux professionnel" },
-  { icon: <Star size={15} />, label: "Miroir éclairé anti-buée" },
+  { icon: <ShowerHead size={15} />, label: "SÃ¨che-cheveux professionnel" },
+  { icon: <Star size={15} />, label: "Miroir Ã©clairÃ© anti-buÃ©e" },
 ];
 
 export default function HotelsLuxePage() {
@@ -37,17 +37,17 @@ export default function HotelsLuxePage() {
     <div className="min-h-screen bg-[#f8fafc]">
       {/* Hero */}
       <section className="relative h-72 overflow-hidden">
-        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1600&q=80" alt="Hôtels de luxe" className="w-full h-full object-cover" />
+        <img src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1600&q=80" alt="HÃ´tels de luxe" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
         <div className="absolute inset-0 flex flex-col justify-end p-8 max-w-6xl mx-auto">
           <Link href="/services/hebergement" className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm mb-4 transition-colors w-fit">
-            <ArrowLeft size={16} /> Retour à l'hébergement
+            <ArrowLeft size={16} /> Retour Ã  l'hÃ©bergement
           </Link>
           <div className="flex items-center gap-2 mb-2">
             {[1,2,3,4,5].map(i => <Star key={i} size={16} className="text-[#c9a84c] fill-[#c9a84c]" />)}
           </div>
-          <h1 className="text-4xl font-black text-white">Hôtels de Luxe</h1>
-          <p className="text-white/80 mt-2 max-w-xl">Une expérience hôtelière d'exception sur le littoral ivoirien. Prestations 5 étoiles, service personnalisé et vue imprenable sur l'océan.</p>
+          <h1 className="text-4xl font-black text-white">HÃ´tels de Luxe</h1>
+          <p className="text-white/80 mt-2 max-w-xl">Une expÃ©rience hÃ´teliÃ¨re d'exception sur le littoral ivoirien. Prestations 5 Ã©toiles, service personnalisÃ© et vue imprenable sur l'ocÃ©an.</p>
         </div>
       </section>
 
@@ -67,7 +67,7 @@ export default function HotelsLuxePage() {
                   <h3 className="font-bold text-[#0c4a6e] mb-1">{r.name}</h3>
                   <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
                     <span className="flex items-center gap-1"><Users size={12} /> {r.capacity} pers.</span>
-                    <span>{r.surface} m²</span>
+                    <span>{r.surface} mÂ²</span>
                   </div>
                   <div className="space-y-1 mb-4">
                     {r.features.map(f => (
@@ -77,7 +77,7 @@ export default function HotelsLuxePage() {
                     ))}
                   </div>
                   <Link href="/services/hebergement#chambres" className="btn-primary w-full justify-center text-sm py-2">
-                    Réserver <ArrowRight size={13} />
+                    RÃ©server <ArrowRight size={13} />
                   </Link>
                 </div>
               </div>
@@ -114,9 +114,9 @@ export default function HotelsLuxePage() {
           </div>
         </section>
 
-        {/* Équipements */}
+        {/* Ã‰quipements */}
         <section className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-          <h2 className="text-xl font-bold text-[#0c4a6e] mb-5">Équipements & services</h2>
+          <h2 className="text-xl font-bold text-[#0c4a6e] mb-5">Ã‰quipements & services</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[
               { icon: <Wifi size={20} className="text-[#38bdf8]" />, label: "Wifi 500 Mbps" },
@@ -138,8 +138,8 @@ export default function HotelsLuxePage() {
 
         {/* CTA */}
         <div className="bg-gradient-to-r from-[#0c4a6e] to-[#0e5a82] rounded-2xl p-8 text-center text-white">
-          <h3 className="text-2xl font-bold mb-2">Réservez votre séjour de luxe</h3>
-          <p className="text-white/70 mb-6">Disponibilités limitées · Réponse sous 24h · Acompte 30%</p>
+          <h3 className="text-2xl font-bold mb-2">RÃ©servez votre sÃ©jour de luxe</h3>
+          <p className="text-white/70 mb-6">DisponibilitÃ©s limitÃ©es Â· RÃ©ponse sous 24h Â· Acompte 30%</p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link href="/services/hebergement#chambres" className="btn-primary">Voir les chambres <ArrowRight size={16} /></Link>
             <a href="tel:+2250747722931" className="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-xl transition-colors">
@@ -152,4 +152,6 @@ export default function HotelsLuxePage() {
     </div>
   );
 }
+
+
 

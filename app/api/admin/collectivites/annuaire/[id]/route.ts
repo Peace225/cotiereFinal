@@ -1,52 +1,60 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-// PATCH - Modifier un contact
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(req: NextRequest) {
   try {
-    const { id } = await params;
-    const body = await req.json();
-    const { nom, type, ville, region, telephone, email, adresse, siteWeb, horaires, isActive } = body;
+    const { searchParams } = new URL(req.url);
+    const type = searchParams.get("type");
+    const ville = searchParams.get("ville");
+    const search = searchParams.get("search");
 
-    const contact = await prisma.collectiviteAnnuaire.update({
-      where: { id },
-      data: {
-        ...(nom !== undefined && { nom }),
-        ...(type !== undefined && { type }),
-        ...(ville !== undefined && { ville }),
-        ...(region !== undefined && { region }),
-        ...(telephone !== undefined && { telephone: telephone || null }),
-        ...(email !== undefined && { email: email || null }),
-        ...(adresse !== undefined && { adresse: adresse || null }),
-        ...(siteWeb !== undefined && { siteWeb: siteWeb || null }),
-        ...(horaires !== undefined && { horaires: horaires || null }),
-        ...(isActive !== undefined && { isActive }),
-      },
+    const where: any = {};
+    if (type && type !== "all") where.type = type;
+    if (ville && ville !== "all") where.ville = ville;
+    if (search) {
+      where.OR = [
+        { nom: { contains: search, mode: "insensitive" } },
+        { ville: { contains: search, mode: "insensitive" } },
+        { region: { contains: search, mode: "insensitive" } },
+      ];
+    }
+
+    const contacts = await prisma.collectivite_annuaire.findMany({
+      where,
+      orderBy: [{ ville: "asc" }, { nom: "asc" }],
     });
-
-    return NextResponse.json({ contact });
+    return NextResponse.json(contacts);
   } catch (error) {
-    console.error("PATCH /api/admin/collectivites/annuaire/[id]:", error);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    console.error("GET /api/admin/collectivites/annuaire:", error);
+    return NextResponse.json({ error: "Erreur" }, { status: 500 });
   }
 }
 
-// DELETE - Supprimer un contact
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function POST(req: NextRequest) {
   try {
-    const { id } = await params;
-    await prisma.collectiviteAnnuaire.delete({
-      where: { id },
+    const { nom, type, ville, region, telephone, email, adresse, siteWeb, horaires } = await req.json();
+    if (!nom || !ville) return NextResponse.json({ error: "Nom et ville requis" }, { status: 400 });
+
+    const newContact = await prisma.collectivite_annuaire.create({
+      data: {
+        id: crypto.randomUUID(),
+        nom,
+        type: type || "Mairie",
+        ville,
+        region: region || "",
+        telephone: telephone || null,
+        email: email || null,
+        adresse: adresse || null,
+        siteWeb: siteWeb || null,
+        horaires: horaires || null,
+        isActive: true,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     });
-    return NextResponse.json({ success: true });
+    return NextResponse.json(newContact, { status: 201 });
   } catch (error) {
-    console.error("DELETE /api/admin/collectivites/annuaire/[id]:", error);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    console.error("POST /api/admin/collectivites/annuaire:", error);
+    return NextResponse.json({ error: "Erreur" }, { status: 500 });
   }
 }

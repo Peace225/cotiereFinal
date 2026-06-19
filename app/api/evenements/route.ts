@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ data: { evenements } });
   } catch (error) {
-    console.error("Erreur GET événements:", error);
+    console.error("Erreur GET Ã©vÃ©nements:", error);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
   try {
     const session = await getSession();
     if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
-      return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+      return NextResponse.json({ error: "Non autorisÃ©" }, { status: 401 });
     }
 
     const body = await req.json();
@@ -47,3 +47,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+
+

@@ -13,11 +13,12 @@ export async function GET() {
       orderBy: [{ isRead: "asc" }, { createdAt: "desc" }],
       take: 50,
       include: {
-        studioBooking: { select: { clientFirstName: true, clientLastName: true } },
-        eventRequest: { select: { clientFirstName: true, clientLastName: true } },
-        excursionBooking: { select: { clientFirstName: true, clientLastName: true } },
-        hotelBooking: { select: { clientFirstName: true, clientLastName: true } },
-        musicBooking: { select: { clientFirstName: true, clientLastName: true } },
+        // ✅ CORRIGÉ : Noms de relations mis à jour selon le typage Prisma (snake_case)
+        studio_bookings: { select: { clientFirstName: true, clientLastName: true } },
+        event_requests: { select: { clientFirstName: true, clientLastName: true } },
+        excursion_bookings: { select: { clientFirstName: true, clientLastName: true } },
+        hotel_bookings: { select: { clientFirstName: true, clientLastName: true } },
+        music_bookings: { select: { clientFirstName: true, clientLastName: true } },
       },
     });
     const unreadCount = await prisma.notification.count({ where: { isRead: false } });

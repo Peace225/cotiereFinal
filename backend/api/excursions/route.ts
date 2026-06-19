@@ -19,11 +19,13 @@ const excursionSchema = z.object({
 // GET /api/excursions — Catalogue public
 export async function GET() {
   try {
-    const excursions = await prisma.excursion.findMany({
+    const excursions = await prisma.excursions.findMany({
       where: { isActive: true },
       include: {
-        options: { where: { isActive: true } },
-        timeSlots: { where: { isActive: true } },
+        // ✅ CORRIGÉ : Remplacement de 'options' par 'excursion_options' (en snake_case)
+        excursion_options: { where: { isActive: true } },
+        // ✅ CORRIGÉ : Remplacement de 'timeSlots' par 'excursion_time_slots' (en snake_case)
+        excursion_time_slots: { where: { isActive: true } },
         reviews: { where: { isApproved: true }, select: { rating: true } },
       },
       orderBy: { title: "asc" },
@@ -58,7 +60,7 @@ export async function POST(req: NextRequest) {
     const parsed = excursionSchema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
 
-    const excursion = await prisma.excursion.create({
+    const excursion = await prisma.excursions.create({
       data: { ...parsed.data, images: parsed.data.images ?? [] },
     });
 

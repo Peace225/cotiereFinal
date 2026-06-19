@@ -14,19 +14,20 @@ import StudioCard from "../frontend/components/home/StudioCard";
 import ActivitiesSection from "../frontend/components/home/ActivitiesSection";
 
 export default async function Home() {
-  let enVogue = [];
-  let mieuxNotes = [];
-  let weekEnd = [];
-  let adoreParClients = [];
-  let restaurantsPopulaires = [];
-  let servicesStudio = [];
+  let enVogue: any[] = [];
+  let mieuxNotes: any[] = [];
+  let weekEnd: any[] = [];
+  let adoreParClients: any[] = [];
+  let restaurantsPopulaires: any[] = [];
+  let servicesStudio: any[] = [];
 
   try {
+    // âœ… CORRECTION : Utilisation de rooms au pluriel
     [enVogue, mieuxNotes, weekEnd, adoreParClients, restaurantsPopulaires, servicesStudio] = await Promise.all([
-      prisma.room.findMany({ where: { isFeatured: true }, take: 4 }),
-      prisma.room.findMany({ orderBy: { rating: 'desc' }, take: 4 }),
-      prisma.room.findMany({ where: { isWeekend: true }, take: 4 }),
-      prisma.room.findMany({ where: { isPopular: true }, take: 4 }),
+      prisma.rooms.findMany({ where: { isFeatured: true }, take: 4 }),
+      prisma.rooms.findMany({ orderBy: { rating: 'desc' }, take: 4 }),
+      prisma.rooms.findMany({ where: { isWeekend: true }, take: 4 }),
+      prisma.rooms.findMany({ where: { isPopular: true }, take: 4 }),
       prisma.villeContenu.findMany({ where: { categorie: "restaurant" }, take: 4 }),
       prisma.villeContenu.findMany({ where: { categorie: "studio" }, take: 4 }), 
     ]);
@@ -35,15 +36,15 @@ export default async function Home() {
   }
 
   // =====================================================================
-  // 🚀 INJECTION DE DONNÉES DE TEST POUR FORCER L'AFFICHAGE DU STUDIO
-  // (À supprimer quand tu auras mis de vrais services dans ta BDD)
+  // ðŸš€ INJECTION DE DONNÃ‰ES DE TEST POUR FORCER L'AFFICHAGE DU STUDIO
+  // (Ã€ supprimer quand tu auras mis de vrais services dans ta BDD)
   // =====================================================================
   if (servicesStudio.length === 0) {
     servicesStudio = [
-      { id: "test-1", label: "Shooting Photo", description: "Séance photo premium en studio ou extérieur.", image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80" },
-      { id: "test-2", label: "Réalisation Vidéo", description: "Captation 4K et montage dynamique.", image: "https://images.unsplash.com/photo-1601506521937-0121a7fc2a6b?w=800&q=80" },
-      { id: "test-3", label: "Prises Aériennes Drone", description: "Vues spectaculaires pour vos événements.", image: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=800&q=80" },
-      { id: "test-4", label: "Couverture Événementielle", description: "Immortalisez vos meilleurs moments.", image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80" }
+      { id: "test-1", label: "Shooting Photo", description: "SÃ©ance photo premium en studio ou extÃ©rieur.", image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&q=80" },
+      { id: "test-2", label: "RÃ©alisation VidÃ©o", description: "Captation 4K et montage dynamique.", image: "https://images.unsplash.com/photo-1601506521937-0121a7fc2a6b?w=800&q=80" },
+      { id: "test-3", label: "Prises AÃ©riennes Drone", description: "Vues spectaculaires pour vos Ã©vÃ©nements.", image: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=800&q=80" },
+      { id: "test-4", label: "Couverture Ã‰vÃ©nementielle", description: "Immortalisez vos meilleurs moments.", image: "https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80" }
     ];
   }
 
@@ -71,18 +72,18 @@ export default async function Home() {
         {/* 2. Ajoute la section ici */}
         <ActivitiesSection />
         
-        <SectionGrid title="Les mieux notés" data={mieuxNotes} />
+        <SectionGrid title="Les mieux notÃ©s" data={mieuxNotes} />
          
         <SectionGrid title="Offres week-end" data={weekEnd} />
         
-        <SectionGrid title="Les hébergements que les clients adorent" data={adoreParClients} />
+        <SectionGrid title="Les hÃ©bergements que les clients adorent" data={adoreParClients} />
 
         {/* SECTION DES RESTAURANTS */}
         {restaurantsPopulaires.length > 0 && (
           <section className="w-full">
             <div className="mb-6 flex items-baseline justify-between">
               <h2 className="!text-[18px] md:!text-[20px] font-black text-slate-900 tracking-tight">
-                Les meilleurs restaurants Côtièriennes
+                Les meilleurs restaurants CÃ´tiÃ¨riennes
               </h2>
               <a href="/restaurants" className="text-sm font-bold text-[#c9a84c] hover:underline transition-colors">
                 Voir tout
@@ -122,3 +123,4 @@ export default async function Home() {
     </main>
   );
 }
+

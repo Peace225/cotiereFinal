@@ -25,20 +25,20 @@ const STATUS_COLORS: Record<string, string> = {
   COMPLETED: "bg-blue-100 text-blue-700 border-blue-200",
 };
 const STATUS_LABELS: Record<string, string> = {
-  PENDING: "En attente", CONFIRMED: "Confirmé", REFUSED: "Refusé",
-  CANCELLED: "Annulé", COMPLETED: "Terminé",
+  PENDING: "En attente", CONFIRMED: "ConfirmÃ©", REFUSED: "RefusÃ©",
+  CANCELLED: "AnnulÃ©", COMPLETED: "TerminÃ©",
 };
 
 const DEFAULT_SUPPORTS: SupportPub[] = [
-  { id: "tv", nom: "Publicité TV", categorie: "Audiovisuel", prix: "À partir de 50 000 FCFA", description: "Spots publicitaires diffusés sur CÔTIÈRE TV, la chaîne locale du littoral ivoirien.", image: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=400&q=80", isActive: true },
-  { id: "radio", nom: "Publicité Radio", categorie: "Audiovisuel", prix: "À partir de 25 000 FCFA", description: "Jingles et annonces sur les radios locales du littoral (FM, communautaires).", image: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400&q=80", isActive: true },
-  { id: "web", nom: "Publicité Web & Réseaux", categorie: "Digital", prix: "À partir de 30 000 FCFA", description: "Campagnes sur Facebook, Instagram, TikTok et le site CÔTIÈRE.", image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&q=80", isActive: true },
-  { id: "sms", nom: "SMS & WhatsApp Marketing", categorie: "Digital", prix: "À partir de 15 000 FCFA", description: "Envoi de messages promotionnels ciblés à notre base de clients du littoral.", image: "https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&q=80", isActive: true },
-  { id: "print", nom: "Affichage & Flyers", categorie: "Print", prix: "À partir de 20 000 FCFA", description: "Conception et impression de supports print : affiches, flyers, banderoles.", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80", isActive: true },
-  { id: "event", nom: "Sponsoring d'événements", categorie: "Événementiel", prix: "Sur devis", description: "Visibilité lors des événements CÔTIÈRE : concerts, galas, foires, marchés.", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80", isActive: true },
-  { id: "starter", nom: "Pack Starter", categorie: "Pack", prix: "75 000 FCFA", description: "1 spot radio × 10 passages + 1 post sponsorisé + conception incluse.", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80", isActive: true },
-  { id: "visibilite", nom: "Pack Visibilité", categorie: "Pack", prix: "200 000 FCFA", description: "TV + Radio + Réseaux sociaux 7j + SMS 500 contacts + conception complète.", image: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=400&q=80", isActive: true },
-  { id: "premium", nom: "Pack Premium", categorie: "Pack", prix: "Sur devis", description: "Campagne multi-supports illimitée avec accompagnement stratégique.", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=80", isActive: true },
+  { id: "tv", nom: "PublicitÃ© TV", categorie: "Audiovisuel", prix: "Ã€ partir de 50 000 FCFA", description: "Spots publicitaires diffusÃ©s sur CÃ”TIÃˆRE TV, la chaÃ®ne locale du littoral ivoirien.", image: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=400&q=80", isActive: true },
+  { id: "radio", nom: "PublicitÃ© Radio", categorie: "Audiovisuel", prix: "Ã€ partir de 25 000 FCFA", description: "Jingles et annonces sur les radios locales du littoral (FM, communautaires).", image: "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=400&q=80", isActive: true },
+  { id: "web", nom: "PublicitÃ© Web & RÃ©seaux", categorie: "Digital", prix: "Ã€ partir de 30 000 FCFA", description: "Campagnes sur Facebook, Instagram, TikTok et le site CÃ”TIÃˆRE.", image: "https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=400&q=80", isActive: true },
+  { id: "sms", nom: "SMS & WhatsApp Marketing", categorie: "Digital", prix: "Ã€ partir de 15 000 FCFA", description: "Envoi de messages promotionnels ciblÃ©s Ã  notre base de clients du littoral.", image: "https://images.unsplash.com/photo-1611746872915-64382b5c76da?w=400&q=80", isActive: true },
+  { id: "print", nom: "Affichage & Flyers", categorie: "Print", prix: "Ã€ partir de 20 000 FCFA", description: "Conception et impression de supports print : affiches, flyers, banderoles.", image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&q=80", isActive: true },
+  { id: "event", nom: "Sponsoring d'Ã©vÃ©nements", categorie: "Ã‰vÃ©nementiel", prix: "Sur devis", description: "VisibilitÃ© lors des Ã©vÃ©nements CÃ”TIÃˆRE : concerts, galas, foires, marchÃ©s.", image: "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=400&q=80", isActive: true },
+  { id: "starter", nom: "Pack Starter", categorie: "Pack", prix: "75 000 FCFA", description: "1 spot radio Ã— 10 passages + 1 post sponsorisÃ© + conception incluse.", image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80", isActive: true },
+  { id: "visibilite", nom: "Pack VisibilitÃ©", categorie: "Pack", prix: "200 000 FCFA", description: "TV + Radio + RÃ©seaux sociaux 7j + SMS 500 contacts + conception complÃ¨te.", image: "https://images.unsplash.com/photo-1533750349088-cd871a92f312?w=400&q=80", isActive: true },
+  { id: "premium", nom: "Pack Premium", categorie: "Pack", prix: "Sur devis", description: "Campagne multi-supports illimitÃ©e avec accompagnement stratÃ©gique.", image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=80", isActive: true },
 ];
 
 const emptyForm = { nom: "", categorie: "Audiovisuel", prix: "", description: "", image: "" };
@@ -55,7 +55,7 @@ export default function AdminAfroubaPage() {
   const [editId, setEditId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  // ── Chargement des supports depuis la DB ──────────────────────────────────
+  // â”€â”€ Chargement des supports depuis la DB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   async function loadSupports() {
     setLoadingSupports(true);
     try {
@@ -95,7 +95,7 @@ export default function AdminAfroubaPage() {
     setRequests(prev => prev.filter(r => r.id !== id));
   }
 
-  // ── CRUD supports ─────────────────────────────────────────────────────────
+  // â”€â”€ CRUD supports â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   async function saveSupport() {
     if (!form.nom) return;
     setSaving(true);
@@ -117,10 +117,10 @@ export default function AdminAfroubaPage() {
         });
         const data = await res.json();
         if (res.ok && data.data) setSupports(prev => [...prev, data.data]);
-        else alert(`Erreur : ${data.error ?? "Impossible de créer."}`);
+        else alert(`Erreur : ${data.error ?? "Impossible de crÃ©er."}`);
       }
       setShowModal(false); setForm(emptyForm); setEditId(null);
-    } catch { alert("Erreur réseau."); }
+    } catch { alert("Erreur rÃ©seau."); }
     setSaving(false);
   }
 
@@ -166,7 +166,7 @@ export default function AdminAfroubaPage() {
             <div className="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center">
               <Megaphone size={20} className="text-amber-600" />
             </div>
-            <h1 className="text-2xl font-black text-[#0c4a6e]">Tout Le Monde A Droit À La Pub</h1>
+            <h1 className="text-2xl font-black text-[#0c4a6e]">Tout Le Monde A Droit Ã€ La Pub</h1>
           </div>
           <div className="flex gap-2 flex-wrap">
             {tab === "catalogue" && (
@@ -209,7 +209,7 @@ export default function AdminAfroubaPage() {
                   <div className="flex gap-2">
                     <button onClick={() => toggleActive(s)}
                       className={`flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg transition-colors ${s.isActive ? "bg-orange-100 text-orange-600 hover:bg-orange-200" : "bg-green-100 text-green-600 hover:bg-green-200"}`}>
-                      <CheckCircle size={13} /> {s.isActive ? "Désactiver" : "Activer"}
+                      <CheckCircle size={13} /> {s.isActive ? "DÃ©sactiver" : "Activer"}
                     </button>
                     <button onClick={() => openEdit(s)}
                       className="flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors">
@@ -234,8 +234,8 @@ export default function AdminAfroubaPage() {
               {[
                 { label: "Total", value: requests.length, color: "text-blue-500", bg: "bg-blue-50", filterVal: "ALL" },
                 { label: "En attente", value: requests.filter(r => r.status === "PENDING").length, color: "text-yellow-500", bg: "bg-yellow-50", filterVal: "PENDING" },
-                { label: "Confirmés", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50", filterVal: "CONFIRMED" },
-                { label: "Terminés", value: requests.filter(r => r.status === "COMPLETED").length, color: "text-blue-500", bg: "bg-blue-50", filterVal: "COMPLETED" },
+                { label: "ConfirmÃ©s", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50", filterVal: "CONFIRMED" },
+                { label: "TerminÃ©s", value: requests.filter(r => r.status === "COMPLETED").length, color: "text-blue-500", bg: "bg-blue-50", filterVal: "COMPLETED" },
               ].map(s => {
                 const isActive = filter === s.filterVal;
                 return (
@@ -259,9 +259,9 @@ export default function AdminAfroubaPage() {
                 className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
                 <option value="ALL">Tous les statuts</option>
                 <option value="PENDING">En attente</option>
-                <option value="CONFIRMED">Confirmés</option>
-                <option value="COMPLETED">Terminés</option>
-                <option value="REFUSED">Refusés</option>
+                <option value="CONFIRMED">ConfirmÃ©s</option>
+                <option value="COMPLETED">TerminÃ©s</option>
+                <option value="REFUSED">RefusÃ©s</option>
               </select>
               <button onClick={load} className="flex items-center gap-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
                 <RefreshCw size={14} className={loading ? "animate-spin" : ""} /> Actualiser
@@ -275,8 +275,8 @@ export default function AdminAfroubaPage() {
                     statut: STATUS_LABELS[r.status] ?? r.status,
                   }))}
                   columns={[
-                    { key: "reference", label: "Référence" }, { key: "client", label: "Client" },
-                    { key: "telephone", label: "Téléphone" }, { key: "support", label: "Support" },
+                    { key: "reference", label: "RÃ©fÃ©rence" }, { key: "client", label: "Client" },
+                    { key: "telephone", label: "TÃ©lÃ©phone" }, { key: "support", label: "Support" },
                     { key: "description", label: "Description" }, { key: "date", label: "Date" },
                     { key: "statut", label: "Statut" },
                   ]}
@@ -290,7 +290,7 @@ export default function AdminAfroubaPage() {
               <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
                 <div className="w-1 h-5 bg-[#c9a84c] rounded-full" />
                 <h2 className="font-bold text-[#0c4a6e]">Demandes publicitaires</h2>
-                <span className="ml-auto text-xs text-gray-400">{filtered.length} résultat(s)</span>
+                <span className="ml-auto text-xs text-gray-400">{filtered.length} rÃ©sultat(s)</span>
               </div>
 
               {loading ? (
@@ -298,13 +298,13 @@ export default function AdminAfroubaPage() {
                   <RefreshCw size={32} className="animate-spin mx-auto mb-3" /> Chargement...
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="py-16 text-center text-gray-400">Aucune demande trouvée.</div>
+                <div className="py-16 text-center text-gray-400">Aucune demande trouvÃ©e.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b border-gray-100">
                       <tr>
-                        {["Réf.", "Client", "Contact", "Support souhaité", "Budget / Détails", "Date", "Statut", "Action"].map(h => (
+                        {["RÃ©f.", "Client", "Contact", "Support souhaitÃ©", "Budget / DÃ©tails", "Date", "Statut", "Action"].map(h => (
                           <th key={h} className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">{h}</th>
                         ))}
                       </tr>
@@ -337,8 +337,8 @@ export default function AdminAfroubaPage() {
                                 </p>
                               )}
                             </td>
-                            <td className="px-4 py-3 text-sm font-medium text-[#0c4a6e]">{r.documentType || "—"}</td>
-                            <td className="px-4 py-3 text-xs text-gray-500 max-w-[180px] truncate">{r.description || "—"}</td>
+                            <td className="px-4 py-3 text-sm font-medium text-[#0c4a6e]">{r.documentType || "â€”"}</td>
+                            <td className="px-4 py-3 text-xs text-gray-500 max-w-[180px] truncate">{r.description || "â€”"}</td>
                             <td className="px-4 py-3 text-xs text-gray-500">
                               {new Date(r.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
                             </td>
@@ -385,20 +385,20 @@ export default function AdminAfroubaPage() {
             <div className="p-6 space-y-4 overflow-y-auto">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Nom du support *</label>
-                <input type="text" placeholder="Publicité TV" value={form.nom}
+                <input type="text" placeholder="PublicitÃ© TV" value={form.nom}
                   onChange={e => setForm(f => ({ ...f, nom: e.target.value }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">CatÃ©gorie *</label>
                 <select value={form.categorie} onChange={e => setForm(f => ({ ...f, categorie: e.target.value }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
-                  {["Audiovisuel", "Digital", "Print", "Événementiel", "Pack"].map(c => <option key={c}>{c}</option>)}
+                  {["Audiovisuel", "Digital", "Print", "Ã‰vÃ©nementiel", "Pack"].map(c => <option key={c}>{c}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Prix</label>
-                <input type="text" placeholder="À partir de 50 000 FCFA" value={form.prix}
+                <input type="text" placeholder="Ã€ partir de 50 000 FCFA" value={form.prix}
                   onChange={e => setForm(f => ({ ...f, prix: e.target.value }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
               </div>
@@ -426,3 +426,5 @@ export default function AdminAfroubaPage() {
     </div>
   );
 }
+
+

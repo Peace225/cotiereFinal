@@ -1,4 +1,4 @@
-// Générateur de PDF côté client avec jsPDF
+// GÃ©nÃ©rateur de PDF cÃ´tÃ© client avec jsPDF
 // Usage: import { generateDevisPDF, generateVoucherPDF } from "@/lib/pdf"
 
 export type DevisData = {
@@ -55,7 +55,7 @@ export async function generateDevisPDF(data: DevisData): Promise<void> {
     });
   } catch {}
 
-  // En-tête
+  // En-tÃªte
   doc.setFillColor(12, 74, 110); // #0c4a6e
   doc.rect(0, 0, W, 45, "F");
 
@@ -121,7 +121,7 @@ export async function generateDevisPDF(data: DevisData): Promise<void> {
   doc.line(margin, y, W - margin, y);
   y += 10;
 
-  // Détails événement
+  // DÃ©tails Ã©vÃ©nement
   doc.setTextColor(12, 74, 110);
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
@@ -160,7 +160,7 @@ export async function generateDevisPDF(data: DevisData): Promise<void> {
   doc.setTextColor(50, 50, 50);
   doc.setFontSize(10);
   data.services.forEach(s => {
-    doc.text(`• ${s}`, margin + 5, y);
+    doc.text(`â€¢ ${s}`, margin + 5, y);
     y += 6;
   });
 
@@ -252,7 +252,7 @@ export async function generateVoucherPDF(data: VoucherData): Promise<void> {
     });
   } catch {}
 
-  // En-tête
+  // En-tÃªte
   doc.setFillColor(12, 74, 110);
   doc.rect(0, 0, W, 45, "F");
 
@@ -301,7 +301,7 @@ export async function generateVoucherPDF(data: VoucherData): Promise<void> {
   doc.text(`Tel: ${data.clientPhone}`, margin, y);
   y += 12;
 
-  // Détails excursion
+  // DÃ©tails excursion
   doc.setTextColor(12, 74, 110);
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
@@ -314,10 +314,10 @@ export async function generateVoucherPDF(data: VoucherData): Promise<void> {
   const details: [string, string][] = [
     ["Excursion:", data.excursionTitle],
     ["Date:", new Date(data.bookingDate).toLocaleDateString("fr-FR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })],
-    ["Creneau:", data.timeSlot ?? "Non précisé"],
+    ["Creneau:", data.timeSlot ?? "Non prÃ©cisÃ©"],
     ["Adultes:", `${data.adultsCount} personne(s)`],
     ["Enfants:", `${data.childrenCount} personne(s)`],
-    ["Langue guide:", data.guideLanguage ?? "Français"],
+    ["Langue guide:", data.guideLanguage ?? "FranÃ§ais"],
   ];
   details.forEach(([label, value]) => {
     doc.setFont("helvetica", "bold");
@@ -354,10 +354,10 @@ export async function generateVoucherPDF(data: VoucherData): Promise<void> {
   doc.setTextColor(50, 50, 50);
   doc.setFontSize(10);
   const instructions = [
-    "• Presentez ce voucher le jour de l'excursion",
-    "• Arrivez 15 minutes avant l'heure de depart",
-    "• Portez des vetements confortables et de la creme solaire",
-    "• En cas d'annulation, contactez-nous 48h a l'avance",
+    "â€¢ Presentez ce voucher le jour de l'excursion",
+    "â€¢ Arrivez 15 minutes avant l'heure de depart",
+    "â€¢ Portez des vetements confortables et de la creme solaire",
+    "â€¢ En cas d'annulation, contactez-nous 48h a l'avance",
   ];
   instructions.forEach(line => { doc.text(line, margin, y); y += 6; });
 
@@ -375,3 +375,5 @@ export async function generateVoucherPDF(data: VoucherData): Promise<void> {
 
   doc.save(`Voucher-${data.reference}.pdf`);
 }
+
+

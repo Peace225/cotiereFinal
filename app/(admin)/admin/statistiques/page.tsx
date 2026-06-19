@@ -5,7 +5,7 @@ import { TrendingUp, Eye, Calendar, Camera, BarChart2, FileText, Users, CreditCa
 import AdminNavbar from "@/components/admin/AdminNavbar";
 import ExportButton from "@/components/admin/ExportButton";
 
-// Données simulées pour les visites (analytics)
+// DonnÃ©es simulÃ©es pour les visites (analytics)
 const generateDailyData = (days: number) => {
   const data = [];
   const now = new Date();
@@ -23,21 +23,21 @@ const generateDailyData = (days: number) => {
 const servicesPopulaires = [
   { label: "HBL Studio+", visits: 342, color: "bg-blue-500", pct: 85 },
   { label: "Tourisme & Voyage", visits: 289, color: "bg-green-500", pct: 72 },
-  { label: "Événements", visits: 241, color: "bg-purple-500", pct: 60 },
-  { label: "Hébergement", visits: 198, color: "bg-orange-500", pct: 49 },
+  { label: "Ã‰vÃ©nements", visits: 241, color: "bg-purple-500", pct: 60 },
+  { label: "HÃ©bergement", visits: 198, color: "bg-orange-500", pct: 49 },
   { label: "Music & Management", visits: 156, color: "bg-pink-500", pct: 39 },
-  { label: "Médias", visits: 112, color: "bg-red-500", pct: 28 },
+  { label: "MÃ©dias", visits: 112, color: "bg-red-500", pct: 28 },
 ];
 
 const pagesVisitees = [
   { label: "Accueil",          visits: 1237, icon: "Home" },
   { label: "Services Studio+", visits: 342,  icon: "Camera" },
   { label: "Tourisme",         visits: 289,  icon: "Waves" },
-  { label: "Événements",       visits: 241,  icon: "PartyPopper" },
+  { label: "Ã‰vÃ©nements",       visits: 241,  icon: "PartyPopper" },
   { label: "Contact",          visits: 198,  icon: "Phone" },
-  { label: "Réservation",      visits: 187,  icon: "Calendar" },
-  { label: "À propos",         visits: 143,  icon: "Info" },
-  { label: "Hébergement",      visits: 112,  icon: "Hotel" },
+  { label: "RÃ©servation",      visits: 187,  icon: "Calendar" },
+  { label: "Ã€ propos",         visits: 143,  icon: "Info" },
+  { label: "HÃ©bergement",      visits: 112,  icon: "Hotel" },
 ];
 
 interface DashboardStats {
@@ -96,7 +96,7 @@ export default function StatistiquesPage() {
           }));
           const recentEvents = (raw.recent?.events ?? []).map((b: any) => ({
             reference: b.reference,
-            service: "Événement",
+            service: "Ã‰vÃ©nement",
             client: `${b.clientFirstName} ${b.clientLastName}`,
             amount: b.totalAmount ?? 0,
             status: b.status,
@@ -121,14 +121,14 @@ export default function StatistiquesPage() {
       .finally(() => setLoadingStats(false));
   }, []);
 
-  // Données pour export CSV/PDF
+  // DonnÃ©es pour export CSV/PDF
   const exportServicesData = servicesPopulaires.map(s => ({ service: s.label, visites: s.visits, pourcentage: `${s.pct}%` }));
   const exportDailyData = dailyData.map(d => ({ date: d.date, visites: d.visits }));
   const exportReservationsData = (stats?.recentBookings ?? []).map(b => ({
     reference: b.reference,
     service: b.service,
     client: b.client,
-    montant: b.amount ? `${b.amount.toLocaleString("fr-FR")} FCFA` : "—",
+    montant: b.amount ? `${b.amount.toLocaleString("fr-FR")} FCFA` : "â€”",
     statut: b.status,
     date: new Date(b.date).toLocaleDateString("fr-FR"),
   }));
@@ -159,7 +159,7 @@ export default function StatistiquesPage() {
         {/* Tabs */}
         <div className="flex gap-1 bg-white rounded-xl p-1 border border-gray-100 shadow-sm mb-6 w-fit">
           {[
-            { id: "reservations", label: "Réservations", icon: Calendar },
+            { id: "reservations", label: "RÃ©servations", icon: Calendar },
             { id: "visites", label: "Visites site", icon: Eye },
           ].map(tab => {
             const Icon = tab.icon;
@@ -178,16 +178,16 @@ export default function StatistiquesPage() {
           })}
         </div>
 
-        {/* ── Onglet Réservations ── */}
+        {/* â”€â”€ Onglet RÃ©servations â”€â”€ */}
         {activeTab === "reservations" && (
           <>
-            {/* Stats réservations */}
+            {/* Stats rÃ©servations */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               {[
-                { label: "Total réservations", value: stats?.totalReservations ?? "—", color: "from-blue-500 to-blue-600", icon: Calendar },
-                { label: "En attente", value: stats?.pendingReservations ?? "—", color: "from-amber-500 to-orange-500", icon: RefreshCw },
-                { label: "Confirmées", value: stats?.confirmedReservations ?? "—", color: "from-green-500 to-emerald-600", icon: TrendingUp },
-                { label: "Clients", value: stats?.totalClients ?? "—", color: "from-purple-500 to-violet-600", icon: Users },
+                { label: "Total rÃ©servations", value: stats?.totalReservations ?? "â€”", color: "from-blue-500 to-blue-600", icon: Calendar },
+                { label: "En attente", value: stats?.pendingReservations ?? "â€”", color: "from-amber-500 to-orange-500", icon: RefreshCw },
+                { label: "ConfirmÃ©es", value: stats?.confirmedReservations ?? "â€”", color: "from-green-500 to-emerald-600", icon: TrendingUp },
+                { label: "Clients", value: stats?.totalClients ?? "â€”", color: "from-purple-500 to-violet-600", icon: Users },
               ].map((s) => {
                 const Icon = s.icon;
                 return (
@@ -223,7 +223,7 @@ export default function StatistiquesPage() {
                 <ExportButton
                   data={exportReservationsData}
                   columns={[
-                    { key: "reference", label: "Référence" },
+                    { key: "reference", label: "RÃ©fÃ©rence" },
                     { key: "service", label: "Service" },
                     { key: "client", label: "Client" },
                     { key: "montant", label: "Montant" },
@@ -237,15 +237,15 @@ export default function StatistiquesPage() {
               </div>
             )}
 
-            {/* Tableau réservations récentes */}
+            {/* Tableau rÃ©servations rÃ©centes */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                 <div className="flex items-center gap-2">
                   <FileText size={18} className="text-[#c9a84c]" />
-                  <h2 className="font-bold text-[#0c4a6e]">Réservations récentes</h2>
+                  <h2 className="font-bold text-[#0c4a6e]">RÃ©servations rÃ©centes</h2>
                 </div>
                 <Link href="/admin/reservations" className="text-xs text-[#38bdf8] hover:underline font-medium">
-                  Voir tout →
+                  Voir tout â†’
                 </Link>
               </div>
               {loadingStats ? (
@@ -253,13 +253,13 @@ export default function StatistiquesPage() {
                   <RefreshCw size={20} className="animate-spin text-[#38bdf8]" />
                 </div>
               ) : (stats?.recentBookings?.length ?? 0) === 0 ? (
-                <div className="text-center py-10 text-gray-400 text-sm">Aucune réservation</div>
+                <div className="text-center py-10 text-gray-400 text-sm">Aucune rÃ©servation</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="bg-gray-50 text-xs text-gray-500 uppercase">
-                        <th className="px-4 py-3 text-left font-semibold">Référence</th>
+                        <th className="px-4 py-3 text-left font-semibold">RÃ©fÃ©rence</th>
                         <th className="px-4 py-3 text-left font-semibold">Service</th>
                         <th className="px-4 py-3 text-left font-semibold">Client</th>
                         <th className="px-4 py-3 text-right font-semibold">Montant</th>
@@ -277,8 +277,8 @@ export default function StatistiquesPage() {
                           COMPLETED: "bg-blue-50 text-blue-700",
                         };
                         const statusLabels: Record<string, string> = {
-                          PENDING: "En attente", CONFIRMED: "Confirmée",
-                          CANCELLED: "Annulée", REFUSED: "Refusée", COMPLETED: "Terminée",
+                          PENDING: "En attente", CONFIRMED: "ConfirmÃ©e",
+                          CANCELLED: "AnnulÃ©e", REFUSED: "RefusÃ©e", COMPLETED: "TerminÃ©e",
                         };
                         return (
                           <tr key={b.reference} className="hover:bg-gray-50 transition-colors">
@@ -286,7 +286,7 @@ export default function StatistiquesPage() {
                             <td className="px-4 py-3 font-medium text-[#0c4a6e]">{b.service}</td>
                             <td className="px-4 py-3 text-gray-700">{b.client}</td>
                             <td className="px-4 py-3 text-right font-bold text-[#0c4a6e]">
-                              {b.amount ? `${b.amount.toLocaleString("fr-FR")} FCFA` : "—"}
+                              {b.amount ? `${b.amount.toLocaleString("fr-FR")} FCFA` : "â€”"}
                             </td>
                             <td className="px-4 py-3 text-center">
                               <span className={`inline-block text-xs font-semibold px-2 py-0.5 rounded-full ${statusColors[b.status] ?? "bg-gray-100 text-gray-500"}`}>
@@ -307,12 +307,12 @@ export default function StatistiquesPage() {
           </>
         )}
 
-        {/* ── Onglet Visites ── */}
+        {/* â”€â”€ Onglet Visites â”€â”€ */}
         {activeTab === "visites" && (
           <>
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
               {[
-                { label: `Visites (${period}j)`, value: totalVisits, sub: "Données simulées", color: "from-blue-500 to-blue-600", icon: Eye },
+                { label: `Visites (${period}j)`, value: totalVisits, sub: "DonnÃ©es simulÃ©es", color: "from-blue-500 to-blue-600", icon: Eye },
                 { label: "Aujourd'hui", value: todayVisits, sub: "Estimation", color: "from-green-500 to-emerald-600", icon: Calendar },
                 { label: "Cette semaine", value: weekVisits, sub: "7 derniers jours", color: "from-purple-500 to-violet-600", icon: TrendingUp },
                 { label: "Taux conversion", value: "2%", sub: `${Math.floor(totalVisits * 0.02)} sessions`, color: "from-orange-500 to-amber-500", icon: BarChart2 },
@@ -354,7 +354,7 @@ export default function StatistiquesPage() {
               <div className="flex items-center gap-2 mb-6">
                 <BarChart2 size={18} className="text-[#c9a84c]" />
                 <h2 className="font-bold text-[#0c4a6e]">Visites par jour</h2>
-                <span className="text-xs text-gray-400 ml-1">(données simulées)</span>
+                <span className="text-xs text-gray-400 ml-1">(donnÃ©es simulÃ©es)</span>
               </div>
               <div className="flex items-end gap-1 h-40 overflow-x-auto pb-2">
                 {dailyData.map((d, i) => (
@@ -375,7 +375,7 @@ export default function StatistiquesPage() {
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div className="flex items-center gap-2 mb-5">
                   <Camera size={18} className="text-[#c9a84c]" />
-                  <h2 className="font-bold text-[#0c4a6e]">Services les plus consultés</h2>
+                  <h2 className="font-bold text-[#0c4a6e]">Services les plus consultÃ©s</h2>
                 </div>
                 <div className="space-y-4">
                   {servicesPopulaires.map((s) => (
@@ -395,7 +395,7 @@ export default function StatistiquesPage() {
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
                 <div className="flex items-center gap-2 mb-5">
                   <FileText size={18} className="text-[#c9a84c]" />
-                  <h2 className="font-bold text-[#0c4a6e]">Pages visitées</h2>
+                  <h2 className="font-bold text-[#0c4a6e]">Pages visitÃ©es</h2>
                 </div>
                 <div className="space-y-3">
                   {pagesVisitees.map((p, i) => (
@@ -420,3 +420,4 @@ export default function StatistiquesPage() {
     </div>
   );
 }
+

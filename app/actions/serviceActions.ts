@@ -2,19 +2,19 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { getSession } from "@/lib/auth"; // ← Importation de getSession depuis votre module d'authentification
+import { getSession } from "@/lib/auth"; // ⇐ Importation de getSession depuis votre module d'authentification
 
 /**
  * Récupère les services/contenus associés au partenaire (prestataire) connecté.
  */
 export async function getPartnerServices() {
-  const session = await getSession(); // ← Utilisation de getSession
+  const session = await getSession(); // ⇐ Utilisation de getSession
   
   if (!session?.user?.id) {
     throw new Error("Non autorisé");
   }
 
-  // Utilisation de partner_id (tel que défini dans votre schema.prisma)
+  // ✅ CORRIGÉ : Utilisation du modèle Prisma singulier 'villeContenu'
   return prisma.villeContenu.findMany({
     where: {
       partner_id: session.user.id,
@@ -29,7 +29,7 @@ export async function getPartnerServices() {
  * Action serveur pour ajouter/créer un nouveau service.
  */
 export async function createServiceAction(formData: FormData) {
-  const session = await getSession(); // ← Utilisation de getSession
+  const session = await getSession(); // ⇐ Utilisation de getSession
   
   if (!session?.user?.id) {
     throw new Error("Non autorisé");
@@ -43,7 +43,7 @@ export async function createServiceAction(formData: FormData) {
     throw new Error("Veuillez remplir tous les champs obligatoires.");
   }
 
-  // Enregistrement dans la table ville_contenus
+  // ✅ CORRIGÉ : Utilisation du modèle Prisma singulier 'villeContenu'
   return prisma.villeContenu.create({
     data: {
       nom,

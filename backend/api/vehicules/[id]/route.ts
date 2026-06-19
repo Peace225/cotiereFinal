@@ -11,7 +11,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const body = await req.json();
-    const vehicule = await prisma.vehicule.update({ where: { id }, data: body });
+    const vehicule = await prisma.vehicules.update({ where: { id }, data: body });
     return ok(vehicule);
   } catch (e) {
     return serverError(e);
@@ -23,9 +23,9 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params;
-    const vehicule = await prisma.vehicule.findUnique({ where: { id } });
+    const vehicule = await prisma.vehicules.findUnique({ where: { id } });
     if (!vehicule) return notFound("Véhicule introuvable");
-    await prisma.vehicule.update({ where: { id }, data: { isActive: false } });
+    await prisma.vehicules.update({ where: { id }, data: { isActive: false } });
     return ok({ message: "Véhicule supprimé" });
   } catch (e) {
     return serverError(e);

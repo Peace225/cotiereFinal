@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useState } from "react";
 import { Plus, CheckCircle, Pencil, Trash2, X, ShoppingBag, Clock, RefreshCw } from "lucide-react";
 import AdminNavbar from "@/components/admin/AdminNavbar";
@@ -453,3 +453,5 @@ export default function AdminMarketPage() {
     </div>
   );
 }
+
+

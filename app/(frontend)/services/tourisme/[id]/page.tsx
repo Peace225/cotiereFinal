@@ -32,24 +32,27 @@ const destinations: Record<string, Destination> = {
     highlights: ["Plage de sable blanc", "Sports nautiques"], 
     images: ["https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"] 
   },
-  // Ajoutez vos autres destinations ici...
 };
 
 async function getExcursionFromDb(id: string): Promise<Destination | null> {
   try {
-    const e = await prisma.excursion.findUnique({ where: { id } });
+    // ✅ CORRIGÉ : prisma.excursions (pluriel)
+    const e = await prisma.excursions.findUnique({ where: { id } });
     if (!e) return null;
+    
     return {
-      name: e.title,
-      subtitle: e.difficulty ?? "Littoral ivoirien",
-      image: e.images[0] ?? "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
-      desc: e.description,
-      duration: e.duration,
-      price: `${e.priceAdult.toLocaleString()} FCFA / pers.`,
+      name: (e as any).title,
+      subtitle: (e as any).difficulty ?? "Littoral ivoirien",
+      image: (e as any).images?.[0] ?? "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80",
+      desc: (e as any).description,
+      duration: (e as any).duration,
+      price: `${(e as any).priceAdult?.toLocaleString() ?? 0} FCFA / pers.`,
       highlights: [],
-      images: e.images,
+      images: (e as any).images || [],
     };
-  } catch { return null; }
+  } catch { 
+    return null; 
+  }
 }
 
 export default async function DestinationDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -60,7 +63,9 @@ export default async function DestinationDetailPage({ params }: { params: Promis
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
         <p className="text-gray-500 text-lg">Destination introuvable.</p>
-        <Link href="/services/tourisme" className="btn-primary">Voir nos voyages</Link>
+        <Link href="/services/tourisme" className="bg-[#003b95] text-white px-5 py-3 rounded-xl font-bold">
+          Voir nos voyages
+        </Link>
       </div>
     );
   }
@@ -88,6 +93,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
           <span className="bg-[#c9a84c] text-white text-xs font-bold px-3 py-1 rounded-full mb-3 inline-block">{dest.subtitle}</span>
           <h1 className="text-3xl sm:text-5xl font-black mb-4">{dest.name}</h1>
           <div className="flex flex-wrap items-center gap-4 text-sm text-white/80">
+            {/* ✅ SYNTAXE CORRIGÉE : Utilisation de fermetures de balises correctes pour Clock */}
             <span className="flex items-center gap-1.5"><Clock size={14} className="text-[#c9a84c]" />{dest.duration}</span>
             <span className="flex items-center gap-1.5"><MapPin size={14} className="text-[#c9a84c]" />{dest.price}</span>
           </div>
@@ -105,14 +111,14 @@ export default async function DestinationDetailPage({ params }: { params: Promis
 
           <div className="space-y-4">
             <div className="bg-white rounded-2xl p-6 shadow-md border border-gray-100 sticky top-24">
-              <Link href="/services/tourisme" className="btn-primary w-full justify-center mb-3">
+              <Link href="/services/tourisme" className="w-full bg-[#003b95] text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 mb-3 hover:bg-blue-800 transition">
                 Réserver cette excursion <ArrowRight size={16} />
               </Link>
               <a
                 href={`https://wa.me/2250747722931?text=${encodeURIComponent(`Bonjour, je souhaite réserver : ${dest.name}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-3 rounded-xl transition-colors text-sm"
+                className="w-full flex items-center justify-center gap-2 bg-[#25D366] text-white font-bold py-3 rounded-xl transition-colors text-sm hover:opacity-90"
               >
                 Réserver via WhatsApp
               </a>

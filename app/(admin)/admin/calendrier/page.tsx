@@ -52,16 +52,16 @@ export default function AdminCalendrierPage() {
         else setBlockedExcursions(prev => [...prev, newBlock]);
         setForm({ serviceId: "", date: "", reason: "" });
       } else {
-        alert(`Erreur ${res.status} : ${data.error ?? "Impossible de bloquer cette date."}\nVérifiez que vous êtes connecté en tant qu'admin.`);
+        alert(`Erreur ${res.status} : ${data.error ?? "Impossible de bloquer cette date."}\nVÃ©rifiez que vous Ãªtes connectÃ© en tant qu'admin.`);
       }
     } catch {
-      alert("Erreur réseau. Vérifiez votre connexion et réessayez.");
+      alert("Erreur rÃ©seau. VÃ©rifiez votre connexion et rÃ©essayez.");
     }
     setSaving(false);
   }
 
   async function unblock(id: string, serviceType: "room" | "excursion") {
-    if (!confirm("Débloquer cette date ?")) return;
+    if (!confirm("DÃ©bloquer cette date ?")) return;
     await fetch("/api/availability", {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
@@ -84,7 +84,7 @@ export default function AdminCalendrierPage() {
             <CalendarOff size={20} className="text-orange-600" />
           </div>
           <div>
-            <h1 className="text-2xl font-black text-[#0c4a6e]">Calendrier de disponibilité</h1>
+            <h1 className="text-2xl font-black text-[#0c4a6e]">Calendrier de disponibilitÃ©</h1>
             <p className="text-gray-500 text-sm">Bloquer des dates pour les chambres et excursions</p>
           </div>
         </div>
@@ -93,11 +93,11 @@ export default function AdminCalendrierPage() {
         <div className="flex gap-2 mb-6">
           <button onClick={() => setTab("rooms")}
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === "rooms" ? "bg-[#0c4a6e] text-white" : "bg-white text-gray-500 border border-gray-200"}`}>
-            Chambres ({blockedRooms.length} bloquées)
+            Chambres ({blockedRooms.length} bloquÃ©es)
           </button>
           <button onClick={() => setTab("excursions")}
             className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === "excursions" ? "bg-[#0c4a6e] text-white" : "bg-white text-gray-500 border border-gray-200"}`}>
-            Excursions ({blockedExcursions.length} bloquées)
+            Excursions ({blockedExcursions.length} bloquÃ©es)
           </button>
         </div>
 
@@ -113,7 +113,7 @@ export default function AdminCalendrierPage() {
               </label>
               <select value={form.serviceId} onChange={e => setForm(f => ({ ...f, serviceId: e.target.value }))}
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
-                <option value="">Sélectionner...</option>
+                <option value="">SÃ©lectionner...</option>
                 {services.map((s: any) => (
                   <option key={s.id} value={s.id}>{s.name ?? s.title}</option>
                 ))}
@@ -127,7 +127,7 @@ export default function AdminCalendrierPage() {
             </div>
             <div>
               <label className="block text-xs font-medium text-gray-700 mb-1">Raison (optionnel)</label>
-              <input type="text" placeholder="Maintenance, événement privé..." value={form.reason}
+              <input type="text" placeholder="Maintenance, Ã©vÃ©nement privÃ©..." value={form.reason}
                 onChange={e => setForm(f => ({ ...f, reason: e.target.value }))}
                 className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
             </div>
@@ -139,23 +139,23 @@ export default function AdminCalendrierPage() {
           </button>
         </div>
 
-        {/* Liste des dates bloquées */}
+        {/* Liste des dates bloquÃ©es */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
             <div className="w-1 h-5 bg-orange-500 rounded-full" />
-            <h2 className="font-bold text-[#0c4a6e]">Dates bloquées</h2>
+            <h2 className="font-bold text-[#0c4a6e]">Dates bloquÃ©es</h2>
             <span className="ml-auto text-xs text-gray-400">{blocked.length} date(s)</span>
           </div>
           {loading ? (
             <div className="py-12 text-center text-gray-400">Chargement...</div>
           ) : blocked.length === 0 ? (
-            <div className="py-12 text-center text-gray-400">Aucune date bloquée.</div>
+            <div className="py-12 text-center text-gray-400">Aucune date bloquÃ©e.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b border-gray-100">
                   <tr>
-                    {[tab === "rooms" ? "Chambre" : "Excursion", "Date bloquée", "Raison", "Action"].map(h => (
+                    {[tab === "rooms" ? "Chambre" : "Excursion", "Date bloquÃ©e", "Raison", "Action"].map(h => (
                       <th key={h} className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">{h}</th>
                     ))}
                   </tr>
@@ -164,16 +164,16 @@ export default function AdminCalendrierPage() {
                   {blocked.map(b => (
                     <tr key={b.id} className="hover:bg-gray-50">
                       <td className="px-4 py-3 font-semibold text-[#0c4a6e] text-sm">
-                        {b.room?.name ?? b.excursion?.title ?? "—"}
+                        {b.room?.name ?? b.excursion?.title ?? "â€”"}
                       </td>
                       <td className="px-4 py-3 text-gray-600 text-sm">
                         {new Date(b.date).toLocaleDateString("fr-FR", { weekday: "long", day: "2-digit", month: "long", year: "numeric" })}
                       </td>
-                      <td className="px-4 py-3 text-gray-500 text-xs">{b.blockReason ?? "—"}</td>
+                      <td className="px-4 py-3 text-gray-500 text-xs">{b.blockReason ?? "â€”"}</td>
                       <td className="px-4 py-3">
                         <button onClick={() => unblock(b.id, tab === "rooms" ? "room" : "excursion")}
                           className="flex items-center gap-1 text-xs font-semibold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors">
-                          <Trash2 size={12} /> Débloquer
+                          <Trash2 size={12} /> DÃ©bloquer
                         </button>
                       </td>
                     </tr>
@@ -187,3 +187,5 @@ export default function AdminCalendrierPage() {
     </div>
   );
 }
+
+

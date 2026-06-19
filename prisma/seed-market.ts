@@ -32,7 +32,7 @@ const PRODUITS = [
 
 async function main() {
   console.log("Seeding market produits...");
-  // Vider d'abord pour éviter les doublons
+  // Vider d'abord pour Ã©viter les doublons
   await prisma.marketProduit.deleteMany();
   for (const p of PRODUITS) {
     await prisma.marketProduit.create({ data: p });
@@ -43,3 +43,5 @@ async function main() {
 main()
   .catch(console.error)
   .finally(() => prisma.$disconnect());
+
+

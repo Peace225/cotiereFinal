@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, created, badRequest, forbidden, serverError } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutÃ©e
 import { z } from "zod";
 
 const roomSchema = z.object({
@@ -15,10 +15,10 @@ const roomSchema = z.object({
   description: z.string().optional(),
 });
 
-// GET /api/rooms — Liste des chambres actives (Public)
+// GET /api/rooms â€” Liste des chambres actives (Public)
 export async function GET() {
   try {
-    const rooms = await prisma.room.findMany({
+    const rooms = await prisma.rooms.findMany({
       where: { isActive: true },
       orderBy: { pricePerNight: "asc" },
     });
@@ -28,9 +28,9 @@ export async function GET() {
   }
 }
 
-// POST /api/rooms — Créer une chambre (Admin uniquement)
+// POST /api/rooms â€” CrÃ©er une chambre (Admin uniquement)
 export async function POST(req: NextRequest) {
-  // Sécurisation : Seul un admin peut ajouter des chambres
+  // SÃ©curisation : Seul un admin peut ajouter des chambres
   try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     const d = parsed.data;
     const slug = d.slug || d.name.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "") + "-" + Date.now();
 
-    const room = await prisma.room.create({
+    const room = await prisma.rooms.create({
       data: { ...d, slug },
     });
     return created(room);
@@ -49,3 +49,4 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+

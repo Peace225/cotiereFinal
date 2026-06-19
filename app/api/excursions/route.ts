@@ -16,14 +16,16 @@ const excursionSchema = z.object({
   images: z.array(z.string()).optional(),
 });
 
-// GET /api/excursions — Catalogue public
+// GET /api/excursions â€” Catalogue public
 export async function GET() {
   try {
-    const excursions = await prisma.excursion.findMany({
+    // âœ… CORRECTION 1 : prisma.excursions
+    const excursions = await prisma.excursions.findMany({
       where: { isActive: true },
       include: {
-        options: { where: { isActive: true } },
-        timeSlots: { where: { isActive: true } },
+        // âœ… CORRECTION 2 : Noms de relations exacts
+        excursion_options: { where: { isActive: true } },
+        excursion_time_slots: { where: { isActive: true } },
         reviews: { where: { isApproved: true }, select: { rating: true } },
       },
       orderBy: { title: "asc" },
@@ -45,7 +47,7 @@ export async function GET() {
   }
 }
 
-// POST /api/excursions — Créer une excursion (admin)
+// POST /api/excursions â€” CrÃ©er une excursion (admin)
 export async function POST(req: NextRequest) {
   try {
     await requireAdmin();
@@ -58,8 +60,14 @@ export async function POST(req: NextRequest) {
     const parsed = excursionSchema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
 
-    const excursion = await prisma.excursion.create({
-      data: { ...parsed.data, images: parsed.data.images ?? [] },
+    // âœ… CORRECTION 3 : prisma.excursions + Injection de l'ID et updatedAt
+    const excursion = await prisma.excursions.create({
+      data: { 
+        id: crypto.randomUUID(),
+        updatedAt: new Date(),
+        ...parsed.data, 
+        images: parsed.data.images ?? [] 
+      },
     });
 
     return created(excursion);
@@ -67,3 +75,4 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+

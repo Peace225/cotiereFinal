@@ -11,7 +11,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const body = await req.json();
-    const service = await prisma.studioService.update({ where: { id }, data: body });
+    const service = await prisma.studio_services.update({ where: { id }, data: body });
     return ok(service);
   } catch (e) {
     return serverError(e);
@@ -23,9 +23,9 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params;
-    const service = await prisma.studioService.findUnique({ where: { id } });
+    const service = await prisma.studio_services.findUnique({ where: { id } });
     if (!service) return notFound("Service introuvable");
-    await prisma.studioService.update({ where: { id }, data: { isActive: false } });
+    await prisma.studio_services.update({ where: { id }, data: { isActive: false } });
     return ok({ message: "Service supprimé" });
   } catch (e) {
     return serverError(e);

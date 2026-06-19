@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
       ];
     }
 
-    const contacts = await prisma.collectiviteAnnuaire.findMany({
+    const contacts = await prisma.collectivite_annuaire.findMany({
       where,
       orderBy: [{ ville: "asc" }, { nom: "asc" }],
     });
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST - Créer un nouveau contact
+// POST - CrÃ©er un nouveau contact
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -45,9 +45,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const contact = await prisma.collectiviteAnnuaire.create({
-      data: {
-        nom,
+    const contact = await prisma.collectivite_annuaire.create({
+      data: { id: crypto.randomUUID(), nom,
         type,
         ville,
         region: region ?? "",
@@ -56,7 +55,7 @@ export async function POST(req: NextRequest) {
         adresse: adresse || null,
         siteWeb: siteWeb || null,
         horaires: horaires || null,
-        isActive: true,
+        isActive: true, createdAt: new Date(), updatedAt: new Date(),
       },
     });
 
@@ -66,3 +65,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+
+

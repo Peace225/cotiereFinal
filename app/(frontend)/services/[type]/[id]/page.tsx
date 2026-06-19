@@ -10,8 +10,9 @@ export default async function PageDetails({
 }) {
   const { id } = await params;
 
-  let hotel = await prisma.room.findUnique({ where: { slug: id } });
-  if (!hotel) hotel = await prisma.room.findUnique({ where: { id } });
+  // ✅ CORRIGÉ : Appel de prisma.rooms au pluriel
+  let hotel = await prisma.rooms.findUnique({ where: { slug: id } });
+  if (!hotel) hotel = await prisma.rooms.findUnique({ where: { id } });
   if (!hotel) notFound();
 
   const pointsForts = hotel.amenities?.length ? hotel.amenities : [
@@ -24,14 +25,14 @@ export default async function PageDetails({
   };
 
   // Default values for calculation
-  const price = hotel.pricePerNight || 0;
+  const price = (hotel as any).pricePerNight || 0;
   const nights = 11; // Hardcoded for display as in the original, usually dynamic
   const serviceFee = 45000;
   const total = (price * nights) + serviceFee;
   
   // Replace with actual contact number from DB if available: (hotel as any).telephone || "+22500000000"
   const contactNumber = "+22500000000"; 
-  const whatsappMessage = encodeURIComponent(`Bonjour, je souhaite réserver le logement "${hotel.name}" à ${hotel.city} pour un total estimé de ${total.toLocaleString()} XOF.`);
+  const whatsappMessage = encodeURIComponent(`Bonjour, je souhaite réserver le logement "${(hotel as any).name}" à ${(hotel as any).city} pour un total estimé de ${total.toLocaleString()} XOF.`);
 
   return (
     <div className="bg-white min-h-screen">
@@ -41,7 +42,7 @@ export default async function PageDetails({
         <span className="mx-2">›</span>
         <Link href="/recherche" className="hover:underline">Hôtels</Link>
         <span className="mx-2">›</span>
-        <span className="text-gray-900 font-medium">{hotel.name}</span>
+        <span className="text-gray-900 font-medium">{(hotel as any).name}</span>
       </div>
 
       <div className="max-w-[1120px] mx-auto px-6 pb-24">
@@ -49,16 +50,16 @@ export default async function PageDetails({
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
           <div>
-            <h1 className="!text-[20px] md:!text-[25px] font-semibold text-gray-900 tracking-tight leading-tight">{hotel.name}</h1>
+            <h1 className="!text-[20px] md:!text-[25px] font-semibold text-gray-900 tracking-tight leading-tight">{(hotel as any).name}</h1>
             <div className="flex items-center gap-3 mt-2 text-[14px] font-medium text-gray-800">
               <div className="flex items-center gap-1">
                 <Star className="w-4 h-4 fill-black text-black" />
-                <span>{hotel.rating?.toFixed(1) || "4.8"}</span>
+                <span>{(hotel as any).rating?.toFixed(1) || "4.8"}</span>
               </div>
               <span className="text-gray-300">·</span>
               <button className="flex items-center gap-1.5 hover:underline decoration-gray-400 underline-offset-2">
                 <MapPin className="w-4 h-4 text-gray-500" />
-                {hotel.quartier}, {hotel.city}
+                {(hotel as any).quartier}, {(hotel as any).city}
               </button>
             </div>
           </div>
@@ -75,22 +76,22 @@ export default async function PageDetails({
         {/* Galerie Premium */}
         <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[400px] md:h-[480px] rounded-2xl overflow-hidden mb-10">
           <div className="col-span-2 row-span-2 relative group cursor-pointer">
-            <img src={hotel.images?.[0] || "/placeholder.jpg"} alt="Vue principale" className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500" />
+            <img src={(hotel as any).images?.[0] || "/placeholder.jpg"} alt="Vue principale" className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500" />
             <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition duration-300"></div>
           </div>
           <div className="relative group cursor-pointer">
-            <img src={hotel.images?.[1] || hotel.images?.[0]} alt="Vue" className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500" />
+            <img src={(hotel as any).images?.[1] || (hotel as any).images?.[0]} alt="Vue" className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500" />
           </div>
           <div className="relative group cursor-pointer">
-            <img src={hotel.images?.[2] || hotel.images?.[0]} alt="Vue" className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500" />
+            <img src={(hotel as any).images?.[2] || (hotel as any).images?.[0]} alt="Vue" className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500" />
           </div>
           <div className="relative group cursor-pointer">
-            <img src={hotel.images?.[3] || hotel.images?.[0]} alt="Vue" className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500" />
+            <img src={(hotel as any).images?.[3] || (hotel as any).images?.[0]} alt="Vue" className="w-full h-full object-cover group-hover:scale-[1.02] transition duration-500" />
           </div>
           <div className="relative group cursor-pointer">
-            <img src={hotel.images?.[4] || hotel.images?.[0]} alt="Vue" className="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 transition duration-500" />
+            <img src={(hotel as any).images?.[4] || (hotel as any).images?.[0]} alt="Vue" className="w-full h-full object-cover brightness-[0.85] group-hover:brightness-100 transition duration-500" />
             <div className="absolute inset-0 flex items-center justify-center text-white font-semibold text-lg drop-shadow-md">
-              Voir les {hotel.images?.length || 12} photos
+              Voir les {(hotel as any).images?.length || 12} photos
             </div>
           </div>
         </div>
@@ -103,7 +104,7 @@ export default async function PageDetails({
             {/* Host Section */}
             <div className="flex justify-between items-start pb-8 border-b border-gray-200">
               <div>
-                <h2 className="!text-[18px] md:!text-[20px] font-semibold text-gray-900">Logement entier · {hotel.city}</h2>
+                <h2 className="!text-[18px] md:!text-[20px] font-semibold text-gray-900">Logement entier · {(hotel as any).city}</h2>
                 <p className="text-gray-600 mt-1 text-base">4 voyageurs · 2 chambres · 2 lits · 1 salle de bain</p>
               </div>
               <img src="https://i.pravatar.cc/150?u=a042581f4e29026024d" className="w-14 h-14 rounded-full border border-gray-200" alt="Hôte" />
@@ -129,7 +130,7 @@ export default async function PageDetails({
             {/* Description */}
             <div className="py-8 border-b border-gray-200">
               <p className="text-sm leading-[1.6] text-gray-700 whitespace-pre-line">
-                {hotel.description || "Un hébergement d'exception offrant tout le confort moderne dans un cadre authentique."}
+                {(hotel as any).description || "Un hébergement d'exception offrant tout le confort moderne dans un cadre authentique."}
               </p>
               <button className="mt-4 font-semibold flex items-center gap-1 underline underline-offset-2 text-gray-900">
                 En savoir plus
@@ -166,7 +167,7 @@ export default async function PageDetails({
                 </div>
                 <div className="flex items-center gap-1 text-[14px]">
                   <Star className="w-3.5 h-3.5 fill-black text-black" />
-                  <span className="font-semibold">{hotel.rating?.toFixed(1) || "4.8"}</span>
+                  <span className="font-semibold">{(hotel as any).rating?.toFixed(1) || "4.8"}</span>
                 </div>
               </div>
 

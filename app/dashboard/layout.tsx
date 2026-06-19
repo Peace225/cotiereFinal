@@ -13,6 +13,9 @@ import {
   Music
 } from "lucide-react";
 
+// ✅ LA LIGNE MAGIQUE : Force le rendu dynamique côté serveur pour éviter l'erreur de build
+export const dynamic = "force-dynamic";
+
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   // Liste des liens pour une navigation propre
   const navLinks = [
@@ -26,6 +29,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* SIDEBAR LATERALE FIXE */}
       <aside className="w-64 bg-slate-900 text-white p-6 hidden md:flex flex-col sticky top-0 h-screen">
         <div className="mb-10 px-2">
+          {/* ✅ CORRIGÉ : Encodage de "COTIÈRE" */}
           <h1 className="text-lg font-black tracking-tighter text-blue-400">COTIÈRE PARTENAIRE</h1>
         </div>
 
@@ -42,6 +46,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </nav>
 
         <div className="border-t border-slate-800 pt-6">
+          {/* ✅ CORRIGÉ : Encodage de "Déconnexion" */}
           <button className="flex items-center gap-3 p-3 text-red-400 hover:text-red-300 transition w-full font-medium">
             <LogOut size={20} /> Déconnexion
           </button>

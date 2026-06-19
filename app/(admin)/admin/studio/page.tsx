@@ -54,7 +54,7 @@ export default function AdminStudioPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-extrabold text-[#0c4a6e] tracking-tight">HBL Studio+</h1>
-            <p className="text-slate-500 text-sm mt-1">Gestion administrative et opérationnelle du studio.</p>
+            <p className="text-slate-500 text-sm mt-1">Gestion administrative et opÃ©rationnelle du studio.</p>
           </div>
           <button onClick={() => { setEditId(null); setShowModal(true); }} 
             className="bg-[#0c4a6e] text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-[#083344] transition-all shadow-lg shadow-[#0c4a6e]/20">
@@ -64,7 +64,7 @@ export default function AdminStudioPage() {
 
         {/* Tabs */}
         <div className="flex gap-2 mb-8">
-          {[ { id: "reservations", label: "Réservations", icon: Calendar }, { id: "services", label: "Prestations", icon: Package } ].map(item => (
+          {[ { id: "reservations", label: "RÃ©servations", icon: Calendar }, { id: "services", label: "Prestations", icon: Package } ].map(item => (
             <button key={item.id} onClick={() => setTab(item.id as any)} 
               className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${tab === item.id ? "bg-[#c9a84c] text-white shadow-md" : "bg-white text-slate-600 border border-slate-200"}`}>
               <item.icon size={18} /> {item.label}
@@ -94,7 +94,7 @@ export default function AdminStudioPage() {
               {bookings.map(b => (
                 <div key={b.id} className="p-4 border-b border-slate-50 space-y-2">
                   <div className="flex justify-between font-bold text-sm text-[#0c4a6e]">{b.clientFirstName} {b.clientLastName}</div>
-                  <p className="text-xs text-slate-500">{b.eventType} • {b.clientPhone}</p>
+                  <p className="text-xs text-slate-500">{b.eventType} â€¢ {b.clientPhone}</p>
                 </div>
               ))}
             </div>
@@ -138,3 +138,4 @@ export default function AdminStudioPage() {
     </div>
   );
 }
+

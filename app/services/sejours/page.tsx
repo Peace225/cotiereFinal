@@ -3,39 +3,39 @@
 import Link from "next/link";
 import { Camera, Video, Mic, Aperture, Play, ArrowRight, Image as ImageIcon, MessageCircle } from "lucide-react";
 
-// Remplace par le numéro WhatsApp de réservation du studio
+// Remplace par le numÃ©ro WhatsApp de rÃ©servation du studio
 const STUDIO_WHATSAPP = "2250700000000";
 
 const services = [
   {
     icon: <Camera size={32} className="text-[#003b95]" />,
     title: "Shooting Photo Pro",
-    desc: "Portraits, mode, corporate ou produits. Captation haute résolution en studio ou en extérieur.",
-    price: "À partir de 50.000 XOF"
+    desc: "Portraits, mode, corporate ou produits. Captation haute rÃ©solution en studio ou en extÃ©rieur.",
+    price: "Ã€ partir de 50.000 XOF"
   },
   {
     icon: <Video size={32} className="text-[#003b95]" />,
-    title: "Production Vidéo",
-    desc: "Clips, spots publicitaires, interviews et aftermovies réalisés avec du matériel de pointe.",
+    title: "Production VidÃ©o",
+    desc: "Clips, spots publicitaires, interviews et aftermovies rÃ©alisÃ©s avec du matÃ©riel de pointe.",
     price: "Sur devis"
   },
   {
     icon: <Aperture size={32} className="text-[#003b95]" />,
     title: "Prises de vue Drone",
-    desc: "Sublimez vos projets avec des plans aériens spectaculaires en 4K.",
-    price: "À partir de 100.000 XOF"
+    desc: "Sublimez vos projets avec des plans aÃ©riens spectaculaires en 4K.",
+    price: "Ã€ partir de 100.000 XOF"
   },
   {
     icon: <Mic size={32} className="text-[#003b95]" />,
     title: "Studio Podcast & Audio",
-    desc: "Enregistrement vocal, mixage et création de podcasts dans un espace insonorisé premium.",
-    price: "À partir de 25.000 XOF / H"
+    desc: "Enregistrement vocal, mixage et crÃ©ation de podcasts dans un espace insonorisÃ© premium.",
+    price: "Ã€ partir de 25.000 XOF / H"
   }
 ];
 
 export default function HblStudioPage() {
   const handleBooking = () => {
-    const message = `*NOUVELLE DEMANDE - HBL STUDIO+* 🎥\n\nBonjour, je souhaite avoir plus d'informations sur vos services et réserver une session de shooting/tournage.`;
+    const message = `*NOUVELLE DEMANDE - HBL STUDIO+* ðŸŽ¥\n\nBonjour, je souhaite avoir plus d'informations sur vos services et rÃ©server une session de shooting/tournage.`;
     window.open(`https://wa.me/${STUDIO_WHATSAPP}?text=${encodeURIComponent(message)}`, "_blank");
   };
 
@@ -68,7 +68,7 @@ export default function HblStudioPage() {
             </h1>
             
             <p className="text-sm md:text-lg text-slate-300 mb-6 md:mb-8 max-w-xl leading-relaxed line-clamp-4 md:line-clamp-none">
-              Photographie, réalisation vidéo, drone et création de contenu digital. Donnez vie à votre vision avec notre équipe d'experts et notre matériel ultra-premium.
+              Photographie, rÃ©alisation vidÃ©o, drone et crÃ©ation de contenu digital. Donnez vie Ã  votre vision avec notre Ã©quipe d'experts et notre matÃ©riel ultra-premium.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
@@ -76,7 +76,7 @@ export default function HblStudioPage() {
                 onClick={handleBooking}
                 className="w-full sm:w-auto bg-[#003b95] hover:bg-blue-700 text-white px-6 py-3.5 md:px-8 md:py-4 rounded-xl font-black transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-900/30 text-sm md:text-base"
               >
-                Réserver une session <ArrowRight size={18} />
+                RÃ©server une session <ArrowRight size={18} />
               </button>
               <button className="w-full sm:w-auto bg-white/10 hover:bg-white/20 backdrop-blur-md text-white px-6 py-3.5 md:px-8 md:py-4 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm md:text-base border border-white/10">
                 <Play size={18} /> Voir notre Reel
@@ -91,7 +91,7 @@ export default function HblStudioPage() {
         <div className="text-center mb-10 md:mb-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 mb-3 md:mb-4">Nos Expertises</h2>
           <p className="text-slate-500 text-sm md:text-base max-w-2xl mx-auto px-2 leading-relaxed">
-            Un accompagnement complet sur mesure pour les particuliers, les entreprises et les créateurs de contenu.
+            Un accompagnement complet sur mesure pour les particuliers, les entreprises et les crÃ©ateurs de contenu.
           </p>
         </div>
 
@@ -120,8 +120,8 @@ export default function HblStudioPage() {
       <div className="max-w-7xl mx-auto px-4 mb-16 md:mb-20">
         <div className="flex justify-between items-end mb-6 md:mb-8">
           <div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1 md:mb-2">Dernières Réalisations</h2>
-            <p className="text-slate-500 text-xs md:text-base">Un aperçu de notre savoir-faire.</p>
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 mb-1 md:mb-2">DerniÃ¨res RÃ©alisations</h2>
+            <p className="text-slate-500 text-xs md:text-base">Un aperÃ§u de notre savoir-faire.</p>
           </div>
           <button className="hidden md:flex text-[#003b95] font-bold items-center gap-1 hover:underline text-sm shrink-0">
             Voir la galerie <ArrowRight size={16} />
@@ -151,16 +151,16 @@ export default function HblStudioPage() {
         </button>
       </div>
 
-      {/* BANIÈRE CALL TO ACTION */}
+      {/* BANIÃˆRE CALL TO ACTION */}
       <div className="max-w-7xl mx-auto px-4">
         <div className="bg-[#003b95] rounded-[2rem] md:rounded-[2.5rem] p-8 md:p-16 text-center text-white relative overflow-hidden shadow-xl">
           <div className="absolute top-0 right-0 opacity-10 hidden sm:block">
             <ImageIcon size={400} className="transform translate-x-32 -translate-y-32" />
           </div>
           <div className="relative z-10 max-w-2xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black mb-4 md:mb-6 leading-tight">Prêt à sublimer votre image ?</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black mb-4 md:mb-6 leading-tight">PrÃªt Ã  sublimer votre image ?</h2>
             <p className="text-white/80 mb-6 md:mb-8 text-sm md:text-lg leading-relaxed px-2">
-              Contactez-nous dès aujourd'hui pour discuter de votre projet et obtenir un devis personnalisé.
+              Contactez-nous dÃ¨s aujourd'hui pour discuter de votre projet et obtenir un devis personnalisÃ©.
             </p>
             <button 
               onClick={handleBooking}
@@ -175,3 +175,4 @@ export default function HblStudioPage() {
     </div>
   );
 }
+

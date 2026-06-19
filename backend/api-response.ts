@@ -12,11 +12,11 @@ export function badRequest(message: string) {
   return NextResponse.json({ success: false, error: message }, { status: 400 });
 }
 
-export function unauthorized(message = "Non autorisé") {
+export function unauthorized(message = "Non autorisÃ©") {
   return NextResponse.json({ success: false, error: message }, { status: 401 });
 }
 
-export function forbidden(message = "Accès refusé") {
+export function forbidden(message = "AccÃ¨s refusÃ©") {
   return NextResponse.json({ success: false, error: message }, { status: 403 });
 }
 
@@ -31,3 +31,5 @@ export function serverError(error: unknown) {
     { status: 500 }
   );
 }
+
+

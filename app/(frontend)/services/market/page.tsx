@@ -38,7 +38,7 @@ export default function MarketPage() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <h1 className="text-2xl sm:text-2xl sm:text-4xl md:text-5xl font-bold mt-2 mb-4">CÔTIÈRE Market &amp; Distribution</h1>
+            <h1 className="text-2xl sm:text-2xl sm:text-4xl md:text-5xl font-bold mt-2 mb-4">CÃ”TIÃˆRE Market &amp; Distribution</h1>
             <p className="text-gray-100 text-lg">Attieke, poissons, fruits de mer et produits locaux du littoral ivoirien.</p>
             <div className="flex gap-3 mt-8">
               <a href="#catalogue" className="btn-primary inline-flex items-center gap-2">Voir le catalogue <ArrowRight size={18} /></a>
@@ -170,3 +170,5 @@ export default function MarketPage() {
     </div>
   );
 }
+
+

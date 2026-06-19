@@ -31,7 +31,19 @@ export async function POST(req: NextRequest) {
     const parsed = schema.safeParse(body);
     if (!parsed.success) return badRequest(parsed.error.errors[0].message);
     const slug = parsed.data.name.toLowerCase().replace(/\s+/g, "-") + "-" + Date.now();
-    const item = await prisma.equipment.create({ data: { ...parsed.data, slug } });
+    
+    // âœ… CORRECTION ICI : Ajout de l'ID et de updatedAt
+    const item = await prisma.equipment.create({ 
+      data: { 
+        ...parsed.data, 
+        slug,
+        id: crypto.randomUUID(),
+        updatedAt: new Date()
+      } 
+    });
+    
     return created(item);
   } catch (e) { return serverError(e); }
 }
+
+

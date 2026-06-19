@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     const serviceId = searchParams.get("serviceId");
 
     if (serviceType === "room" && serviceId) {
-      const blocked = await prisma.roomAvailability.findMany({
+      const blocked = await prisma.room_availability.findMany({
         where: { roomId: serviceId, isBlocked: true },
         orderBy: { date: "asc" },
       });
@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
     }
 
     if (serviceType === "excursion" && serviceId) {
-      const blocked = await prisma.excursionAvailability.findMany({
+      const blocked = await prisma.excursion_availability.findMany({
         where: { excursionId: serviceId, isBlocked: true },
         orderBy: { date: "asc" },
       });
@@ -35,8 +35,9 @@ export async function GET(req: NextRequest) {
     }
 
     const [rooms, excursions] = await Promise.all([
-      prisma.roomAvailability.findMany({ where: { isBlocked: true }, include: { room: { select: { name: true } } }, orderBy: { date: "asc" } }),
-      prisma.excursionAvailability.findMany({ where: { isBlocked: true }, orderBy: { date: "asc" } }),
+      // ✅ CORRIGÉ : Remplacement de 'room' par 'rooms' dans la clause include
+      prisma.room_availability.findMany({ where: { isBlocked: true }, include: { rooms: { select: { name: true } } }, orderBy: { date: "asc" } }),
+      prisma.excursion_availability.findMany({ where: { isBlocked: true }, orderBy: { date: "asc" } }),
     ]);
     return ok({ rooms, excursions });
   } catch (e) {
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest) {
     const d = new Date(date);
 
     if (serviceType === "room") {
-      const result = await prisma.roomAvailability.upsert({
+      const result = await prisma.room_availability.upsert({
         where: { roomId_date: { roomId: serviceId, date: d } },
         update: { isBlocked: true, price: null },
         create: { roomId: serviceId, date: d, isBlocked: true },
@@ -64,7 +65,7 @@ export async function POST(req: NextRequest) {
       return ok(result);
     }
 
-    const result = await prisma.excursionAvailability.upsert({
+    const result = await prisma.excursion_availability.upsert({
       where: { excursionId_date_timeSlot: { excursionId: serviceId, date: d, timeSlot: "all" } },
       update: { isBlocked: true, blockReason: reason },
       create: { excursionId: serviceId, date: d, timeSlot: "all", totalSlots: 0, isBlocked: true, blockReason: reason },
@@ -84,9 +85,9 @@ export async function DELETE(req: NextRequest) {
     const { serviceType, id } = body;
 
     if (serviceType === "room") {
-      await prisma.roomAvailability.delete({ where: { id } });
+      await prisma.room_availability.delete({ where: { id } });
     } else {
-      await prisma.excursionAvailability.delete({ where: { id } });
+      await prisma.excursion_availability.delete({ where: { id } });
     }
     return ok({ message: "Date débloquée" });
   } catch (e) {

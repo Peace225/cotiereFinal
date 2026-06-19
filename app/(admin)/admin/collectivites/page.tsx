@@ -8,7 +8,7 @@ import AdminNavbar from "@/components/admin/AdminNavbar";
 import ExportButton from "@/components/admin/ExportButton";
 import ImageUploader from "@/components/admin/ImageUploader";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 type EventRequest = {
   id: string;
@@ -40,7 +40,7 @@ type AnnuaireContact = {
   createdAt: string;
 };
 
-// ─── Constantes ───────────────────────────────────────────────────────────────
+// â”€â”€â”€ Constantes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-700 border-yellow-200",
@@ -51,18 +51,18 @@ const STATUS_COLORS: Record<string, string> = {
 };
 const STATUS_LABELS: Record<string, string> = {
   PENDING: "En attente",
-  CONFIRMED: "Confirmé",
-  REFUSED: "Refusé",
-  CANCELLED: "Annulé",
-  COMPLETED: "Terminé",
+  CONFIRMED: "ConfirmÃ©",
+  REFUSED: "RefusÃ©",
+  CANCELLED: "AnnulÃ©",
+  COMPLETED: "TerminÃ©",
 };
 
 const TYPE_LABELS: Record<string, string> = {
   mairie: "Mairie",
   conseil: "Conseil",
   service: "Service public",
-  prefecture: "Préfecture",
-  sous_prefecture: "Sous-préfecture",
+  prefecture: "PrÃ©fecture",
+  sous_prefecture: "Sous-prÃ©fecture",
   autre: "Autre",
 };
 
@@ -79,42 +79,42 @@ const DEFAULT_CATALOGUE_SERVICES = [
   {
     id: "coaching",
     nom: "Coaching institutionnel",
-    description: "Accompagnement stratégique des institutions et collectivités locales pour améliorer leur gouvernance.",
+    description: "Accompagnement stratÃ©gique des institutions et collectivitÃ©s locales pour amÃ©liorer leur gouvernance.",
     image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
     categorie: "Coaching",
   },
   {
     id: "accompagnement",
-    nom: "Accompagnement collectivités",
-    description: "Soutien opérationnel aux mairies et conseils régionaux dans leurs projets de développement.",
+    nom: "Accompagnement collectivitÃ©s",
+    description: "Soutien opÃ©rationnel aux mairies et conseils rÃ©gionaux dans leurs projets de dÃ©veloppement.",
     image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80",
     categorie: "Accompagnement",
   },
   {
     id: "formation",
     nom: "Formation",
-    description: "Programmes de formation pour les élus locaux et agents des collectivités territoriales.",
+    description: "Programmes de formation pour les Ã©lus locaux et agents des collectivitÃ©s territoriales.",
     image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&q=80",
     categorie: "Formation",
   },
   {
     id: "developpement",
-    nom: "Développement local",
-    description: "Conception et mise en œuvre de projets de développement économique et social local.",
+    nom: "DÃ©veloppement local",
+    description: "Conception et mise en Å“uvre de projets de dÃ©veloppement Ã©conomique et social local.",
     image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
-    categorie: "Développement",
+    categorie: "DÃ©veloppement",
   },
   {
     id: "mediation",
-    nom: "Médiation",
-    description: "Services de médiation et résolution de conflits entre acteurs locaux et institutions.",
+    nom: "MÃ©diation",
+    description: "Services de mÃ©diation et rÃ©solution de conflits entre acteurs locaux et institutions.",
     image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=400&q=80",
-    categorie: "Médiation",
+    categorie: "MÃ©diation",
   },
   {
     id: "conseil",
-    nom: "Conseil stratégique",
-    description: "Conseil en planification stratégique et élaboration de plans de développement communaux.",
+    nom: "Conseil stratÃ©gique",
+    description: "Conseil en planification stratÃ©gique et Ã©laboration de plans de dÃ©veloppement communaux.",
     image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&q=80",
     categorie: "Conseil",
   },
@@ -130,10 +130,10 @@ function matchesCollectivites(r: EventRequest) {
   return (r.eventType?.toLowerCase() ?? "").includes("collectivit");
 }
 
-// ─── Composant principal ──────────────────────────────────────────────────────
+// â”€â”€â”€ Composant principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export default function AdminCollectivitesPage() {
-  // États catalogue & demandes
+  // Ã‰tats catalogue & demandes
   const [catalogueServices, setCatalogueServices] = useState(DEFAULT_CATALOGUE_SERVICES);
   const [requests, setRequests] = useState<EventRequest[]>([]);
   const [loading, setLoading] = useState(true);
@@ -142,7 +142,7 @@ export default function AdminCollectivitesPage() {
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState(emptyServiceForm);
 
-  // États annuaire
+  // Ã‰tats annuaire
   const [annuaire, setAnnuaire] = useState<AnnuaireContact[]>([]);
   const [annuaireLoading, setAnnuaireLoading] = useState(false);
   const [annuaireSearch, setAnnuaireSearch] = useState("");
@@ -151,7 +151,7 @@ export default function AdminCollectivitesPage() {
   const [editingContact, setEditingContact] = useState<AnnuaireContact | null>(null);
   const [annuaireForm, setAnnuaireForm] = useState(emptyAnnuaireForm);
 
-  // ── Chargement demandes ──
+  // â”€â”€ Chargement demandes â”€â”€
   async function load() {
     setLoading(true);
     try {
@@ -163,7 +163,7 @@ export default function AdminCollectivitesPage() {
     setLoading(false);
   }
 
-  // ── Chargement annuaire ──
+  // â”€â”€ Chargement annuaire â”€â”€
   async function loadAnnuaire() {
     setAnnuaireLoading(true);
     try {
@@ -180,7 +180,7 @@ export default function AdminCollectivitesPage() {
   useEffect(() => { load(); }, []);
   useEffect(() => { if (tab === "annuaire") loadAnnuaire(); }, [tab, annuaireTypeFilter]);
 
-  // ── Actions demandes ──
+  // â”€â”€ Actions demandes â”€â”€
   async function changeStatus(id: string, status: string) {
     await fetch(`/api/events/requests/${id}`, {
       method: "PATCH",
@@ -209,7 +209,7 @@ export default function AdminCollectivitesPage() {
     setForm(emptyServiceForm);
   }
 
-  // ── Actions annuaire ──
+  // â”€â”€ Actions annuaire â”€â”€
   function openNewContact() {
     setEditingContact(null);
     setAnnuaireForm(emptyAnnuaireForm);
@@ -267,14 +267,14 @@ export default function AdminCollectivitesPage() {
     setAnnuaire(prev => prev.map(x => x.id === c.id ? { ...x, isActive: !x.isActive } : x));
   }
 
-  // ── Filtres locaux annuaire ──
+  // â”€â”€ Filtres locaux annuaire â”€â”€
   const filteredAnnuaire = annuaire.filter(c => {
     if (!annuaireSearch) return true;
     const q = annuaireSearch.toLowerCase();
     return c.nom.toLowerCase().includes(q) || c.ville.toLowerCase().includes(q) || (c.region ?? "").toLowerCase().includes(q);
   });
 
-  // ── Export demandes ──
+  // â”€â”€ Export demandes â”€â”€
   const filtered = filter === "ALL" ? requests : requests.filter(r => r.status === filter);
   const exportData = filtered.map(r => ({
     reference: r.reference,
@@ -285,15 +285,15 @@ export default function AdminCollectivitesPage() {
     statut: STATUS_LABELS[r.status] ?? r.status,
   }));
   const exportColumns = [
-    { key: "reference", label: "Référence" },
+    { key: "reference", label: "RÃ©fÃ©rence" },
     { key: "client", label: "Client" },
-    { key: "telephone", label: "Téléphone" },
-    { key: "service", label: "Service demandé" },
+    { key: "telephone", label: "TÃ©lÃ©phone" },
+    { key: "service", label: "Service demandÃ©" },
     { key: "date", label: "Date" },
     { key: "statut", label: "Statut" },
   ];
 
-  // ── Export annuaire ──
+  // â”€â”€ Export annuaire â”€â”€
   const exportAnnuaire = filteredAnnuaire.map(c => ({
     nom: c.nom,
     type: TYPE_LABELS[c.type] ?? c.type,
@@ -307,8 +307,8 @@ export default function AdminCollectivitesPage() {
     { key: "nom", label: "Nom" },
     { key: "type", label: "Type" },
     { key: "ville", label: "Ville" },
-    { key: "region", label: "Région" },
-    { key: "telephone", label: "Téléphone" },
+    { key: "region", label: "RÃ©gion" },
+    { key: "telephone", label: "TÃ©lÃ©phone" },
     { key: "email", label: "Email" },
     { key: "adresse", label: "Adresse" },
   ];
@@ -324,7 +324,7 @@ export default function AdminCollectivitesPage() {
             <div className="w-10 h-10 bg-[#0c4a6e] rounded-xl flex items-center justify-center">
               <Building2 size={20} className="text-[#c9a84c]" />
             </div>
-            <h1 className="text-2xl font-black text-[#0c4a6e]">CÔTIÈRE Collectivités & Services</h1>
+            <h1 className="text-2xl font-black text-[#0c4a6e]">CÃ”TIÃˆRE CollectivitÃ©s & Services</h1>
           </div>
           <div className="flex gap-2 flex-wrap">
             {tab === "catalogue" && (
@@ -365,7 +365,7 @@ export default function AdminCollectivitesPage() {
           </div>
         </div>
 
-        {/* ── Onglet Catalogue ── */}
+        {/* â”€â”€ Onglet Catalogue â”€â”€ */}
         {tab === "catalogue" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {catalogueServices.map(s => (
@@ -396,14 +396,14 @@ export default function AdminCollectivitesPage() {
           </div>
         )}
 
-        {/* ── Onglet Demandes ── */}
+        {/* â”€â”€ Onglet Demandes â”€â”€ */}
         {tab === "reservations" && (
           <>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {[
                 { label: "Total", value: requests.length, color: "text-blue-500", bg: "bg-blue-50", filterVal: "ALL" },
                 { label: "En attente", value: requests.filter(r => r.status === "PENDING").length, color: "text-yellow-500", bg: "bg-yellow-50", filterVal: "PENDING" },
-                { label: "Confirmés", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50", filterVal: "CONFIRMED" },
+                { label: "ConfirmÃ©s", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50", filterVal: "CONFIRMED" },
               ].map(s => {
                 const isActive = filter === s.filterVal;
                 return (
@@ -433,9 +433,9 @@ export default function AdminCollectivitesPage() {
               >
                 <option value="ALL">Tous les statuts</option>
                 <option value="PENDING">En attente</option>
-                <option value="CONFIRMED">Confirmés</option>
-                <option value="COMPLETED">Terminés</option>
-                <option value="REFUSED">Refusés</option>
+                <option value="CONFIRMED">ConfirmÃ©s</option>
+                <option value="COMPLETED">TerminÃ©s</option>
+                <option value="REFUSED">RefusÃ©s</option>
               </select>
               <button
                 onClick={load}
@@ -451,21 +451,21 @@ export default function AdminCollectivitesPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
                 <div className="w-1 h-5 bg-[#c9a84c] rounded-full" />
-                <h2 className="font-bold text-[#0c4a6e]">Demandes Collectivités &amp; Services</h2>
-                <span className="ml-auto text-xs text-gray-400">{filtered.length} résultat(s)</span>
+                <h2 className="font-bold text-[#0c4a6e]">Demandes CollectivitÃ©s &amp; Services</h2>
+                <span className="ml-auto text-xs text-gray-400">{filtered.length} rÃ©sultat(s)</span>
               </div>
               {loading ? (
                 <div className="py-16 text-center text-gray-400">
                   <RefreshCw size={32} className="animate-spin mx-auto mb-3" /> Chargement...
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="py-16 text-center text-gray-400">Aucune demande trouvée.</div>
+                <div className="py-16 text-center text-gray-400">Aucune demande trouvÃ©e.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b border-gray-100">
                       <tr>
-                        {["Réf.", "Client", "WhatsApp", "Service demandé", "Date", "Statut", "Action"].map(h => (
+                        {["RÃ©f.", "Client", "WhatsApp", "Service demandÃ©", "Date", "Statut", "Action"].map(h => (
                           <th key={h} className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">{h}</th>
                         ))}
                       </tr>
@@ -475,7 +475,7 @@ export default function AdminCollectivitesPage() {
                         <tr key={r.id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-3 py-3">
                             <div className="flex items-center gap-2">
-                              <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=60&q=80" alt="Collectivités" className="w-9 h-9 rounded-lg object-cover shrink-0 border border-gray-100" />
+                              <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=60&q=80" alt="CollectivitÃ©s" className="w-9 h-9 rounded-lg object-cover shrink-0 border border-gray-100" />
                               <span className="font-mono text-xs text-gray-400">{r.reference?.slice(-8) ?? r.id.slice(-8)}</span>
                             </div>
                           </td>
@@ -489,7 +489,7 @@ export default function AdminCollectivitesPage() {
                             </a>
                           </td>
                           <td className="px-4 py-3 text-sm font-medium text-[#0c4a6e]">
-                            <a href="/services/collectivites" target="_blank" rel="noopener noreferrer" className="hover:underline">{r.eventType} ↗</a>
+                            <a href="/services/collectivites" target="_blank" rel="noopener noreferrer" className="hover:underline">{r.eventType} â†—</a>
                           </td>
                           <td className="px-4 py-3 text-xs text-gray-500">
                             {new Date(r.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
@@ -524,7 +524,7 @@ export default function AdminCollectivitesPage() {
           </>
         )}
 
-        {/* ── Onglet Annuaire ── */}
+        {/* â”€â”€ Onglet Annuaire â”€â”€ */}
         {tab === "annuaire" && (
           <>
             {/* Stats annuaire */}
@@ -561,7 +561,7 @@ export default function AdminCollectivitesPage() {
                 <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Rechercher par nom, ville, région..."
+                  placeholder="Rechercher par nom, ville, rÃ©gion..."
                   value={annuaireSearch}
                   onChange={e => setAnnuaireSearch(e.target.value)}
                   className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white"
@@ -578,8 +578,8 @@ export default function AdminCollectivitesPage() {
                   <option value="mairie">Mairies</option>
                   <option value="conseil">Conseils</option>
                   <option value="service">Services publics</option>
-                  <option value="prefecture">Préfectures</option>
-                  <option value="sous_prefecture">Sous-préfectures</option>
+                  <option value="prefecture">PrÃ©fectures</option>
+                  <option value="sous_prefecture">Sous-prÃ©fectures</option>
                   <option value="autre">Autres</option>
                 </select>
               </div>
@@ -618,7 +618,7 @@ export default function AdminCollectivitesPage() {
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b border-gray-100">
                       <tr>
-                        {["Nom", "Type", "Ville / Région", "Contact", "Horaires", "Statut", "Actions"].map(h => (
+                        {["Nom", "Type", "Ville / RÃ©gion", "Contact", "Horaires", "Statut", "Actions"].map(h => (
                           <th key={h} className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">{h}</th>
                         ))}
                       </tr>
@@ -666,7 +666,7 @@ export default function AdminCollectivitesPage() {
                                 <Clock size={10} className="mt-0.5 shrink-0" /> {c.horaires}
                               </p>
                             ) : (
-                              <span className="text-xs text-gray-300">—</span>
+                              <span className="text-xs text-gray-300">â€”</span>
                             )}
                           </td>
                           <td className="px-4 py-3">
@@ -706,7 +706,7 @@ export default function AdminCollectivitesPage() {
         )}
       </div>
 
-      {/* ── Modal Ajouter un service ── */}
+      {/* â”€â”€ Modal Ajouter un service â”€â”€ */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col overflow-hidden">
@@ -722,7 +722,7 @@ export default function AdminCollectivitesPage() {
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">CatÃ©gorie</label>
                 <input type="text" placeholder="Coaching / Formation / Conseil..." value={form.categorie}
                   onChange={e => setForm(f => ({ ...f, categorie: e.target.value }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
@@ -747,7 +747,7 @@ export default function AdminCollectivitesPage() {
         </div>
       )}
 
-      {/* ── Modal Annuaire (Créer / Modifier) ── */}
+      {/* â”€â”€ Modal Annuaire (CrÃ©er / Modifier) â”€â”€ */}
       {showAnnuaireModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden">
@@ -775,8 +775,8 @@ export default function AdminCollectivitesPage() {
                     <option value="mairie">Mairie</option>
                     <option value="conseil">Conseil</option>
                     <option value="service">Service public</option>
-                    <option value="prefecture">Préfecture</option>
-                    <option value="sous_prefecture">Sous-préfecture</option>
+                    <option value="prefecture">PrÃ©fecture</option>
+                    <option value="sous_prefecture">Sous-prÃ©fecture</option>
                     <option value="autre">Autre</option>
                   </select>
                 </div>
@@ -787,13 +787,13 @@ export default function AdminCollectivitesPage() {
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Région</label>
-                  <input type="text" placeholder="Sud-Comoé" value={annuaireForm.region}
+                  <label className="block text-sm font-medium text-gray-700 mb-1">RÃ©gion</label>
+                  <input type="text" placeholder="Sud-ComoÃ©" value={annuaireForm.region}
                     onChange={e => setAnnuaireForm(f => ({ ...f, region: e.target.value }))}
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">TÃ©lÃ©phone</label>
                   <input type="text" placeholder="+225 27 21 30 00 00" value={annuaireForm.telephone}
                     onChange={e => setAnnuaireForm(f => ({ ...f, telephone: e.target.value }))}
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
@@ -840,3 +840,5 @@ export default function AdminCollectivitesPage() {
     </div>
   );
 }
+
+

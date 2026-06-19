@@ -8,13 +8,13 @@ export default function EvenementPage() {
   // 1. ADDED TYPE HERE: e: React.FormEvent<HTMLFormElement>
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Données de l'événement enregistrées");
+    console.log("DonnÃ©es de l'Ã©vÃ©nement enregistrÃ©es");
   };
 
   return (
     <div className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-3xl">
       <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
-        <Calendar className="text-blue-600" /> Nouvel Événement à promouvoir
+        <Calendar className="text-blue-600" /> Nouvel Ã‰vÃ©nement Ã  promouvoir
       </h2>
       
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -22,7 +22,7 @@ export default function EvenementPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input 
             type="text" 
-            placeholder="Nom de l'événement" 
+            placeholder="Nom de l'Ã©vÃ©nement" 
             className="w-full p-3 border rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all" 
             required 
           />
@@ -39,7 +39,7 @@ export default function EvenementPage() {
             <MapPin className="text-gray-400" />
             <input 
               type="text" 
-              placeholder="Lieu (Hôtel, salle, espace...)" 
+              placeholder="Lieu (HÃ´tel, salle, espace...)" 
               className="w-full outline-none text-gray-800" 
               required 
             />
@@ -57,10 +57,10 @@ export default function EvenementPage() {
         {/* Description */}
         <div className="space-y-2">
           <label className="font-semibold text-gray-700 flex items-center gap-2">
-            <FileText className="w-5 h-5 text-blue-600" /> Description de l'événement
+            <FileText className="w-5 h-5 text-blue-600" /> Description de l'Ã©vÃ©nement
           </label>
           <textarea 
-            placeholder="Détails, programme, artistes invités..." 
+            placeholder="DÃ©tails, programme, artistes invitÃ©s..." 
             className="w-full p-3 border rounded-lg h-32 outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all resize-none text-gray-800" 
             required 
           />
@@ -76,3 +76,4 @@ export default function EvenementPage() {
     </div>
   );
 }
+

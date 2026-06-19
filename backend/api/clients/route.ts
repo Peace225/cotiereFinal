@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, created, badRequest, serverError, forbidden } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Sécurité ajoutée
+import { requireAdmin } from "@/lib/auth"; // SÃ©curitÃ© ajoutÃ©e
 import bcrypt from "bcryptjs";
 import { z } from "zod";
 
@@ -42,7 +42,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  // Protection : Seuls les admins peuvent créer un utilisateur
+  // Protection : Seuls les admins peuvent crÃ©er un utilisateur
   try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
 
     const d = parsed.data;
     const existing = await prisma.user.findUnique({ where: { email: d.email } });
-    if (existing) return badRequest("Un compte avec cet email existe déjà");
+    if (existing) return badRequest("Un compte avec cet email existe dÃ©jÃ ");
 
     const password = d.password
       ? await bcrypt.hash(d.password, 12)
@@ -80,3 +80,4 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+

@@ -45,7 +45,7 @@ export const authOptions: NextAuthOptions = {
 
         const login = credentials.email.trim();
 
-        // Chercher par email uniquement (username nécessite migration)
+        // Chercher par email uniquement (username nÃ©cessite migration)
         const user = await prisma.user.findUnique({
           where: { email: login },
         });
@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account }) {
-      // Pour OAuth (Google, Facebook) : créer le compte si inexistant
+      // Pour OAuth (Google, Facebook) : crÃ©er le compte si inexistant
       if (account?.provider === "google" || account?.provider === "facebook") {
         if (!user.email) return false;
         const existing = await prisma.user.findUnique({ where: { email: user.email } });
@@ -90,7 +90,7 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         token.id = user.id;
         token.role = (user as unknown as { role: string }).role;
-        // Pour OAuth, récupérer le rôle depuis la base
+        // Pour OAuth, rÃ©cupÃ©rer le rÃ´le depuis la base
         if (!token.role && token.email) {
           const dbUser = await prisma.user.findUnique({ where: { email: token.email as string } });
           if (dbUser) { token.id = dbUser.id; token.role = dbUser.role; }
@@ -129,3 +129,5 @@ export async function requireAdmin() {
   if (role !== "ADMIN" && role !== "SUPER_ADMIN") throw new Error("FORBIDDEN");
   return session;
 }
+
+

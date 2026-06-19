@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useState } from "react";
 import { RefreshCw, CalendarDays, CheckCircle, Pencil, Plus, X, Trash2, MapPin, Clock, Users, Ticket, Calendar } from "lucide-react";
 import AdminNavbar from "@/components/admin/AdminNavbar";
@@ -566,4 +566,6 @@ export default function AdminRdvPage() {
     </div>
   );
 }
+
+
 

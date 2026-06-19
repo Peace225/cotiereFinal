@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
     request,
   })
 
-  // 1. Création du client Supabase pour le serveur
+  // 1. CrÃ©ation du client Supabase pour le serveur
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -30,7 +30,7 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  // 2. Vérification de la session en cours
+  // 2. VÃ©rification de la session en cours
   const { data: { user } } = await supabase.auth.getUser()
 
   const pathname = request.nextUrl.pathname
@@ -38,7 +38,7 @@ export async function middleware(request: NextRequest) {
   // 3. Protection de la route /admin
   if (pathname.startsWith("/admin")) {
     
-    // Si l'utilisateur n'est pas connecté du tout
+    // Si l'utilisateur n'est pas connectÃ© du tout
     if (!user) {
       const url = request.nextUrl.clone()
       url.pathname = '/connexion'
@@ -46,7 +46,7 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(url)
     }
 
-    // Récupération du rôle depuis ta table 'users'
+    // RÃ©cupÃ©ration du rÃ´le depuis ta table 'users'
     const { data: profile } = await supabase
       .from('users')
       .select('role')
@@ -55,7 +55,7 @@ export async function middleware(request: NextRequest) {
 
     const role = profile?.role
 
-    // Si connecté mais pas ADMIN, on le renvoie à l'accueil
+    // Si connectÃ© mais pas ADMIN, on le renvoie Ã  l'accueil
     if (role !== "ADMIN" && role !== "SUPER_ADMIN") {
       const url = request.nextUrl.clone()
       url.pathname = '/'
@@ -68,5 +68,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"], // Protège toutes les routes qui commencent par /admin
+  matcher: ["/admin/:path*"], // ProtÃ¨ge toutes les routes qui commencent par /admin
 }
+

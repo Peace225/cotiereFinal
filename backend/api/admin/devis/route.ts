@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, badRequest, serverError } from "@/lib/api-response";
 
-// POST /api/admin/devis — Sauvegarder l'URL du devis PDF sur une réservation
+// POST /api/admin/devis â€” Sauvegarder l'URL du devis PDF sur une rÃ©servation
 export async function POST(req: NextRequest) {
   try {
     const { type, id, quotePdfUrl, totalAmount, adminNotes } = await req.json();
@@ -26,3 +26,5 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+
+

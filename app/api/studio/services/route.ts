@@ -23,14 +23,14 @@ export async function GET() {
   try {
     const supabase = await getSupabaseClient();
     
-    // Tentative de récupération depuis la table 'studio_services'
+    // Tentative de rÃ©cupÃ©ration depuis la table 'studio_services'
     const { data, error } = await supabase
       .from('studio_services')
       .select('*');
 
     if (error) {
       // C'EST ICI QUE NOUS VERRONS L'ERREUR DANS LE TERMINAL VS CODE
-      console.error("ERREUR SUPABASE (Détail):", JSON.stringify(error, null, 2));
+      console.error("ERREUR SUPABASE (DÃ©tail):", JSON.stringify(error, null, 2));
       throw error;
     }
 
@@ -59,3 +59,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
 }
+
+

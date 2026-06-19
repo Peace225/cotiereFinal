@@ -124,7 +124,7 @@ model EquipmentRental {
   adminNotes             String?
   paymentStatus          PaymentStatus            @default(UNPAID)
   createdAt              DateTime                 @default(now())
-  updatedAt              DateTime
+  updatedAt              DateTime                 @updatedAt
   equipment_rental_items equipment_rental_items[]
   user                   User?                    @relation(fields: [userId], references: [id])
   notifications          Notification[]
@@ -155,7 +155,7 @@ model EventRequest {
   paymentStatus   PaymentStatus  @default(UNPAID)
   totalAmount     Int?
   createdAt       DateTime       @default(now())
-  updatedAt       DateTime
+  updatedAt       DateTime       @updatedAt
   user            User?          @relation(fields: [userId], references: [id])
   notifications   Notification[]
   payments        Payment[]
@@ -191,7 +191,7 @@ model ExcursionBooking {
   paymentStatus      PaymentStatus  @default(UNPAID)
   depositAmount      Int?
   createdAt          DateTime       @default(now())
-  updatedAt          DateTime
+  updatedAt          DateTime       @updatedAt
   excursions         excursions     @relation(fields: [excursionId], references: [id])
   user               User?          @relation(fields: [userId], references: [id])
   notifications      Notification[]
@@ -223,7 +223,7 @@ model HotelBooking {
   paymentStatus   PaymentStatus  @default(UNPAID)
   depositAmount   Int
   createdAt       DateTime       @default(now())
-  updatedAt       DateTime
+  updatedAt       DateTime       @updatedAt
   rooms           rooms          @relation(fields: [roomId], references: [id])
   user            User?          @relation(fields: [userId], references: [id])
   notifications   Notification[]
@@ -251,7 +251,7 @@ model MediaAdRequest {
   quotePdfUrl   String?
   adminNotes    String?
   createdAt     DateTime       @default(now())
-  updatedAt     DateTime
+  updatedAt     DateTime       @updatedAt
   user          User?          @relation(fields: [userId], references: [id])
   notifications Notification[]
 
@@ -277,7 +277,7 @@ model MusicBooking {
   adminNotes         String?
   paymentStatus      PaymentStatus  @default(UNPAID)
   createdAt          DateTime       @default(now())
-  updatedAt          DateTime
+  updatedAt          DateTime       @updatedAt
   user               User?          @relation(fields: [userId], references: [id])
   notifications      Notification[]
   payments           Payment[]
@@ -331,7 +331,7 @@ model Payment {
   receiptPdfUrl      String?
   paidAt             DateTime?
   createdAt          DateTime          @default(now())
-  updatedAt          DateTime
+  updatedAt          DateTime          @updatedAt
   equipment_rentals  EquipmentRental?  @relation(fields: [equipmentRentalId], references: [id])
   event_requests     EventRequest?     @relation(fields: [eventRequestId], references: [id])
   excursion_bookings ExcursionBooking? @relation(fields: [excursionBookingId], references: [id])
@@ -386,7 +386,7 @@ model StudioBooking {
   depositAmount     Int?
   totalAmount       Int?
   createdAt         DateTime       @default(now())
-  updatedAt         DateTime
+  updatedAt         DateTime       @updatedAt
   notifications     Notification[]
   payments          Payment[]
   user              User?          @relation(fields: [userId], references: [id])
@@ -418,7 +418,7 @@ model VilleContenu {
 }
 
 model afrouba_requests {
-  id              String        @id
+  id              String        @id @default(cuid())
   reference       String        @unique
   clientFirstName String
   clientLastName  String
@@ -430,11 +430,11 @@ model afrouba_requests {
   status          BookingStatus @default(PENDING)
   adminNotes      String?
   createdAt       DateTime      @default(now())
-  updatedAt       DateTime
+  updatedAt       DateTime      @updatedAt
 }
 
 model afrouba_supports {
-  id          String   @id
+  id          String   @id @default(cuid())
   nom         String
   categorie   String
   description String
@@ -442,11 +442,11 @@ model afrouba_supports {
   image       String
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
 
 model blocked_dates {
-  id          String   @id
+  id          String   @id @default(cuid())
   serviceType String
   serviceId   String?
   date        DateTime @db.Date
@@ -455,7 +455,7 @@ model blocked_dates {
 }
 
 model collectivite_annuaire {
-  id        String   @id
+  id        String   @id @default(cuid())
   nom       String
   type      String
   ville     String
@@ -467,22 +467,22 @@ model collectivite_annuaire {
   horaires  String?
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model collectivite_services {
-  id          String   @id
+  id          String   @id @default(cuid())
   nom         String
   categorie   String
   description String
   image       String
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
 
 model equipment {
-  id                     String                   @id
+  id                     String                   @id @default(cuid())
   name                   String
   slug                   String                   @unique
   description            String?
@@ -494,12 +494,12 @@ model equipment {
   techSheetUrl           String?
   isActive               Boolean                  @default(true)
   createdAt              DateTime                 @default(now())
-  updatedAt              DateTime
+  updatedAt              DateTime                 @updatedAt
   equipment_rental_items equipment_rental_items[]
 }
 
 model equipment_rental_items {
-  id                String          @id
+  id                String          @id @default(cuid())
   rentalId          String
   equipmentId       String
   quantity          Int
@@ -510,7 +510,7 @@ model equipment_rental_items {
 }
 
 model excursion_availability {
-  id          String   @id
+  id          String   @id @default(cuid())
   excursionId String
   date        DateTime @db.Date
   timeSlot    String
@@ -523,7 +523,7 @@ model excursion_availability {
 }
 
 model excursion_options {
-  id             String     @id
+  id             String     @id @default(cuid())
   excursionId    String
   label          String
   pricePerPerson Int
@@ -532,7 +532,7 @@ model excursion_options {
 }
 
 model excursion_time_slots {
-  id          String     @id
+  id          String     @id @default(cuid())
   excursionId String
   startTime   String
   endTime     String
@@ -541,7 +541,7 @@ model excursion_time_slots {
 }
 
 model excursions {
-  id                   String                 @id
+  id                   String                 @id @default(cuid())
   title                String
   slug                 String                 @unique
   description          String
@@ -553,7 +553,7 @@ model excursions {
   images               String[]
   isActive             Boolean                @default(true)
   createdAt            DateTime               @default(now())
-  updatedAt            DateTime
+  updatedAt            DateTime               @updatedAt
   excursion_bookings   ExcursionBooking[]
   excursion_options    excursion_options[]
   excursion_time_slots excursion_time_slots[]
@@ -561,7 +561,7 @@ model excursions {
 }
 
 model info_prestations {
-  id          String   @id
+  id          String   @id @default(cuid())
   nom         String
   categorie   String?
   description String?
@@ -569,11 +569,11 @@ model info_prestations {
   image       String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
 
 model marketProduit {
-  id        String   @id
+  id        String   @id @default(cuid())
   label     String
   desc      String?
   prix      Int
@@ -582,11 +582,11 @@ model marketProduit {
   images    String[]
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model media_supports {
-  id          String   @id
+  id          String   @id @default(cuid())
   nom         String
   categorie   String
   description String?
@@ -594,11 +594,11 @@ model media_supports {
   badge       String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
 
 model musique_services {
-  id          String   @id
+  id          String   @id @default(cuid())
   nom         String
   categorie   String
   prix        String   @default("Sur devis")
@@ -606,11 +606,11 @@ model musique_services {
   image       String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
 
 model opportunite_secteurs {
-  id          String   @id
+  id          String   @id @default(cuid())
   nom         String
   categorie   String
   couleur     String
@@ -618,11 +618,11 @@ model opportunite_secteurs {
   image       String
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
 
 model room_availability {
-  id        String   @id
+  id        String   @id @default(cuid())
   roomId    String
   date      DateTime @db.Date
   isBlocked Boolean  @default(false)
@@ -633,7 +633,7 @@ model room_availability {
 }
 
 model rooms {
-  id                String              @id
+  id                String              @id @default(cuid())
   name              String
   slug              String              @unique
   description       String?
@@ -644,7 +644,7 @@ model rooms {
   amenities         String[]
   isActive          Boolean             @default(true)
   createdAt         DateTime            @default(now())
-  updatedAt         DateTime
+  updatedAt         DateTime            @updatedAt
   city              String              @default("cotiere")
   isFeatured        Boolean             @default(false)
   isPopular         Boolean             @default(false)
@@ -656,25 +656,26 @@ model rooms {
 }
 
 model site_content {
-  id        String   @id
+  id        String   @id @default(cuid())
   key       String   @unique
   value     String
   type      String   @default("text")
-  updatedAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model studio_services {
-  id          String   @id
+  id          String   @id @default(cuid())
   label       String
   description String?
   image       String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
 
 model vehicules {
-  id          String   @id
+  id          String   @id @default(cuid())
   nom         String
   categorie   String
   description String?
@@ -684,7 +685,7 @@ model vehicules {
   image       String?
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
-  updatedAt   DateTime
+  updatedAt   DateTime @updatedAt
 }
 
 enum Role {

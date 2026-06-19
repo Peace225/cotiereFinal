@@ -13,12 +13,14 @@ async function main() {
     data: { password: hash, role: "ADMIN", emailVerified: true },
   });
 
-  console.log("✅ Mot de passe réinitialisé !");
-  console.log(`📧 Email    : ${user.email}`);
-  console.log(`🔑 Mot de passe : ${password}`);
-  console.log(`👤 Rôle     : ${user.role}`);
+  console.log("âœ… Mot de passe rÃ©initialisÃ© !");
+  console.log(`ðŸ“§ Email    : ${user.email}`);
+  console.log(`ðŸ”‘ Mot de passe : ${password}`);
+  console.log(`ðŸ‘¤ RÃ´le     : ${user.role}`);
 }
 
 main()
   .catch(console.error)
   .finally(() => prisma.$disconnect());
+
+

@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, created, badRequest, serverError, forbidden } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Sécurité centralisée
+import { requireAdmin } from "@/lib/auth"; // SÃ©curitÃ© centralisÃ©e
 import { z } from "zod";
 
 const schema = z.object({
@@ -25,7 +25,7 @@ export async function GET() {
   } catch (e) { return serverError(e); }
 }
 
-// POST est désormais sécurisé
+// POST est dÃ©sormais sÃ©curisÃ©
 export async function POST(req: NextRequest) {
   try { await requireAdmin(); } catch { return forbidden(); }
 
@@ -39,3 +39,4 @@ export async function POST(req: NextRequest) {
     return created(item);
   } catch (e) { return serverError(e); }
 }
+

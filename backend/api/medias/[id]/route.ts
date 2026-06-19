@@ -12,6 +12,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const data = await req.json();
+    // ✅ CORRIGÉ : media_ad_requests -> mediaAdRequest
     const request = await prisma.mediaAdRequest.update({ where: { id }, data });
     return ok(request);
   } catch (e) { return serverError(e); }
@@ -23,6 +24,7 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params;
+    // ✅ CORRIGÉ : media_ad_requests -> mediaAdRequest
     await prisma.mediaAdRequest.delete({ where: { id } });
     return ok({ message: "Supprimé" });
   } catch (e) { return serverError(e); }

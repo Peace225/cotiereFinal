@@ -12,12 +12,12 @@ const reservationSchema = z.object({
   clientEmail: z.string().email().optional().or(z.literal("")),
   eventDate: z.string().optional(),
   message: z.string().optional(),
-  serviceTitle: z.string().min(1),   // ex: "Chambre Supérieure"
-  serviceDetails: z.string().optional(), // ex: "Chambre · 2 personnes · 40 000 FCFA/nuit"
+  serviceTitle: z.string().min(1),   // ex: "Chambre SupÃ©rieure"
+  serviceDetails: z.string().optional(), // ex: "Chambre Â· 2 personnes Â· 40 000 FCFA/nuit"
   pageUrl: z.string().optional(),
 });
 
-// POST /api/reservations — Réservation générique depuis le modal
+// POST /api/reservations â€” RÃ©servation gÃ©nÃ©rique depuis le modal
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -27,26 +27,39 @@ export async function POST(req: NextRequest) {
     const session = await getSession();
     const d = parsed.data;
 
+    // Construction sÃ©curisÃ©e de l'objet de crÃ©ation pour satisfaire le typage strict de Prisma
+    const formattedDescription = [
+      d.serviceDetails ? `Service : ${d.serviceDetails}` : null,
+      d.message ? `Message : ${d.message}` : null,
+      d.pageUrl ? `Page : ${d.pageUrl}` : null,
+    ].filter(Boolean).join("\n");
+
+    const reservationData: any = {
+      id: crypto.randomUUID(),
+      updatedAt: new Date(),
+      reference: generateReference("RES"),
+      clientFirstName: d.clientFirstName,
+      clientLastName: d.clientLastName,
+      clientEmail: d.clientEmail || "non-fourni@cotiere.ci",
+      clientPhone: d.clientPhone,
+      eventType: d.serviceTitle,
+      eventDate: d.eventDate ? new Date(d.eventDate) : new Date(),
+      eventLocation: d.pageUrl ?? "Site web",
+      guestCount: 1,
+      services: [d.serviceTitle],
+      attachments: [],
+    };
+
+    if (session?.user) {
+      reservationData.userId = (session.user as { id: string }).id;
+    }
+
+    if (formattedDescription) {
+      reservationData.description = formattedDescription;
+    }
+
     const reservation = await prisma.eventRequest.create({
-      data: {
-        reference: generateReference("RES"),
-        userId: session?.user ? (session.user as { id: string }).id : undefined,
-        clientFirstName: d.clientFirstName,
-        clientLastName: d.clientLastName,
-        clientEmail: d.clientEmail || "non-fourni@cotiere.ci",
-        clientPhone: d.clientPhone,
-        eventType: d.serviceTitle,
-        eventDate: d.eventDate ? new Date(d.eventDate) : new Date(),
-        eventLocation: d.pageUrl ?? "Site web",
-        guestCount: 1,
-        services: [d.serviceTitle],
-        attachments: [],
-        description: [
-          d.serviceDetails ? `Service : ${d.serviceDetails}` : null,
-          d.message ? `Message : ${d.message}` : null,
-          d.pageUrl ? `Page : ${d.pageUrl}` : null,
-        ].filter(Boolean).join("\n") || undefined,
-      },
+      data: reservationData,
     });
 
     return created({ id: reservation.id, reference: reservation.reference });
@@ -54,3 +67,4 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+

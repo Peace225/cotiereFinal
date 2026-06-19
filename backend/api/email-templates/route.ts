@@ -1,21 +1,21 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, forbidden, serverError } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutÃ©e
 
 const DEFAULT_TEMPLATES = [
-  { key: "confirmation_reservation", label: "Confirmation de réservation", subject: "Votre réservation COTIERE est confirmée", content: "Bonjour {{clientName}},\n\nVotre réservation pour {{service}} du {{date}} a été confirmée.\n\nMontant : {{montant}} FCFA\n\nMerci de votre confiance.\nCÔTIÈRE MEDIA GROUP\n07 47 72 29 31" },
-  { key: "refus_reservation", label: "Refus de réservation", subject: "Votre demande CÔTIÈRE", content: "Bonjour {{clientName}},\n\nNous sommes désolés, votre demande pour {{service}} n'a pas pu être acceptée.\n\nContactez-nous pour plus d'informations.\nCÔTIÈRE MEDIA GROUP\n07 47 72 29 31" },
-  { key: "rappel_reservation", label: "Rappel 48h avant", subject: "Rappel : votre réservation COTIERE demain", content: "Bonjour {{clientName}},\n\nRappel : votre {{service}} est prévu le {{date}}.\n\nN'oubliez pas de vous présenter 15 minutes avant.\nCÔTIÈRE MEDIA GROUP\n07 47 72 29 31" },
-  { key: "devis_envoye", label: "Envoi de devis", subject: "Votre devis HBL Studio+", content: "Bonjour {{clientName}},\n\nVeuillez trouver ci-joint votre devis pour {{service}}.\n\nMontant estimé : {{montant}} FCFA\n\nCe devis est valable 30 jours.\nCÔTIÈRE MEDIA GROUP\n07 47 72 29 31" },
+  { key: "confirmation_reservation", label: "Confirmation de rÃ©servation", subject: "Votre rÃ©servation COTIERE est confirmÃ©e", content: "Bonjour {{clientName}},\n\nVotre rÃ©servation pour {{service}} du {{date}} a Ã©tÃ© confirmÃ©e.\n\nMontant : {{montant}} FCFA\n\nMerci de votre confiance.\nCÃ”TIÃˆRE MEDIA GROUP\n07 47 72 29 31" },
+  { key: "refus_reservation", label: "Refus de rÃ©servation", subject: "Votre demande CÃ”TIÃˆRE", content: "Bonjour {{clientName}},\n\nNous sommes dÃ©solÃ©s, votre demande pour {{service}} n'a pas pu Ãªtre acceptÃ©e.\n\nContactez-nous pour plus d'informations.\nCÃ”TIÃˆRE MEDIA GROUP\n07 47 72 29 31" },
+  { key: "rappel_reservation", label: "Rappel 48h avant", subject: "Rappel : votre rÃ©servation COTIERE demain", content: "Bonjour {{clientName}},\n\nRappel : votre {{service}} est prÃ©vu le {{date}}.\n\nN'oubliez pas de vous prÃ©senter 15 minutes avant.\nCÃ”TIÃˆRE MEDIA GROUP\n07 47 72 29 31" },
+  { key: "devis_envoye", label: "Envoi de devis", subject: "Votre devis HBL Studio+", content: "Bonjour {{clientName}},\n\nVeuillez trouver ci-joint votre devis pour {{service}}.\n\nMontant estimÃ© : {{montant}} FCFA\n\nCe devis est valable 30 jours.\nCÃ”TIÃˆRE MEDIA GROUP\n07 47 72 29 31" },
 ];
 
 export async function GET() {
-  // Sécurisation du GET (lecture des modèles)
+  // SÃ©curisation du GET (lecture des modÃ¨les)
   try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
-    const stored = await prisma.siteContent.findMany({
+    const stored = await prisma.site_content.findMany({
       where: { key: { startsWith: "email_template_" } },
     });
 
@@ -35,16 +35,17 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  // Sécurisation du POST (écriture/modification)
+  // SÃ©curisation du POST (Ã©criture/modification)
   try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
     const { key, subject, content } = await req.json();
-    await prisma.siteContent.upsert({
+    await prisma.site_content.upsert({
       where: { key: `email_template_${key}` },
       update: { value: JSON.stringify({ subject, content }) },
       create: { key: `email_template_${key}`, value: JSON.stringify({ subject, content }), type: "json" },
     });
-    return ok({ message: "Template sauvegardé" });
+    return ok({ message: "Template sauvegardÃ©" });
   } catch (e) { return serverError(e); }
 }
+

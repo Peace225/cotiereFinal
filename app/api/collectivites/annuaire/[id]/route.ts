@@ -10,7 +10,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const data = await req.json();
-    const institution = await prisma.collectiviteAnnuaire.update({ where: { id }, data });
+    // ✅ CORRECTION : collectivite_annuaire
+    const institution = await prisma.collectivite_annuaire.update({ where: { id }, data });
     return ok(institution);
   } catch (e) { return serverError(e); }
 }
@@ -19,9 +20,11 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
   try { await requireAdmin(); } catch { return forbidden(); }
   try {
     const { id } = await params;
-    const item = await prisma.collectiviteAnnuaire.findUnique({ where: { id } });
+    // ✅ CORRECTION : collectivite_annuaire
+    const item = await prisma.collectivite_annuaire.findUnique({ where: { id } });
     if (!item) return notFound("Institution introuvable");
-    await prisma.collectiviteAnnuaire.update({ where: { id }, data: { isActive: false } });
+    // ✅ CORRECTION : collectivite_annuaire
+    await prisma.collectivite_annuaire.update({ where: { id }, data: { isActive: false } });
     return ok({ message: "Supprimé" });
   } catch (e) { return serverError(e); }
 }

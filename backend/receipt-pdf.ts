@@ -1,6 +1,6 @@
 /**
- * Générateur de reçu de paiement PDF — COTIERE MEDIA GROUP
- * Côté client uniquement (jsPDF)
+ * GÃ©nÃ©rateur de reÃ§u de paiement PDF â€” COTIERE MEDIA GROUP
+ * CÃ´tÃ© client uniquement (jsPDF)
  */
 
 export type ReceiptData = {
@@ -23,7 +23,7 @@ const METHOD_LABELS: Record<string, string> = {
   MTN_MONEY: "MTN MoMo",
   MOOV_MONEY: "Moov Money",
   WAVE: "Wave",
-  CASH: "Espèces",
+  CASH: "EspÃ¨ces",
   BANK_TRANSFER: "Virement bancaire",
 };
 
@@ -35,7 +35,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<void> {
   const margin = 20;
   let y = 20;
 
-  // En-tête
+  // En-tÃªte
   doc.setFillColor(12, 74, 110);
   doc.rect(0, 0, W, 40, "F");
   doc.setTextColor(201, 168, 76);
@@ -50,20 +50,20 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<void> {
 
   y = 55;
 
-  // Badge REÇU
+  // Badge REÃ‡U
   doc.setFillColor(201, 168, 76);
   doc.rect(margin, y - 5, W - margin * 2, 16, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(14);
   doc.setFont("helvetica", "bold");
-  doc.text("REÇU DE PAIEMENT", W / 2, y + 5, { align: "center" });
+  doc.text("REÃ‡U DE PAIEMENT", W / 2, y + 5, { align: "center" });
   y += 22;
 
-  // Références
+  // RÃ©fÃ©rences
   doc.setTextColor(100, 100, 100);
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.text(`Réf. paiement : ${data.paymentReference}`, margin, y);
+  doc.text(`RÃ©f. paiement : ${data.paymentReference}`, margin, y);
   doc.text(`Date : ${new Date(data.paidAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}`, W - margin - 70, y);
   y += 12;
 
@@ -84,18 +84,18 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<void> {
   doc.text(`${data.clientFirstName} ${data.clientLastName}`, margin, y);
   y += 5;
   if (data.clientEmail) { doc.text(data.clientEmail, margin, y); y += 5; }
-  if (data.clientPhone) { doc.text(`Tél : ${data.clientPhone}`, margin, y); y += 5; }
+  if (data.clientPhone) { doc.text(`TÃ©l : ${data.clientPhone}`, margin, y); y += 5; }
   y += 8;
 
   doc.setDrawColor(220, 220, 220);
   doc.line(margin, y, W - margin, y);
   y += 10;
 
-  // Détail service
+  // DÃ©tail service
   doc.setTextColor(12, 74, 110);
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
-  doc.text("DÉTAIL DU SERVICE", margin, y);
+  doc.text("DÃ‰TAIL DU SERVICE", margin, y);
   y += 7;
   doc.setFont("helvetica", "normal");
   doc.setTextColor(50, 50, 50);
@@ -104,7 +104,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<void> {
   const rows: [string, string][] = [
     ["Service :", data.serviceType],
     ["Description :", data.serviceLabel],
-    ["Référence :", data.reference],
+    ["RÃ©fÃ©rence :", data.reference],
   ];
   rows.forEach(([label, value]) => {
     doc.setFont("helvetica", "bold");
@@ -120,11 +120,11 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<void> {
   doc.line(margin, y, W - margin, y);
   y += 10;
 
-  // Détail paiement
+  // DÃ©tail paiement
   doc.setTextColor(12, 74, 110);
   doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
-  doc.text("DÉTAIL DU PAIEMENT", margin, y);
+  doc.text("DÃ‰TAIL DU PAIEMENT", margin, y);
   y += 7;
   doc.setFont("helvetica", "normal");
   doc.setTextColor(50, 50, 50);
@@ -133,7 +133,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<void> {
   const payRows: [string, string][] = [
     ["Mode de paiement :", METHOD_LABELS[data.method] ?? data.method],
   ];
-  if (data.transactionId) payRows.push(["N° transaction :", data.transactionId]);
+  if (data.transactionId) payRows.push(["NÂ° transaction :", data.transactionId]);
   payRows.forEach(([label, value]) => {
     doc.setFont("helvetica", "bold");
     doc.text(label, margin, y);
@@ -144,7 +144,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<void> {
 
   y += 8;
 
-  // Montant total — encadré
+  // Montant total â€” encadrÃ©
   doc.setFillColor(240, 249, 255);
   doc.rect(margin, y, W - margin * 2, 22, "F");
   doc.setDrawColor(12, 74, 110);
@@ -153,7 +153,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<void> {
   doc.setTextColor(12, 74, 110);
   doc.setFontSize(13);
   doc.setFont("helvetica", "bold");
-  doc.text("MONTANT PAYÉ :", margin + 8, y + 9);
+  doc.text("MONTANT PAYÃ‰ :", margin + 8, y + 9);
   doc.setFontSize(16);
   doc.setTextColor(201, 168, 76);
   doc.text(`${data.amount.toLocaleString("fr-FR")} FCFA`, W - margin - 8, y + 12, { align: "right" });
@@ -165,7 +165,7 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<void> {
   doc.setTextColor(22, 163, 74);
   doc.setFontSize(11);
   doc.setFont("helvetica", "bold");
-  doc.text("✓  Paiement confirmé — Merci pour votre confiance !", W / 2, y + 10, { align: "center" });
+  doc.text("âœ“  Paiement confirmÃ© â€” Merci pour votre confiance !", W / 2, y + 10, { align: "center" });
   y += 26;
 
   // Pied de page
@@ -176,7 +176,9 @@ export async function generateReceiptPDF(data: ReceiptData): Promise<void> {
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.text("COTIERE MEDIA GROUP | 07 47 72 29 31 | contact@cotiere.ci", margin, footerY + 8);
-  doc.text("Ce reçu est un document officiel. Conservez-le précieusement.", margin, footerY + 15);
+  doc.text("Ce reÃ§u est un document officiel. Conservez-le prÃ©cieusement.", margin, footerY + 15);
 
   doc.save(`Recu-${data.paymentReference}.pdf`);
 }
+
+

@@ -9,14 +9,15 @@ export async function GET(req: NextRequest) {
     const isAdmin = searchParams.get("admin") === "1";
     const whereClause = isAdmin ? {} : { isActive: true };
 
-    const secteurs = await prisma.opportuniteSecteur.findMany({
+    // âœ… CORRECTION : Utilisation de opportunite_secteurs
+    const secteurs = await prisma.opportunite_secteurs.findMany({
       where: whereClause,
       orderBy: { createdAt: "asc" },
     });
 
     return ok(secteurs);
   } catch (e: any) {
-    console.error("ERREUR API SECTEURS:", e); // REGARDEZ ICI DANS LE TERMINAL
+    console.error("ERREUR API SECTEURS:", e);
     return serverError(e.message);
   }
 }
@@ -29,8 +30,11 @@ export async function POST(req: NextRequest) {
     
     if (!nom || !description) return badRequest("Nom et description requis");
 
-    const secteur = await prisma.opportuniteSecteur.create({
+    // âœ… CORRECTION : Utilisation de opportunite_secteurs + Injection id et updatedAt
+    const secteur = await prisma.opportunite_secteurs.create({
       data: {
+        id: crypto.randomUUID(),
+        updatedAt: new Date(),
         nom,
         categorie: categorie || nom,
         couleur: couleur || "bg-cyan-500",
@@ -45,3 +49,4 @@ export async function POST(req: NextRequest) {
     return serverError(e.message);
   }
 }
+

@@ -2,7 +2,7 @@ import { forbidden, ok, serverError } from "@/lib/api-response";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
-// GET /api/admin/dashboard — Statistiques globales
+// GET /api/admin/dashboard â€” Statistiques globales
 export async function GET() {
   try {
     await requireAdmin();
@@ -32,14 +32,14 @@ export async function GET() {
       prisma.eventRequest.count(),
       prisma.eventRequest.count({ where: { status: "PENDING" } }),
       prisma.eventRequest.count({ where: { createdAt: { gte: startOfMonth } } }),
-      // Récents
+      // RÃ©cents
       prisma.studioBooking.findMany({
         orderBy: { createdAt: "desc" }, take: 5,
         select: { id: true, reference: true, clientFirstName: true, clientLastName: true, eventDate: true, status: true, createdAt: true },
       }),
       prisma.excursionBooking.findMany({
         orderBy: { createdAt: "desc" }, take: 5,
-        include: { excursion: { select: { title: true } } },
+        include: { excursions: { select: { title: true } } },
       }),
       prisma.eventRequest.findMany({
         orderBy: { createdAt: "desc" }, take: 5,
@@ -47,7 +47,7 @@ export async function GET() {
       }),
     ]);
 
-    // CA total des paiements confirmés
+    // CA total des paiements confirmÃ©s
     const payments = await prisma.payment.aggregate({
       _sum: { amount: true },
       where: { status: { in: ["PARTIAL", "PAID"] } },
@@ -70,3 +70,6 @@ export async function GET() {
     return serverError(e);
   }
 }
+
+
+

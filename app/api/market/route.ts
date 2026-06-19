@@ -19,7 +19,7 @@ async function getSupabase() {
   );
 }
 
-// GET — liste publique des produits actifs
+// GET â€” liste publique des produits actifs
 export async function GET(req: NextRequest) {
   try {
     const supabase = await getSupabase();
@@ -41,16 +41,16 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// POST — créer un produit (admin)
+// POST â€” crÃ©er un produit (admin)
 export async function POST(req: NextRequest) {
   try {
     const supabase = await getSupabase();
     
-    // 1. Vérification session
+    // 1. VÃ©rification session
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
+    if (!user) return NextResponse.json({ error: "Non autorisÃ©" }, { status: 401 });
 
-    // 2. Vérification rôle ADMIN dans ta table 'users'
+    // 2. VÃ©rification rÃ´le ADMIN dans ta table 'users'
     const { data: profile } = await supabase
       .from('users')
       .select('role')
@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (profile?.role !== 'ADMIN' && profile?.role !== 'SUPER_ADMIN') {
-      return NextResponse.json({ error: "Accès refusé" }, { status: 403 });
+      return NextResponse.json({ error: "AccÃ¨s refusÃ©" }, { status: 403 });
     }
 
     const body = await req.json();
@@ -86,3 +86,5 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
+
+

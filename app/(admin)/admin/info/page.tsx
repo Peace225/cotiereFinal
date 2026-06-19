@@ -24,15 +24,15 @@ const STATUS_COLORS: Record<string, string> = {
   COMPLETED: "bg-blue-100 text-blue-700 border-blue-200",
 };
 const STATUS_LABELS: Record<string, string> = {
-  PENDING: "En attente", CONFIRMED: "Confirmé", REFUSED: "Refusé",
-  CANCELLED: "Annulé", COMPLETED: "Terminé",
+  PENDING: "En attente", CONFIRMED: "ConfirmÃ©", REFUSED: "RefusÃ©",
+  CANCELLED: "AnnulÃ©", COMPLETED: "TerminÃ©",
 };
 
 const DEFAULT_PRESTATIONS: Prestation[] = [
-  { id: "reportages", nom: "Reportages vidéo et photo", categorie: "Vidéo", description: "Captation vidéo HD/4K, photojournalisme, montage inclus.", prix: "Sur devis", image: "/Images/cotiere-info.png", isActive: true },
-  { id: "interviews", nom: "Interviews et émissions", categorie: "TV/Radio", description: "Studio, plateau TV, diffusion multi-canaux.", prix: "Sur devis", image: "/Images/cotiere-info.png", isActive: true },
-  { id: "couverture", nom: "Couverture d'événements", categorie: "Live", description: "Live, multi-caméras, réseaux sociaux en temps réel.", prix: "Sur devis", image: "/Images/cotiere-info.png", isActive: true },
-  { id: "contenus", nom: "Publication de contenus", categorie: "Digital", description: "Articles, communiqués, réseaux sociaux, newsletter.", prix: "Sur devis", image: "/Images/cotiere-info.png", isActive: true },
+  { id: "reportages", nom: "Reportages vidÃ©o et photo", categorie: "VidÃ©o", description: "Captation vidÃ©o HD/4K, photojournalisme, montage inclus.", prix: "Sur devis", image: "/Images/cotiere-info.png", isActive: true },
+  { id: "interviews", nom: "Interviews et Ã©missions", categorie: "TV/Radio", description: "Studio, plateau TV, diffusion multi-canaux.", prix: "Sur devis", image: "/Images/cotiere-info.png", isActive: true },
+  { id: "couverture", nom: "Couverture d'Ã©vÃ©nements", categorie: "Live", description: "Live, multi-camÃ©ras, rÃ©seaux sociaux en temps rÃ©el.", prix: "Sur devis", image: "/Images/cotiere-info.png", isActive: true },
+  { id: "contenus", nom: "Publication de contenus", categorie: "Digital", description: "Articles, communiquÃ©s, rÃ©seaux sociaux, newsletter.", prix: "Sur devis", image: "/Images/cotiere-info.png", isActive: true },
 ];
 
 const emptyForm = { nom: "", categorie: "", description: "", prix: "", image: "" };
@@ -49,7 +49,7 @@ export default function AdminInfoPage() {
   const [editId, setEditId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  // ── Chargement des prestations depuis la DB ───────────────────────────────
+  // â”€â”€ Chargement des prestations depuis la DB â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   async function loadPrestations() {
     setLoadingPrestations(true);
     try {
@@ -92,7 +92,7 @@ export default function AdminInfoPage() {
     setRequests(prev => prev.filter(r => r.id !== id));
   }
 
-  // ── CRUD prestations ──────────────────────────────────────────────────────
+  // â”€â”€ CRUD prestations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   async function savePrestation() {
     if (!form.nom) return;
     setSaving(true);
@@ -114,10 +114,10 @@ export default function AdminInfoPage() {
         });
         const data = await res.json();
         if (res.ok && data.data) setPrestations(prev => [...prev, data.data]);
-        else alert(`Erreur : ${data.error ?? "Impossible de créer."}`);
+        else alert(`Erreur : ${data.error ?? "Impossible de crÃ©er."}`);
       }
       setShowModal(false); setForm(emptyForm); setEditId(null);
-    } catch { alert("Erreur réseau."); }
+    } catch { alert("Erreur rÃ©seau."); }
     setSaving(false);
   }
 
@@ -168,7 +168,7 @@ export default function AdminInfoPage() {
             </button>
             <button onClick={() => setTab("reservations")}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === "reservations" ? "bg-[#0c4a6e] text-white" : "bg-white text-gray-500 border border-gray-200"}`}>
-              Réservations ({requests.length})
+              RÃ©servations ({requests.length})
             </button>
           </div>
         </div>
@@ -196,7 +196,7 @@ export default function AdminInfoPage() {
                   <div className="flex gap-2">
                     <button onClick={() => togglePrestation(p)}
                       className={`flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg transition-colors ${p.isActive ? "bg-orange-100 text-orange-600 hover:bg-orange-200" : "bg-green-100 text-green-600 hover:bg-green-200"}`}>
-                      <CheckCircle size={13} /> {p.isActive ? "Désactiver" : "Activer"}
+                      <CheckCircle size={13} /> {p.isActive ? "DÃ©sactiver" : "Activer"}
                     </button>
                     <button onClick={() => openEdit(p)}
                       className="flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors">
@@ -213,7 +213,7 @@ export default function AdminInfoPage() {
           </div>
         )}
 
-        {/* Onglet Réservations */}
+        {/* Onglet RÃ©servations */}
         {tab === "reservations" && (
           <>
             {/* Stats */}
@@ -221,7 +221,7 @@ export default function AdminInfoPage() {
               {[
                 { label: "Total", value: requests.length, color: "text-blue-500", bg: "bg-blue-50" },
                 { label: "En attente", value: requests.filter(r => r.status === "PENDING").length, color: "text-yellow-500", bg: "bg-yellow-50" },
-                { label: "Confirmés", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50" },
+                { label: "ConfirmÃ©s", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50" },
               ].map(s => (
                 <div key={s.label} className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100 flex items-center justify-between">
                   <div><p className="text-gray-400 text-xs mb-1">{s.label}</p><p className={`text-3xl font-black ${s.color}`}>{s.value}</p></div>
@@ -235,9 +235,9 @@ export default function AdminInfoPage() {
                 className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
                 <option value="ALL">Tous les statuts</option>
                 <option value="PENDING">En attente</option>
-                <option value="CONFIRMED">Confirmés</option>
-                <option value="COMPLETED">Terminés</option>
-                <option value="REFUSED">Refusés</option>
+                <option value="CONFIRMED">ConfirmÃ©s</option>
+                <option value="COMPLETED">TerminÃ©s</option>
+                <option value="REFUSED">RefusÃ©s</option>
               </select>
               <button onClick={loadRequests}
                 className="flex items-center gap-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
@@ -251,12 +251,12 @@ export default function AdminInfoPage() {
                     date: new Date(r.createdAt).toLocaleDateString("fr-FR"), statut: STATUS_LABELS[r.status] ?? r.status,
                   }))}
                   columns={[
-                    { key: "reference", label: "Référence" }, { key: "client", label: "Client" },
-                    { key: "telephone", label: "Téléphone" }, { key: "prestation", label: "Prestation" },
+                    { key: "reference", label: "RÃ©fÃ©rence" }, { key: "client", label: "Client" },
+                    { key: "telephone", label: "TÃ©lÃ©phone" }, { key: "prestation", label: "Prestation" },
                     { key: "date", label: "Date" }, { key: "statut", label: "Statut" },
                   ]}
                   filename={"info-reservations-" + new Date().toISOString().split("T")[0]}
-                  label="Réservations"
+                  label="RÃ©servations"
                 />
               </div>
             </div>
@@ -265,17 +265,17 @@ export default function AdminInfoPage() {
               <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
                 <div className="w-1 h-5 bg-green-500 rounded-full" />
                 <h2 className="font-bold text-[#0c4a6e]">Demandes INFO+</h2>
-                <span className="ml-auto text-xs text-gray-400">{filtered.length} résultat(s)</span>
+                <span className="ml-auto text-xs text-gray-400">{filtered.length} rÃ©sultat(s)</span>
               </div>
               {loading ? (
                 <div className="py-12 text-center text-gray-400"><RefreshCw size={28} className="animate-spin mx-auto mb-2" /> Chargement...</div>
               ) : filtered.length === 0 ? (
-                <div className="py-12 text-center text-gray-400">Aucune demande trouvée.</div>
+                <div className="py-12 text-center text-gray-400">Aucune demande trouvÃ©e.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b border-gray-100">
-                      <tr>{["Réf.", "Client", "WhatsApp", "Prestation demandée", "Date", "Statut", "Action"].map(h => (
+                      <tr>{["RÃ©f.", "Client", "WhatsApp", "Prestation demandÃ©e", "Date", "Statut", "Action"].map(h => (
                         <th key={h} className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase">{h}</th>
                       ))}</tr>
                     </thead>
@@ -301,7 +301,7 @@ export default function AdminInfoPage() {
                           <td className="px-4 py-3 text-sm font-medium text-[#0c4a6e]">
                             <a href="/services/info" target="_blank" rel="noopener noreferrer"
                               className="hover:underline text-[#0c4a6e] font-medium">
-                              {r.eventType} ↗
+                              {r.eventType} â†—
                             </a>
                           </td>
                           <td className="px-4 py-3 text-xs text-gray-500">
@@ -348,8 +348,8 @@ export default function AdminInfoPage() {
             </div>
             <div className="p-6 space-y-4 overflow-y-auto">
               {[
-                { key: "nom", label: "Nom de la prestation *", placeholder: "Reportages vidéo et photo" },
-                { key: "categorie", label: "Catégorie *", placeholder: "Vidéo / TV/Radio / Live / Digital..." },
+                { key: "nom", label: "Nom de la prestation *", placeholder: "Reportages vidÃ©o et photo" },
+                { key: "categorie", label: "CatÃ©gorie *", placeholder: "VidÃ©o / TV/Radio / Live / Digital..." },
                 { key: "prix", label: "Prix *", placeholder: "Sur devis" },
               ].map(({ key, label, placeholder }) => (
                 <div key={key}>
@@ -383,3 +383,5 @@ export default function AdminInfoPage() {
     </div>
   );
 }
+
+

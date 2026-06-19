@@ -44,6 +44,8 @@ export async function POST(req: NextRequest) {
 
     const request = await prisma.mediaAdRequest.create({
       data: {
+        id: crypto.randomUUID(),
+        updatedAt: new Date(),
         reference: `MED-${Date.now().toString(36).toUpperCase()}`,
         ...parsed.data,
       },
@@ -55,3 +57,4 @@ export async function POST(req: NextRequest) {
     return serverError(e); 
   }
 }
+

@@ -37,6 +37,8 @@ export async function POST(req: NextRequest) {
     const d = parsed.data;
     const booking = await prisma.musicBooking.create({
       data: {
+        id: crypto.randomUUID(),
+        updatedAt: new Date(),
         reference: `MUS-${Date.now().toString(36).toUpperCase()}`,
         clientFirstName: d.clientFirstName,
         clientLastName: d.clientLastName,
@@ -55,3 +57,7 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+
+
+
+

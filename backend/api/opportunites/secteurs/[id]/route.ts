@@ -16,7 +16,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
     const body = await req.json();
-    const secteur = await prisma.opportuniteSecteur.update({
+    const secteur = await prisma.opportunite_secteurs.update({
       where: { id },
       data: body,
     });
@@ -36,10 +36,10 @@ export async function DELETE(_req: NextRequest, { params }: Params) {
 
   try {
     const { id } = await params;
-    const secteur = await prisma.opportuniteSecteur.findUnique({ where: { id } });
+    const secteur = await prisma.opportunite_secteurs.findUnique({ where: { id } });
     if (!secteur) return notFound("Secteur introuvable");
 
-    await prisma.opportuniteSecteur.update({
+    await prisma.opportunite_secteurs.update({
       where: { id },
       data: { isActive: false },
     });

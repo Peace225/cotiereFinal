@@ -13,14 +13,22 @@ const DEFAULT_SERVICES = [
 // GET /api/musique/services — Public
 export async function GET() {
   try {
-    let services = await prisma.musiqueService.findMany({
+    // ✅ CORRECTION : Utilisation de musique_services
+    let services = await prisma.musique_services.findMany({
       where: { isActive: true },
       orderBy: { createdAt: "asc" },
     });
 
     if (services.length === 0) {
-      await prisma.musiqueService.createMany({ data: DEFAULT_SERVICES });
-      services = await prisma.musiqueService.findMany({
+      // ✅ CORRECTION : Injection d'un ID et d'une date de mise à jour dans la création par défaut
+      await prisma.musique_services.createMany({
+        data: DEFAULT_SERVICES.map((service) => ({
+          ...service,
+          id: crypto.randomUUID(),
+          updatedAt: new Date(),
+        })),
+      });
+      services = await prisma.musique_services.findMany({
         where: { isActive: true },
         orderBy: { createdAt: "asc" },
       });
@@ -41,8 +49,11 @@ export async function POST(req: NextRequest) {
     const { nom, categorie, prix, description, image } = body;
     if (!nom) return badRequest("Nom requis");
 
-    const service = await prisma.musiqueService.create({
+    // ✅ CORRECTION : Utilisation de musique_services + Injection id et updatedAt
+    const service = await prisma.musique_services.create({
       data: {
+        id: crypto.randomUUID(),
+        updatedAt: new Date(),
         nom,
         categorie: categorie || nom,
         prix: prix || "Sur devis",
@@ -56,3 +67,4 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+

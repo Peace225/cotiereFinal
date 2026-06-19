@@ -15,14 +15,14 @@ const DEFAULT_SERVICES = [
 // GET /api/collectivites/services — Public
 export async function GET() {
   try {
-    let services = await prisma.collectiviteService.findMany({
+    let services = await prisma.collectivite_services.findMany({
       where: { isActive: true },
       orderBy: { createdAt: "asc" },
     });
 
     if (services.length === 0) {
-      await prisma.collectiviteService.createMany({ data: DEFAULT_SERVICES });
-      services = await prisma.collectiviteService.findMany({
+      await prisma.collectivite_services.createMany({ data: DEFAULT_SERVICES.map(s => ({ ...s, id: crypto.randomUUID(), updatedAt: new Date() })) });
+      services = await prisma.collectivite_services.findMany({
         where: { isActive: true },
         orderBy: { createdAt: "asc" },
       });
@@ -41,8 +41,11 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { nom, categorie, description, image } = body;
     if (!nom) return badRequest("Nom requis");
-    const service = await prisma.collectiviteService.create({
+    const service = await prisma.collectivite_services.create({
       data: {
+        // ✅ CORRECTION ICI : Ajout des champs obligatoires
+        id: crypto.randomUUID(),
+        updatedAt: new Date(),
         nom,
         categorie: categorie || nom,
         description: description || nom,
@@ -54,3 +57,4 @@ export async function POST(req: NextRequest) {
     return serverError(e);
   }
 }
+

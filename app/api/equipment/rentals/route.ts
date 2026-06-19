@@ -28,7 +28,7 @@ export async function GET() {
   try {
     const rentals = await prisma.equipmentRental.findMany({
       orderBy: { createdAt: "desc" },
-      include: { items: { include: { equipment: { select: { name: true } } } } },
+      include: { equipment_rental_items: { include: { equipment: { select: { name: true } } } } },
     });
     return ok(rentals);
   } catch (e) { return serverError(e); }
@@ -51,6 +51,7 @@ export async function POST(req: NextRequest) {
     let depositAmount = 0;
     const itemsData: { equipmentId: string; quantity: number; pricePerDay: number; subtotal: number }[] = [];
 
+    // ✅ CORRECTION : Utilisation de d.items (comme défini dans le Zod schema)
     for (const item of d.items) {
       const eq = await prisma.equipment.findUnique({ where: { id: item.equipmentId } });
       if (!eq) return badRequest(`Équipement introuvable: ${item.equipmentId}`);
@@ -69,6 +70,9 @@ export async function POST(req: NextRequest) {
     const rental = await prisma.$transaction(async (tx) => {
       const r = await tx.equipmentRental.create({
         data: {
+          // ✅ INJECTION DE SÉCURITÉ : id et updatedAt
+          id: crypto.randomUUID(),
+          updatedAt: new Date(),
           reference: `LOC-${Date.now().toString(36).toUpperCase()}`,
           userId: session?.user ? (session.user as { id: string }).id : undefined,
           clientFirstName: d.clientFirstName,
@@ -88,9 +92,17 @@ export async function POST(req: NextRequest) {
           insuranceAmount,
           depositAmount,
           totalAmount,
-          items: { create: itemsData },
+          // ✅ CORRECTION : equipment_rental_items + injection id/updatedAt
+          equipment_rental_items: { 
+            create: itemsData.map(item => ({
+              ...item,
+              id: crypto.randomUUID(),
+              updatedAt: new Date()
+            }))
+          },
         },
-        include: { items: true },
+        // ✅ CORRECTION : include avec le bon nom
+        include: { equipment_rental_items: true },
       });
       return r;
     });
@@ -98,3 +110,4 @@ export async function POST(req: NextRequest) {
     return created(rental);
   } catch (e) { return serverError(e); }
 }
+

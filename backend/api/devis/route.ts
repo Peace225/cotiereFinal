@@ -1,11 +1,11 @@
 import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, forbidden, badRequest, serverError } from "@/lib/api-response";
-import { requireAdmin } from "@/lib/auth"; // Protection ajoutée
+import { requireAdmin } from "@/lib/auth"; // Protection ajoutÃ©e
 
-// POST /api/admin/devis — Sauvegarder l'URL du devis PDF sur une réservation
+// POST /api/admin/devis â€” Sauvegarder l'URL du devis PDF sur une rÃ©servation
 export async function POST(req: NextRequest) {
-  // Sécurisation : Seul un admin peut mettre à jour un devis
+  // SÃ©curisation : Seul un admin peut mettre Ã  jour un devis
   try { await requireAdmin(); } catch { return forbidden(); }
 
   try {
@@ -24,11 +24,12 @@ export async function POST(req: NextRequest) {
     } else if (type === "excursion") {
       await prisma.excursionBooking.update({ where: { id }, data });
     } else {
-      return badRequest("Type de réservation invalide");
+      return badRequest("Type de rÃ©servation invalide");
     }
 
-    return ok({ message: "Devis mis à jour" });
+    return ok({ message: "Devis mis Ã  jour" });
   } catch (e) {
     return serverError(e);
   }
 }
+

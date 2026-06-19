@@ -5,18 +5,18 @@ import AdminNavbar from "@/components/admin/AdminNavbar";
 import ImageUploader from "@/components/admin/ImageUploader";
 
 const VILLES = [
-  { slug: "aboisso", nom: "Aboisso" }, { slug: "adiake", nom: "Adiaké" },
+  { slug: "aboisso", nom: "Aboisso" }, { slug: "adiake", nom: "AdiakÃ©" },
   { slug: "assinie-mafia", nom: "Assinie-Mafia" }, { slug: "grand-bassam", nom: "Grand-Bassam" },
   { slug: "abidjan", nom: "Abidjan" }, { slug: "jacqueville", nom: "Jacqueville" },
   { slug: "dabou", nom: "Dabou" }, { slug: "grand-lahou", nom: "Grand-Lahou" },
   { slug: "fresco", nom: "Fresco" }, { slug: "sassandra", nom: "Sassandra" },
-  { slug: "san-pedro", nom: "San-Pédro" }, { slug: "grand-bereby", nom: "Grand-Béréby" },
+  { slug: "san-pedro", nom: "San-PÃ©dro" }, { slug: "grand-bereby", nom: "Grand-BÃ©rÃ©by" },
   { slug: "tabou", nom: "Tabou" },
 ];
 
 const CATEGORIES = [
-  { id: "hotels", label: "Hôtels", icon: Hotel },
-  { id: "residences", label: "Résidences", icon: Home },
+  { id: "hotels", label: "HÃ´tels", icon: Hotel },
+  { id: "residences", label: "RÃ©sidences", icon: Home },
   { id: "plages", label: "Plages", icon: Waves },
   { id: "restaurants", label: "Restaurants", icon: UtensilsCrossed },
   { id: "sites", label: "Sites touristiques", icon: Landmark },
@@ -77,7 +77,7 @@ export default function AdminVillesPage() {
   }
 
   async function remove(id: string) {
-    if (!confirm("Supprimer cet élément ?")) return;
+    if (!confirm("Supprimer cet Ã©lÃ©ment ?")) return;
     await fetch(`/api/villes/${selectedVille}/${selectedCat}/${id}`, { method: "DELETE" });
     setContenus(prev => prev.filter(c => c.id !== id));
   }
@@ -109,7 +109,7 @@ export default function AdminVillesPage() {
           </button>
         </div>
 
-        {/* Sélecteurs */}
+        {/* SÃ©lecteurs */}
         <div className="flex flex-wrap gap-3 mb-6">
           <div>
             <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Ville</label>
@@ -119,7 +119,7 @@ export default function AdminVillesPage() {
             </select>
           </div>
           <div>
-            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Catégorie</label>
+            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">CatÃ©gorie</label>
             <div className="flex gap-2 flex-wrap">
               {CATEGORIES.map(c => {
                 const Icon = c.icon;
@@ -136,7 +136,7 @@ export default function AdminVillesPage() {
 
         {/* Titre section */}
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-bold text-[#0c4a6e]">{catLabel} à {villeNom} <span className="text-gray-400 font-normal text-sm">({contenus.length})</span></h2>
+          <h2 className="font-bold text-[#0c4a6e]">{catLabel} Ã  {villeNom} <span className="text-gray-400 font-normal text-sm">({contenus.length})</span></h2>
           <button onClick={load} className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-[#0c4a6e] transition-colors">
             <RefreshCw size={13} className={loading ? "animate-spin" : ""} /> Actualiser
           </button>
@@ -147,7 +147,7 @@ export default function AdminVillesPage() {
           <div className="py-16 text-center text-gray-400"><RefreshCw size={28} className="animate-spin mx-auto mb-2" /> Chargement...</div>
         ) : contenus.length === 0 ? (
           <div className="py-16 text-center bg-white rounded-2xl border border-gray-100">
-            <p className="text-gray-400 mb-3">Aucun contenu pour {catLabel} à {villeNom}</p>
+            <p className="text-gray-400 mb-3">Aucun contenu pour {catLabel} Ã  {villeNom}</p>
             <button onClick={() => { setEditId(null); setForm(emptyForm); setShowModal(true); }}
               className="inline-flex items-center gap-2 bg-[#c9a84c] text-white font-semibold px-4 py-2 rounded-xl text-sm">
               <Plus size={14} /> Ajouter le premier
@@ -194,17 +194,17 @@ export default function AdminVillesPage() {
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col overflow-hidden">
             <div className="flex items-center justify-between p-6 border-b border-gray-100 shrink-0">
-              <h3 className="font-bold text-[#0c4a6e] text-lg">{editId ? "Modifier" : "Ajouter"} — {catLabel} à {villeNom}</h3>
+              <h3 className="font-bold text-[#0c4a6e] text-lg">{editId ? "Modifier" : "Ajouter"} â€” {catLabel} Ã  {villeNom}</h3>
               <button onClick={() => { setShowModal(false); setEditId(null); setForm(emptyForm); }} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
             </div>
             <div className="p-6 space-y-3 overflow-y-auto">
               {[
-                { key: "nom", label: "Nom *", placeholder: "Ex: Hôtel Ivoire" },
+                { key: "nom", label: "Nom *", placeholder: "Ex: HÃ´tel Ivoire" },
                 { key: "adresse", label: "Adresse", placeholder: "Ex: Cocody, Abidjan" },
-                { key: "telephone", label: "Téléphone", placeholder: "+225 07 XX XX XX XX" },
+                { key: "telephone", label: "TÃ©lÃ©phone", placeholder: "+225 07 XX XX XX XX" },
                 { key: "whatsapp", label: "WhatsApp", placeholder: "+2250747722931" },
                 { key: "siteWeb", label: "Site web", placeholder: "https://..." },
-                { key: "prix", label: "Prix / Tarif", placeholder: "Ex: À partir de 25 000 FCFA" },
+                { key: "prix", label: "Prix / Tarif", placeholder: "Ex: Ã€ partir de 25 000 FCFA" },
                 { key: "note", label: "Note (0-5)", placeholder: "Ex: 4.5" },
               ].map(({ key, label, placeholder }) => (
                 <div key={key}>
@@ -240,3 +240,5 @@ export default function AdminVillesPage() {
     </div>
   );
 }
+
+

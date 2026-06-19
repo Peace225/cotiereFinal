@@ -48,7 +48,7 @@ export default function AdminClientsPage() {
         setShowModal(false);
         setForm({ firstName: "", lastName: "", email: "", phone: "", whatsapp: "", password: "", role: "CLIENT" });
       } else {
-        alert(data.error ?? "Erreur lors de la création");
+        alert(data.error ?? "Erreur lors de la crÃ©ation");
       }
     } catch {}
     setSaving(false);
@@ -87,7 +87,7 @@ export default function AdminClientsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
           {[
             { label: "Total clients", value: clients.length, color: "text-blue-500", bg: "bg-blue-50", icon: Users },
-            { label: "Email vérifiés", value: clients.filter(c => c.emailVerified).length, color: "text-green-500", bg: "bg-green-50", icon: CheckCircle },
+            { label: "Email vÃ©rifiÃ©s", value: clients.filter(c => c.emailVerified).length, color: "text-green-500", bg: "bg-green-50", icon: CheckCircle },
             { label: "Administrateurs", value: clients.filter(c => c.role === "ADMIN" || c.role === "SUPER_ADMIN").length, color: "text-purple-500", bg: "bg-purple-50", icon: UserCheck },
           ].map(s => {
             const Icon = s.icon;
@@ -148,7 +148,7 @@ export default function AdminClientsPage() {
                         </div>
                       </td>
                       <td className="px-4 py-3 text-gray-600 text-xs">{c.email}</td>
-                      <td className="px-4 py-3 text-gray-600 text-xs">{c.phone ?? "—"}</td>
+                      <td className="px-4 py-3 text-gray-600 text-xs">{c.phone ?? "â€”"}</td>
                       <td className="px-4 py-3">
                         <span className={`text-xs px-2 py-1 rounded-full font-semibold ${c.role === "ADMIN" || c.role === "SUPER_ADMIN" ? "bg-purple-100 text-purple-700" : "bg-blue-50 text-blue-600"}`}>
                           {c.role}
@@ -189,14 +189,14 @@ export default function AdminClientsPage() {
             <div className="p-6 space-y-3 max-h-[70vh] overflow-y-auto">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Prénom *</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">PrÃ©nom *</label>
                   <input required type="text" placeholder="Jean" value={form.firstName}
                     onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))}
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-700 mb-1">Nom *</label>
-                  <input required type="text" placeholder="Kouamé" value={form.lastName}
+                  <input required type="text" placeholder="KouamÃ©" value={form.lastName}
                     onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))}
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
                 </div>
@@ -209,7 +209,7 @@ export default function AdminClientsPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-700 mb-1">Téléphone</label>
+                  <label className="block text-xs font-medium text-gray-700 mb-1">TÃ©lÃ©phone</label>
                   <input type="tel" placeholder="07 XX XX XX XX" value={form.phone}
                     onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
                     className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
@@ -223,12 +223,12 @@ export default function AdminClientsPage() {
               </div>
               <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Mot de passe (optionnel)</label>
-                <input type="password" placeholder="Laissez vide pour générer automatiquement" value={form.password}
+                <input type="password" placeholder="Laissez vide pour gÃ©nÃ©rer automatiquement" value={form.password}
                   onChange={e => setForm(f => ({ ...f, password: e.target.value }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">Rôle</label>
+                <label className="block text-xs font-medium text-gray-700 mb-1">RÃ´le</label>
                 <select value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
                   <option value="CLIENT">Client</option>
@@ -240,7 +240,7 @@ export default function AdminClientsPage() {
               <button onClick={() => setShowModal(false)} className="flex-1 border border-gray-200 text-gray-600 font-semibold py-2.5 rounded-xl hover:bg-gray-50">Annuler</button>
               <button onClick={saveClient} disabled={saving || !form.firstName || !form.lastName || !form.email}
                 className="flex-1 bg-[#c9a84c] hover:bg-[#b8973b] text-white font-bold py-2.5 rounded-xl disabled:opacity-60 transition-colors">
-                {saving ? "Création..." : "Créer le client"}
+                {saving ? "CrÃ©ation..." : "CrÃ©er le client"}
               </button>
             </div>
           </div>
@@ -249,3 +249,5 @@ export default function AdminClientsPage() {
     </div>
   );
 }
+
+

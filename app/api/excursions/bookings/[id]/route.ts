@@ -20,7 +20,8 @@ export async function GET(_req: NextRequest, { params }: Params) {
     const booking = await prisma.excursionBooking.findUnique({
       where: { id },
       include: {
-        excursion: { include: { options: true, timeSlots: true } },
+        // ✅ CORRECTION ICI : Noms de relations exacts
+        excursions: { include: { excursion_options: true, excursion_time_slots: true } },
         payments: true,
       },
     });
@@ -43,13 +44,15 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     const booking = await prisma.excursionBooking.update({
       where: { id },
       data: parsed.data,
-      include: { excursion: { select: { title: true } } },
+      // ✅ CORRECTION ICI : excursions au lieu de excursion
+      include: { excursions: { select: { title: true } } },
     });
 
     // Email au client si changement de statut
     await sendExcursionStatusUpdate({
       ...booking,
-      excursionTitle: booking.excursion.title,
+      // ✅ CORRECTION ICI : excursions?.title pour éviter les crashs
+      excursionTitle: booking.excursions?.title || "Excursion",
     }).catch(console.error);
 
     // Si annulation, libérer les places
@@ -57,7 +60,8 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       const original = await prisma.excursionBooking.findUnique({ where: { id } });
       if (original) {
         const total = original.adultsCount + original.childrenCount;
-        await prisma.excursionAvailability.updateMany({
+        // Note: Si 'excursionAvailability' pose aussi problème plus tard, il faudra probablement le changer en 'excursion_availability'
+        await prisma.excursion_availability.updateMany({
           where: {
             excursionId: original.excursionId,
             date: original.bookingDate,

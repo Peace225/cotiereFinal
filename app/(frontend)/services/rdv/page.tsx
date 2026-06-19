@@ -42,7 +42,7 @@ export default function RdvPage() {
     e.preventDefault();
     setSoumSending(true);
     const msg = encodeURIComponent(
-      `SOUMISSION EVENEMENT — COTIERE RDV\n\nOrganisateur : ${soumForm.nom}\nTel : ${soumForm.telephone}\nEmail : ${soumForm.email || "—"}\n\nEvenement : ${soumForm.titreEv}\nDate prevue : ${soumForm.dateEv || "—"}\nLieu : ${soumForm.lieuEv || "—"}\n\nDescription :\n${soumForm.description || "—"}`
+      `SOUMISSION EVENEMENT â€” COTIERE RDV\n\nOrganisateur : ${soumForm.nom}\nTel : ${soumForm.telephone}\nEmail : ${soumForm.email || "â€”"}\n\nEvenement : ${soumForm.titreEv}\nDate prevue : ${soumForm.dateEv || "â€”"}\nLieu : ${soumForm.lieuEv || "â€”"}\n\nDescription :\n${soumForm.description || "â€”"}`
     );
     setTimeout(() => {
       window.open(`https://wa.me/2250747722931?text=${msg}`, "_blank");
@@ -58,25 +58,25 @@ export default function RdvPage() {
       <section className="relative text-white overflow-hidden min-h-[320px]">
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a1628] via-[#0c2d4a]/95 to-[#0c4a6e]/60" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-        {/* Cercles décoratifs */}
+        {/* Cercles dÃ©coratifs */}
         <div className="absolute top-0 right-0 w-96 h-96 bg-[#c9a84c]/5 rounded-full translate-x-1/3 -translate-y-1/3 blur-3xl" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-[#38bdf8]/5 rounded-full -translate-x-1/3 translate-y-1/3 blur-3xl" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="flex items-center justify-between gap-8">
             <div className="flex-1 min-w-0">
               <span className="text-[#c9a84c] text-xs font-bold uppercase tracking-widest bg-[#c9a84c]/10 border border-[#c9a84c]/30 px-3 py-1 rounded-full inline-block mb-4">Agenda du littoral</span>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mt-2 mb-4 leading-tight">Le RDV Des<br className="hidden sm:block" /> Événements À Venir</h1>
-              <p className="text-[#c9a84c] font-semibold text-base mb-3">Ne manquez plus aucun événement du littoral ivoirien</p>
-              <p className="text-gray-300 text-base leading-relaxed max-w-lg">Festivals, galas, conférences, fêtes culturelles et tournois sportifs — retrouvez ici tous les événements à venir sur la côte ivoirienne.</p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black mt-2 mb-4 leading-tight">Le RDV Des<br className="hidden sm:block" /> Ã‰vÃ©nements Ã€ Venir</h1>
+              <p className="text-[#c9a84c] font-semibold text-base mb-3">Ne manquez plus aucun Ã©vÃ©nement du littoral ivoirien</p>
+              <p className="text-gray-300 text-base leading-relaxed max-w-lg">Festivals, galas, confÃ©rences, fÃªtes culturelles et tournois sportifs â€” retrouvez ici tous les Ã©vÃ©nements Ã  venir sur la cÃ´te ivoirienne.</p>
               <div className="flex flex-wrap gap-3 mt-8">
-                <a href="#evenements" className="btn-primary inline-flex items-center gap-2">Voir les événements <ArrowRight size={18} /></a>
+                <a href="#evenements" className="btn-primary inline-flex items-center gap-2">Voir les Ã©vÃ©nements <ArrowRight size={18} /></a>
                 <a href="tel:+2250747722931" className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold px-5 py-3 rounded-xl hover:bg-white/20 transition-colors"><Phone size={18} /> Nous contacter</a>
               </div>
             </div>
             <div className="shrink-0 w-52 md:w-64 lg:w-80 hidden sm:flex items-center justify-center">
               <div className="relative">
                 <div className="absolute inset-0 bg-white/5 rounded-3xl blur-2xl scale-110" />
-                <img src="/Images/rdv.jpeg" alt="Le RDV Des Événements À Venir" className="relative w-full h-auto object-contain drop-shadow-2xl rounded-2xl" />
+                <img src="/Images/rdv.jpeg" alt="Le RDV Des Ã‰vÃ©nements Ã€ Venir" className="relative w-full h-auto object-contain drop-shadow-2xl rounded-2xl" />
               </div>
             </div>
           </div>
@@ -113,10 +113,10 @@ export default function RdvPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {loading ? (
               <div className="col-span-3 py-16 text-center text-gray-400">
-                <RefreshCw size={32} className="animate-spin mx-auto mb-3" /> Chargement des événements...
+                <RefreshCw size={32} className="animate-spin mx-auto mb-3" /> Chargement des Ã©vÃ©nements...
               </div>
             ) : filtered.length === 0 ? (
-              <div className="col-span-3 py-16 text-center text-gray-400">Aucun événement dans cette catégorie.</div>
+              <div className="col-span-3 py-16 text-center text-gray-400">Aucun Ã©vÃ©nement dans cette catÃ©gorie.</div>
             ) : filtered.map(ev => {
               const Icon = CATEGORIE_ICON[ev.categorie] ?? Star;
               return (
@@ -265,7 +265,7 @@ export default function RdvPage() {
                       <Phone size={14} />
                     </a>
                   </div>
-                  <p className="text-xs text-gray-400 text-center">Reponse sous 24h — Gratuit et sans engagement</p>
+                  <p className="text-xs text-gray-400 text-center">Reponse sous 24h â€” Gratuit et sans engagement</p>
                 </form>
               )}
             </div>
@@ -275,3 +275,5 @@ export default function RdvPage() {
     </div>
   );
 }
+
+

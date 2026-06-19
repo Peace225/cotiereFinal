@@ -52,7 +52,7 @@ export default function AdminAvisPage() {
           </div>
           <div>
             <h1 className="text-2xl font-black text-[#0c4a6e]">Avis clients</h1>
-            <p className="text-gray-500 text-sm">{pending} avis en attente de modération</p>
+            <p className="text-gray-500 text-sm">{pending} avis en attente de modÃ©ration</p>
           </div>
         </div>
 
@@ -61,7 +61,7 @@ export default function AdminAvisPage() {
           {[
             { label: "Total", value: reviews.length, color: "text-blue-500", bg: "bg-blue-50", icon: ListChecks, filterVal: "all" },
             { label: "En attente", value: pending, color: "text-yellow-500", bg: "bg-yellow-50", icon: Clock, filterVal: "pending" },
-            { label: "Approuvés", value: reviews.filter(r => r.isApproved).length, color: "text-green-500", bg: "bg-green-50", icon: CheckCircle, filterVal: "approved" },
+            { label: "ApprouvÃ©s", value: reviews.filter(r => r.isApproved).length, color: "text-green-500", bg: "bg-green-50", icon: CheckCircle, filterVal: "approved" },
           ].map(s => {
             const isActive = filter === s.filterVal;
             const Icon = s.icon;
@@ -83,7 +83,7 @@ export default function AdminAvisPage() {
 
         <div className="flex flex-wrap items-center justify-between mb-6 gap-3">
           <div className="flex flex-wrap gap-2">
-            {[["pending", "En attente"], ["approved", "Approuvés"], ["all", "Tous"]].map(([val, label]) => (
+            {[["pending", "En attente"], ["approved", "ApprouvÃ©s"], ["all", "Tous"]].map(([val, label]) => (
               <button key={val} onClick={() => setFilter(val as any)}
                 className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${filter === val ? "bg-[#0c4a6e] text-white" : "bg-white text-gray-500 border border-gray-200"}`}>
                 {label} {val === "pending" && pending > 0 && <span className="ml-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">{pending}</span>}
@@ -95,8 +95,8 @@ export default function AdminAvisPage() {
               client: r.user.firstName + " " + r.user.lastName,
               service: r.serviceType,
               note: r.rating + "/5",
-              commentaire: r.comment ?? "—",
-              statut: r.isApproved ? "Approuvé" : "En attente",
+              commentaire: r.comment ?? "â€”",
+              statut: r.isApproved ? "ApprouvÃ©" : "En attente",
               date: new Date(r.createdAt).toLocaleDateString("fr-FR"),
             }))}
             columns={[
@@ -130,7 +130,7 @@ export default function AdminAvisPage() {
                       ))}
                     </div>
                     {!r.isApproved && <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full font-semibold">En attente</span>}
-                    {r.isApproved && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">Approuvé</span>}
+                    {r.isApproved && <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">ApprouvÃ©</span>}
                   </div>
                   {r.comment && <p className="text-gray-600 text-sm">{r.comment}</p>}
                   <p className="text-xs text-gray-400 mt-2">{new Date(r.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "long", year: "numeric" })}</p>
@@ -153,3 +153,5 @@ export default function AdminAvisPage() {
     </div>
   );
 }
+
+

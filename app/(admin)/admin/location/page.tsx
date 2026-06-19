@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Plus, Pencil, Trash2, X, Package } from "lucide-react";
@@ -396,3 +396,4 @@ export default function AdminLocationPage() {
     </div>
   );
 }
+
