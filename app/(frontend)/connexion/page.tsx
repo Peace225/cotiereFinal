@@ -67,7 +67,6 @@ export default function ConnexionPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            {/* ✅ CORRIGÉ : L'encodage du logo texte */}
             <span className="text-[#c9a84c] font-black text-2xl">CÔTIÈRE</span>
             <span className="text-[#0c4a6e] font-light text-sm ml-1">MEDIA GROUP</span>
           </Link>
@@ -102,7 +101,6 @@ export default function ConnexionPage() {
                 <input 
                   type={showPwd ? "text" : "password"} 
                   required 
-                  // ✅ CORRIGÉ : L'encodage des points de mot de passe
                   placeholder="••••••••"
                   value={form.password} 
                   onChange={e => setForm({ ...form, password: e.target.value })}

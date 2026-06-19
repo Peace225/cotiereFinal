@@ -9,49 +9,49 @@ function ResultatsContent() {
   const router = useRouter();
   
   const [data, setData] = useState<any[]>([]);
-  // ðŸš€ NOUVEAU : Deux Ã©tats de chargement distincts
+  // 🚀 NOUVEAU : Deux états de loading distincts
   const [isFirstLoad, setIsFirstLoad] = useState(true); // Pour le tout premier affichage
   const [isFetching, setIsFetching] = useState(false);  // Pour les clics sur les filtres
   
   // Gestion des URL
   const initialType = searchParams.get("type") || "Tous";
   let normalizedType = "Tous";
-  if (initialType.toLowerCase() === "hotel") normalizedType = "HÃ´tel";
-  else if (initialType.toLowerCase() === "residence") normalizedType = "RÃ©sidence";
-  else if (initialType.toLowerCase() === "evenement") normalizedType = "Ã‰vÃ©nement";
+  if (initialType.toLowerCase() === "hotel") normalizedType = "Hôtel";
+  else if (initialType.toLowerCase() === "residence") normalizedType = "Résidence";
+  else if (initialType.toLowerCase() === "evenement") normalizedType = "Événement";
   else if (initialType !== "Tous") normalizedType = initialType.charAt(0).toUpperCase() + initialType.slice(1);
   
   const [categorieActive, setCategorieActive] = useState(normalizedType);
 
   const dest = searchParams.get("dest") || "";
-  const displayDest = dest || "La CÃ´tiÃ¨re";
+  const displayDest = dest || "La Côtière";
   const adults = searchParams.get("adults") || "2";
 
-  // Filtres statiques de dÃ©monstration
+  // Filtres statiques de démonstration
   const villesFiltres = [
     { nom: "Assinie-Mafia", count: 24 },
     { nom: "San Pedro", count: 18 },
     { nom: "Grand-Bassam", count: 35 },
     { nom: "Jacqueville", count: 12 },
-    { nom: "Grand-BÃ©rÃ©by", count: 8 },
+    { nom: "Grand-Béréby", count: 8 },
     { nom: "Sassandra", count: 5 }
   ];
 
   const typeFiltres = [
-    { nom: "HÃ´tel", count: 65 },
-    { nom: "RÃ©sidence", count: 119 }, // ModifiÃ© pour correspondre Ã  ta DB
-    { nom: "Complexe hÃ´telier", count: 1 },
+    { nom: "Hôtel", count: 65 },
+    { nom: "Résidence", count: 119 }, // Modifié pour correspondre à ta DB
+    { nom: "Complexe hôtelier", count: 1 },
     { nom: "Villa", count: 14 }
   ];
 
   const popFiltres = [
-    { nom: "HÃ´tel", count: 65 },
-    { nom: "RÃ©sidence", count: 119 },
-    { nom: "Pas de prÃ©paiement", count: 49 },
+    { nom: "Hôtel", count: 65 },
+    { nom: "Résidence", count: 119 },
+    { nom: "Pas de prépaiement", count: 49 },
     { nom: "Piscine", count: 39 }
   ];
 
-  // ðŸš€ NOUVEAU : Fonction unique pour mettre Ã  jour TOUS les paramÃ¨tres d'un coup de maniÃ¨re fluide
+  // 🚀 NOUVEAU : Fonction unique pour mettre à jour TOUS les paramètres d'un coup de manière fluide
   const updateFiltersInUrl = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
     if (value === null) {
@@ -60,7 +60,7 @@ function ResultatsContent() {
     } else {
       params.set(key, value);
     }
-    router.push(`/recherche?${params.toString()}`, { scroll: false }); // scroll: false Ã©vite que la page remonte d'un coup
+    router.push(`/recherche?${params.toString()}`, { scroll: false }); // scroll: false évite que la page remonte d'un coup
   };
 
   const handleCityChange = (cityName: string) => {
@@ -75,10 +75,10 @@ function ResultatsContent() {
     updateFiltersInUrl("type", newValue === "Tous" ? null : newValue.toLowerCase());
   };
 
-  // ðŸš€ NOUVEAU : Fetch optimisÃ©
+  // 🚀 NOUVEAU : Fetch optimisé
   useEffect(() => {
     const fetchData = async () => {
-      setIsFetching(true); // Active l'effet visuel de transparence (ne vide pas l'Ã©cran)
+      setIsFetching(true); // Active l'effet visuel de transparence (ne vide pas l'écran)
       try {
         const res = await fetch(`/api/recherche?${searchParams.toString()}`);
         const json = await res.json();
@@ -87,7 +87,7 @@ function ResultatsContent() {
         console.error("Erreur recherche:", err);
       } finally {
         setIsFetching(false);
-        setIsFirstLoad(false); // Le premier chargement est terminÃ© pour de bon
+        setIsFirstLoad(false); // Le premier chargement est terminé pour de bon
       }
     };
     fetchData();
@@ -106,9 +106,9 @@ function ResultatsContent() {
       {/* ================= BREADCRUMB ================= */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-4 pb-2 text-[11px] text-[#0071c2]">
         <Link href="/" className="hover:underline">Accueil</Link> &gt; 
-        <span className="mx-1 hover:underline cursor-pointer">CÃ´te-d'Ivoire</span> &gt; 
+        <span className="mx-1 hover:underline cursor-pointer">Côte-d'Ivoire</span> &gt; 
         <span className="mx-1 hover:underline cursor-pointer">{displayDest}</span> &gt; 
-        <span className="text-slate-500 mx-1">RÃ©sultats de votre recherche</span>
+        <span className="text-slate-500 mx-1">Résultats de votre recherche</span>
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row gap-4 mt-2">
@@ -130,7 +130,7 @@ function ResultatsContent() {
 
             {/* VILLES */}
             <div className="p-3 border-b border-[#c6c6c6] bg-blue-50/30">
-              <h3 className="!text-[15px] md:!text-[18px] font-bold text-slate-900 mb-3">Destinations La CÃ´tiÃ¨re</h3>
+              <h3 className="!text-[15px] md:!text-[18px] font-bold text-slate-900 mb-3">Destinations La Côtière</h3>
               <div className="flex flex-col gap-2">
                 {villesFiltres.map((ville) => {
                   const isChecked = dest.toLowerCase() === ville.nom.toLowerCase();
@@ -157,7 +157,7 @@ function ResultatsContent() {
             {/* BUDGET */}
             <div className="p-3 border-b border-[#c6c6c6]">
               <h3 className="!text-[15px] md:!text-[18px] font-bold text-slate-900 mb-2">Votre budget (par nuit)</h3>
-              <p className="text-sm text-slate-600 mb-4">De XOF 15 000 Ã  XOF 200 000+</p>
+              <p className="text-sm text-slate-600 mb-4">De XOF 15 000 à XOF 200 000+</p>
               
               <div className="h-10 flex items-end gap-[1px] mb-1 px-1">
                 {[2, 4, 3, 7, 5, 10, 8, 4, 3, 2, 5, 8, 12, 16, 14, 9, 6, 4, 2].map((h, i) => (
@@ -173,9 +173,9 @@ function ResultatsContent() {
               </div>
             </div>
 
-            {/* TYPES D'Ã‰TABLISSEMENTS */}
+            {/* TYPES D'ÉTABLISSEMENTS */}
             <div className="p-3">
-              <h3 className="!text-[15px] md:!text-[18px] font-bold text-slate-900 mb-3">Type d'Ã©tablissement</h3>
+              <h3 className="!text-[15px] md:!text-[18px] font-bold text-slate-900 mb-3">Type d'établissement</h3>
               <div className="flex flex-col gap-2">
                 {typeFiltres.map((cat) => {
                   const isChecked = Boolean(categorieActive === cat.nom);
@@ -201,12 +201,12 @@ function ResultatsContent() {
           </div>
         </aside>
 
-        {/* ================= COLONNE DE DROITE : RÃ‰SULTATS DYNAMIQUES ================= */}
+        {/* ================= COLONNE DE DROITE : RÉSULTATS DYNAMIQUES ================= */}
         <main className="flex-1 flex flex-col gap-3 relative">
           
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
             <h1 className="!text-[20px] md:!text-[22px] font-bold text-slate-900 flex items-center gap-3">
-              {displayDest} : {data.length} Ã©tablissements trouvÃ©s
+              {displayDest} : {data.length} établissements trouvés
               {/* Petit loader discret quand on clique sur un filtre */}
               {isFetching && <Loader2 className="animate-spin text-[#0071c2]" size={20} />}
             </h1>
@@ -215,7 +215,7 @@ function ResultatsContent() {
                 Liste
               </button>
               <button className="border border-transparent text-slate-600 px-4 py-1.5 text-[12px] font-bold hover:bg-gray-100 rounded-full">
-                MosaÃ¯que
+                Mosaïque
               </button>
             </div>
           </div>
@@ -223,7 +223,7 @@ function ResultatsContent() {
           <div className="flex flex-col gap-2 mb-2">
             <div className="flex gap-2 items-center">
               <button className="border border-[#c6c6c6] rounded-full px-3 py-1 text-[12px] font-medium text-slate-700 flex items-center gap-2 hover:bg-gray-50">
-                <ChevronDown size={14} className="rotate-180" /> Trier par : SÃ©lection pour les longs sÃ©jours <ChevronDown size={14} />
+                <ChevronDown size={14} className="rotate-180" /> Trier par : Sélection pour les longs séjours <ChevronDown size={14} />
               </button>
               {categorieActive !== "Tous" && (
                 <button className="border border-[#0071c2] bg-[#f0f6fd] text-[#0071c2] rounded-full px-3 py-1 text-[12px] font-medium flex items-center gap-1 transition-all">
@@ -235,17 +235,17 @@ function ResultatsContent() {
             <div className="border border-[#c6c6c6] rounded p-2 text-[12px] text-slate-700 flex items-center gap-2 justify-between">
               <div className="flex items-center gap-2">
                 <Info size={16} className="text-slate-500 shrink-0" />
-                <span>Consultez les derniÃ¨res consignes aux voyageurs. Pensez Ã  vÃ©rifier les mesures en vigueur.</span>
+                <span>Consultez les dernières consignes aux voyageurs. Pensez à vérifier les mesures en vigueur.</span>
               </div>
               <X size={16} className="text-slate-400 cursor-pointer shrink-0" />
             </div>
           </div>
           
-          {/* ðŸš€ L'EFFET DE FLUIDITÃ‰ EST ICI : transition-opacity et pointer-events */}
+          {/* 🚀 L'EFFET DE FLUIDITÉ EST ICI : transition-opacity et pointer-events */}
           <div className={`flex flex-col gap-3 transition-opacity duration-300 ease-in-out ${isFetching ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
             {data.length === 0 && !isFetching ? (
                <div className="bg-white border border-[#c6c6c6] rounded p-8 text-center mt-4 shadow-sm">
-                  <p className="text-sm font-bold text-slate-700 mb-2">Aucun Ã©tablissement trouvÃ©</p>
+                  <p className="text-sm font-bold text-slate-700 mb-2">Aucun établissement trouvé</p>
                   <p className="text-sm text-slate-500">Essayez de modifier vos filtres ou de changer de destination.</p>
                   <button onClick={() => router.push('/recherche')} className="mt-4 text-[#0071c2] font-bold text-sm hover:underline">
                     Effacer tous les filtres
@@ -282,22 +282,22 @@ function ResultatsContent() {
                         {item.destination || displayDest}
                       </span>
                       <span className="text-[#0071c2] text-[11px] underline cursor-pointer hover:text-[#005999]">Indiquer sur la carte</span>
-                      <span className="text-[11px] text-slate-600 ml-1">Ã  proximitÃ© de la plage</span>
+                      <span className="text-[11px] text-slate-600 ml-1">À proximité de la plage</span>
                     </div>
                     
                     <div className="border-l-[3px] border-[#c6c6c6] pl-2.5">
                       <p className="text-[11px] font-bold text-slate-900 mb-0.5">{item.type}</p>
                       <p className="text-[10px] text-slate-600 mb-2 line-clamp-2">{item.description || "Aucune description fournie."}</p>
                       
-                      {item.type === 'HÃ´tel' && (
-                        <p className="text-sm font-bold text-[#008009] mb-1">Petit-dÃ©jeuner compris</p>
+                      {item.type === 'Hôtel' && (
+                        <p className="text-sm font-bold text-[#008009] mb-1">Petit-déjeuner compris</p>
                       )}
                       
                       <div className="flex items-start gap-1.5 text-[11px] font-bold text-[#008009]">
                         <Check size={14} className="shrink-0 mt-[1px]" /> Annulation gratuite
                       </div>
                       <div className="flex items-start gap-1.5 text-[11px] font-bold text-[#008009]">
-                        <Check size={14} className="shrink-0 mt-[1px]" /> Aucun prÃ©paiement requis <span className="font-normal text-slate-600">â€“ Payez sur place</span>
+                        <Check size={14} className="shrink-0 mt-[1px]" /> Aucun prépaiement requis <span className="font-normal text-slate-600">– Payez sur place</span>
                       </div>
                     </div>
                   </div>
@@ -307,9 +307,9 @@ function ResultatsContent() {
                     <div className="flex gap-2">
                       <div className="flex flex-col items-end pt-0.5">
                         <span className="font-bold text-slate-900 text-[14px] leading-tight">
-                          {item.rating >= 9 ? "Superbe" : item.rating >= 8 ? "TrÃ¨s bien" : "Bien"}
+                          {item.rating >= 9 ? "Superbe" : item.rating >= 8 ? "Très bien" : "Bien"}
                         </span>
-                        <span className="text-slate-500 text-[10px]">ExpÃ©riences vÃ©cues</span>
+                        <span className="text-slate-500 text-[10px]">Expériences vécues</span>
                       </div>
                       <div className="bg-[#003b95] text-white font-bold px-1.5 py-1.5 rounded-t rounded-br text-[13px] flex items-center justify-center min-w-[28px] h-[28px]">
                         {item.rating?.toString().replace('.', ',') || "8,0"}
@@ -329,7 +329,7 @@ function ResultatsContent() {
                           href={`/services/${(item.type || 'hotel').toLowerCase()}/${item.id}`}
                           className="bg-[#0071c2] hover:bg-[#005999] text-white font-bold py-2 px-4 rounded text-[13px] w-full text-center flex items-center justify-between"
                         >
-                          Voir les disponibilitÃ©s <ChevronRight size={14} />
+                          Voir les disponibilités <ChevronRight size={14} />
                       </Link>
                     </div>
 
@@ -356,4 +356,3 @@ export default function Page() {
     </Suspense>
   );
 }
-

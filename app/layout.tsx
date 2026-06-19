@@ -6,7 +6,7 @@ import { Providers } from "./Providers";
 
 // Imports des composants globaux
 import Navbar from "../frontend/components/layout/Navbar"; 
-import Footer from "../frontend/components/layout/Footer"; // 👈 AJOUTE CECI
+import Footer from "../frontend/components/layout/Footer"; 
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -16,22 +16,24 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  // ✅ CORRIGÉ : L'encodage du titre de l'onglet
   title: "CÔTIÈRE MEDIA GROUP",
-  // ✅ CORRIGÉ : L'encodage de la description
   description: "Découvrez les services CÔTIÈRE.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={montserrat.variable}>
+      <head>
+        {/* 👈 AJOUTEZ CECI : Force le navigateur à lire et afficher correctement les caractères accentués français */}
+        <meta charSet="UTF-8" />
+      </head>
       <body className="font-sans antialiased" suppressHydrationWarning>
         <Providers>
           <Navbar />
           
           <main>{children}</main>
           
-          <Footer /> {/* 👈 AJOUTE CECI : Le footer sera maintenant sous ton contenu */}
+          <Footer /> 
           
           <Toaster />
         </Providers>
