@@ -6,7 +6,7 @@ import { Providers } from "./Providers";
 
 // Imports des composants globaux
 import Navbar from "../frontend/components/layout/Navbar"; 
-import Footer from "../frontend/components/layout/Footer"; // ðŸ‘ˆ AJOUTE CECI
+import Footer from "../frontend/components/layout/Footer"; // 👈 AJOUTE CECI
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -16,8 +16,10 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "CÃ”TIÃˆRE MEDIA GROUP",
-  description: "DÃ©couvrez les services CÃ”TIÃˆRE.",
+  // ✅ CORRIGÉ : L'encodage du titre de l'onglet
+  title: "CÔTIÈRE MEDIA GROUP",
+  // ✅ CORRIGÉ : L'encodage de la description
+  description: "Découvrez les services CÔTIÈRE.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -29,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           
           <main>{children}</main>
           
-          <Footer /> {/* ðŸ‘ˆ AJOUTE CECI : Le footer sera maintenant sous ton contenu */}
+          <Footer /> {/* 👈 AJOUTE CECI : Le footer sera maintenant sous ton contenu */}
           
           <Toaster />
         </Providers>
@@ -37,4 +39,3 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </html>
   );
 }
-
