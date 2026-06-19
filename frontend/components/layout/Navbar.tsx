@@ -143,10 +143,10 @@ export default function Navbar({ session }: { session?: any }) {
                 Devenir Partenaire
               </Link>
 
-              {/* Bouton Menu Burger Principal (Actif sur tous les formats) */}
+              {/* Bouton Menu Burger Principal (Masqué sur PC grâce à md:hidden) */}
               <button 
                 onClick={() => setMobileOpen(!mobileOpen)} 
-                className="flex items-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-xs font-black px-4 py-2.5 rounded-xl transition-all duration-300 text-white shadow-sm"
+                className="md:hidden flex items-center gap-2 bg-white/10 border border-white/20 hover:bg-white/20 text-xs font-black px-4 py-2.5 rounded-xl transition-all duration-300 text-white shadow-sm"
                 aria-label="Menu"
               >
                 {mobileOpen ? <X size={20} /> : <Menu size={20} />}
@@ -155,7 +155,7 @@ export default function Navbar({ session }: { session?: any }) {
             </div>
           </div>
 
-          {/* ================= SERVICES NAVIGATION (Optionnel / Liseré de navigation en attente) ================= */}
+          {/* ================= SERVICES NAVIGATION (Liseré de navigation) ================= */}
           <div className="hidden md:flex items-center gap-3 overflow-x-auto pb-2 pt-1 w-full custom-scrollbar scroll-smooth">
             {services.map((s) => {
               const isActive = pathname === s.href;

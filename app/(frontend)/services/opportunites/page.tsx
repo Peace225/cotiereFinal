@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { ArrowRight, Briefcase, CheckCircle, Phone, Loader2 } from "lucide-react";
 
-const SECTEURS_FALLBACK = ["Tourisme", "Agro-alimentaire", "PÃªche & aquaculture", "Immobilier", "Culture & arts", "NumÃ©rique", "Commerce", "Autre"];
+const SECTEURS_FALLBACK = ["Tourisme", "Agro-alimentaire", "Pêche & aquaculture", "Immobilier", "Culture & arts", "Numérique", "Commerce", "Autre"];
 
 type DbSecteur = { id: string; nom: string; categorie: string; couleur: string; description: string; image: string };
 
@@ -56,20 +56,20 @@ export default function OpportunitesPage() {
     <div className="min-h-screen">
       <section className="relative text-white py-20 overflow-hidden">
         <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1600&q=80" alt="OpportunitÃ©s" className="w-full h-full object-cover opacity-80" />
+          <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=1600&q=80" alt="Opportunités" className="w-full h-full object-cover opacity-80" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
             <span className="text-[#c9a84c] text-sm font-semibold uppercase tracking-widest">Service</span>
-            <h1 className="text-2xl sm:text-2xl sm:text-4xl md:text-5xl font-bold mt-2 mb-4">OpportunitÃ©s</h1>
+            <h1 className="text-2xl sm:text-2xl sm:text-4xl md:text-5xl font-bold mt-2 mb-4">Opportunités</h1>
             <p className="text-white text-lg font-medium">Identification, mise en relation, promotion et accompagnement dans les secteurs porteurs du littoral ivoirien.</p>
             <a href="#demande" className="btn-primary mt-8 inline-flex items-center gap-2">Soumettre un projet <ArrowRight size={18} /></a>
           </div>
         </div>
       </section>
 
-      {/* Secteurs porteurs â€” dynamiques depuis la DB */}
+      {/* Secteurs porteurs — dynamiques depuis la DB */}
       <section id="services" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="section-title mb-10">Secteurs porteurs</h2>
@@ -90,7 +90,7 @@ export default function OpportunitesPage() {
                         src={s.image}
                         alt={s.nom}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={e => { (e.target as HTMLImageElement).style.display = "none"; }}
+                        onError={e => { (e.currentTarget as HTMLImageElement).style.display = "none"; }}
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-[#0c4a6e]/10 to-[#c9a84c]/10">
@@ -127,39 +127,39 @@ export default function OpportunitesPage() {
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <h2 className="section-title">Soumettre votre projet</h2>
-            <p className="text-gray-500 mt-2">Partagez votre idÃ©e, notre Ã©quipe vous accompagne.</p>
+            <p className="text-gray-500 mt-2">Partagez votre idée, notre équipe vous accompagne.</p>
           </div>
           {sent ? (
             <div className="bg-white rounded-2xl p-8 text-center shadow-sm border border-gray-100">
               <CheckCircle size={48} className="text-green-500 mx-auto mb-4" />
               <h3 className="font-bold text-[#0c4a6e] text-lg mb-2">Projet soumis !</h3>
-              <p className="text-gray-500 text-sm">Notre Ã©quipe vous contactera sous 48h.</p>
+              <p className="text-gray-500 text-sm">Notre équipe vous contactera sous 48h.</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 space-y-4">
               <div className="grid grid-cols-2 gap-3">
-                <div><label className="block text-xs font-medium text-gray-700 mb-1">PrÃ©nom *</label>
+                <div><label className="block text-xs font-medium text-gray-700 mb-1">Prénom *</label>
                   <input required type="text" placeholder="Jean" value={form.firstName} onChange={e => setForm(f => ({ ...f, firstName: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" /></div>
                 <div><label className="block text-xs font-medium text-gray-700 mb-1">Nom *</label>
-                  <input required type="text" placeholder="KouamÃ©" value={form.lastName} onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" /></div>
+                  <input required type="text" placeholder="Kouamé" value={form.lastName} onChange={e => setForm(f => ({ ...f, lastName: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" /></div>
               </div>
               <div className="grid grid-cols-2 gap-3">
-                <div><label className="block text-xs font-medium text-gray-700 mb-1">TÃ©lÃ©phone *</label>
+                <div><label className="block text-xs font-medium text-gray-700 mb-1">Téléphone *</label>
                   <input required type="tel" placeholder="07 XX XX XX XX" value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" /></div>
                 <div><label className="block text-xs font-medium text-gray-700 mb-1">Email</label>
                   <input type="email" placeholder="jean@email.com" value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" /></div>
               </div>
-              <div><label className="block text-xs font-medium text-gray-700 mb-1">Secteur d'activitÃ© *</label>
+              <div><label className="block text-xs font-medium text-gray-700 mb-1">Secteur d'activité *</label>
                 <select required value={form.secteur} onChange={e => setForm(f => ({ ...f, secteur: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
-                  <option value="">SÃ©lectionner...</option>
+                  <option value="">Sélectionner...</option>
                   {secteursList.map(s => <option key={s} value={s}>{s}</option>)}
                 </select></div>
               <div><label className="block text-xs font-medium text-gray-700 mb-1">Description du projet</label>
-                <textarea rows={4} placeholder="DÃ©crivez votre projet, vos besoins ou votre idÃ©e d'investissement..." value={form.projet} onChange={e => setForm(f => ({ ...f, projet: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] resize-none" /></div>
+                <textarea rows={4} placeholder="Décrivez votre projet, vos besoins ou votre idée d'investissement..." value={form.projet} onChange={e => setForm(f => ({ ...f, projet: e.target.value }))} className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] resize-none" /></div>
               <button type="submit" disabled={loading} className="btn-primary w-full justify-center disabled:opacity-60">
                 {loading ? "Envoi..." : <><span>Soumettre mon projet</span><ArrowRight size={16} /></>}
               </button>
-              <p className="text-xs text-gray-400 text-center">RÃ©ponse sous 48h Ã© Gratuit et confidentiel</p>
+              <p className="text-xs text-gray-400 text-center">Réponse sous 48h à Gratuit et confidentiel</p>
             </form>
           )}
         </div>
@@ -167,8 +167,8 @@ export default function OpportunitesPage() {
 
       <section className="py-16 bg-[#0c4a6e] text-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl font-black mb-4">Vous prÃ©fÃ©rez nous appeler ?</h2>
-          <p className="text-gray-300 mb-8">Notre Ã©quipe est disponible du lundi au samedi de 8h Ã© 18h.</p>
+          <h2 className="text-2xl font-black mb-4">Vous préférez nous appeler ?</h2>
+          <p className="text-gray-300 mb-8">Notre équipe est disponible du lundi au samedi de 8h à 18h.</p>
           <a href="tel:+2250747722931" className="inline-flex items-center gap-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white font-bold px-8 py-4 rounded-xl transition-colors">
             <Phone size={18} /> 07 47 72 29 31
           </a>
@@ -178,5 +178,3 @@ export default function OpportunitesPage() {
     </div>
   );
 }
-
-

@@ -33,13 +33,13 @@ export default function MarketPage() {
     <div className="min-h-screen">
       <section className="relative text-white py-20 overflow-hidden">
         <div className="absolute inset-0">
-          <img src="https://images.unsplash.com/photo-1534482421-64566f976cfa?w=1600&q=80" alt="Marche" className="w-full h-full object-cover opacity-90" />
+          <img src="https://images.unsplash.com/photo-1534482421-64566f976cfa?w=1600&q=80" alt="Marché" className="w-full h-full object-cover opacity-90" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-black/20" />
         </div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
-            <h1 className="text-2xl sm:text-2xl sm:text-4xl md:text-5xl font-bold mt-2 mb-4">CÃ”TIÃˆRE Market &amp; Distribution</h1>
-            <p className="text-gray-100 text-lg">Attieke, poissons, fruits de mer et produits locaux du littoral ivoirien.</p>
+            <h1 className="text-2xl sm:text-2xl sm:text-4xl md:text-5xl font-bold mt-2 mb-4">CÔTIÈRE Market & Distribution</h1>
+            <p className="text-gray-100 text-lg">Attiéké, poissons, fruits de mer et produits locaux du littoral ivoirien.</p>
             <div className="flex gap-3 mt-8">
               <a href="#catalogue" className="btn-primary inline-flex items-center gap-2">Voir le catalogue <ArrowRight size={18} /></a>
               <a href="tel:+2250747722931" className="flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-bold px-5 py-3 rounded-xl hover:bg-white/20 transition-colors">
@@ -56,7 +56,7 @@ export default function MarketPage() {
             <h2 className="section-title">Nos produits</h2>
             {cartCount > 0 && (
               <button onClick={() => setShowCart(true)} className="flex items-center gap-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white font-bold px-5 py-2.5 rounded-xl transition-colors shadow-md">
-                <ShoppingCart size={18} /> Panier ({cartCount}) &mdash; {cartTotal.toLocaleString()} FCFA
+                <ShoppingCart size={18} /> Panier ({cartCount}) — {cartTotal.toLocaleString()} FCFA
               </button>
             )}
           </div>
@@ -74,12 +74,18 @@ export default function MarketPage() {
                 <RefreshCw size={32} className="animate-spin mx-auto mb-3" /> Chargement des produits...
               </div>
             ) : filtered.map(p => {
-              const img = p.images?.[0] ?? "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&q=80";
+              // 🔥 CORRIGÉ : On sécurise l'URL de l'image pour éviter les chaînes vides ("") et les erreurs 404
+              const img = p.images?.[0] || "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&q=80";
               const cartItem = cart.find(i => i.produit.id === p.id);
               return (
                 <div key={p.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 card-hover">
                   <div className="relative h-40">
-                    <img src={img} alt={p.label} className="w-full h-full object-cover" />
+                    <img 
+                      src={img} 
+                      alt={p.label} 
+                      className="w-full h-full object-cover" 
+                      onError={e => { (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&q=80"; }} 
+                    />
                     <span className="absolute top-3 left-3 bg-white/90 text-[#0c4a6e] text-xs font-bold px-2 py-1 rounded-full">{p.categorie}</span>
                     <span className="absolute top-3 right-3 bg-[#c9a84c] text-white text-xs font-bold px-2 py-1 rounded-full">{p.prix.toLocaleString()} FCFA</span>
                   </div>
@@ -111,7 +117,7 @@ export default function MarketPage() {
                         Commander via WhatsApp
                       </a>
                       <a href={"/services/market/" + p.id} className="mt-1 w-full flex items-center justify-center gap-1 text-sm font-semibold text-[#0c4a6e] border border-[#0c4a6e]/20 rounded-xl py-2 hover:bg-[#0c4a6e]/5 transition-colors">
-                        Voir detail <ArrowRight size={13} />
+                        Voir détail <ArrowRight size={13} />
                       </a>
                     </div>
                   </div>
@@ -132,7 +138,12 @@ export default function MarketPage() {
             <div className="overflow-y-auto px-5 py-4 space-y-3 flex-1">
               {cart.map(i => (
                 <div key={i.produit.id} className="flex items-center gap-3">
-                  <img src={i.produit.images?.[0] ?? "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&q=80"} alt={i.produit.label} className="w-12 h-12 rounded-lg object-cover shrink-0" />
+                  <img 
+                    src={i.produit.images?.[0] || "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&q=80"} 
+                    alt={i.produit.label} 
+                    className="w-12 h-12 rounded-lg object-cover shrink-0" 
+                    onError={e => { (e.currentTarget as HTMLImageElement).src = "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&q=80"; }}
+                  />
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm text-[#0c4a6e] truncate">{i.produit.label}</p>
                     <p className="text-xs text-gray-500">{i.produit.prix.toLocaleString()} FCFA x {i.qty}</p>
@@ -170,5 +181,3 @@ export default function MarketPage() {
     </div>
   );
 }
-
-

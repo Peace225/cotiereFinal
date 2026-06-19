@@ -19,65 +19,65 @@ type Excursion = {
   reviews?: number;
 };
 
-// Liste des destinations cÃ´tiÃ¨res
+// Liste des destinations côtières
 const ALL_DESTINATIONS = [
-  "Abidjan", "Aboisso", "AdiakÃ©", "Assinie Mafia", "Dabou", 
-  "Fresco", "Grand-Bassam", "Grand-BÃ©rÃ©by", "Grand-Lahou", 
-  "Jacqueville", "San-PÃ©dro", "Sassandra", "Tabou"
+  "Abidjan", "Aboisso", "Adiaké", "Assinie Mafia", "Dabou", 
+  "Fresco", "Grand-Bassam", "Grand-Béréby", "Grand-Lahou", 
+  "Jacqueville", "San-Pédro", "Sassandra", "Tabou"
 ];
 
-// Catalogue complet des excursions cÃ´tiÃ¨res premium
+// Catalogue complet des excursions côtières premium
 const DEFAULT_EXCURSIONS: Excursion[] = [
   { 
-    id: "abidjan-baie", title: "CroisiÃ¨re Baie des Milliardaires", location: "Abidjan", duration: "Demi-journÃ©e", priceAdult: 25000, 
+    id: "abidjan-baie", title: "Croisière Baie des Milliardaires", location: "Abidjan", duration: "Demi-journée", priceAdult: 25000, 
     images: ["https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&q=80"], avgRating: 4.8, reviews: 340 
   },
   { 
-    id: "aboisso-bia", title: "Ã‰vasion Naturelle sur la riviÃ¨re Bia", location: "Aboisso", duration: "JournÃ©e", priceAdult: 18000, 
+    id: "aboisso-bia", title: "Évasion Naturelle sur la rivière Bia", location: "Aboisso", duration: "Journée", priceAdult: 18000, 
     images: ["https://images.unsplash.com/photo-1501183638710-841dd1904471?w=800&q=80"], avgRating: 4.6, reviews: 85 
   },
   { 
-    id: "adiake-ehotile", title: "Balade Lagunaire & ÃŽles EhotilÃ©", location: "AdiakÃ©", duration: "JournÃ©e", priceAdult: 20000, 
+    id: "adiake-ehotile", title: "Balade Lagunaire & Îles Ehotilé", location: "Adiaké", duration: "Journée", priceAdult: 20000, 
     images: ["https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80"], avgRating: 4.9, reviews: 112 
   },
   { 
-    id: "assinie-detente", title: "Week-end Ã‰vasion Premium", location: "Assinie Mafia", duration: "Week-end", priceAdult: 45000, 
+    id: "assinie-detente", title: "Week-end Évasion Premium", location: "Assinie Mafia", duration: "Week-end", priceAdult: 45000, 
     images: ["https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80"], avgRating: 4.9, reviews: 520 
   },
   { 
-    id: "dabou-lagune", title: "DÃ©couverte des Plantations", location: "Dabou", duration: "Demi-journÃ©e", priceAdult: 15000, 
+    id: "dabou-lagune", title: "Découverte des Plantations", location: "Dabou", duration: "Demi-journée", priceAdult: 15000, 
     images: ["https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=800&q=80"], avgRating: 4.5, reviews: 65 
   },
   { 
-    id: "fresco-lamantins", title: "Ã‰cotourisme: Les Lamantins", location: "Fresco", duration: "JournÃ©e", priceAdult: 22000, 
+    id: "fresco-lamantins", title: "Écotourisme: Les Lamantins", location: "Fresco", duration: "Journée", priceAdult: 22000, 
     images: ["https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=800&q=80"], avgRating: 4.8, reviews: 90 
   },
   { 
-    id: "grand-bassam-unesco", title: "Circuit Historique UNESCO", location: "Grand-Bassam", duration: "Demi-journÃ©e", priceAdult: 15000, 
+    id: "grand-bassam-unesco", title: "Circuit Historique UNESCO", location: "Grand-Bassam", duration: "Demi-journée", priceAdult: 15000, 
     images: ["https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80"], avgRating: 4.7, reviews: 410 
   },
   { 
-    id: "bereby-plongee", title: "PlongÃ©e & Safari Baie des SirÃ¨nes", location: "Grand-BÃ©rÃ©by", duration: "2 Jours", priceAdult: 65000, 
+    id: "bereby-plongee", title: "Plongée & Safari Baie des Sirènes", location: "Grand-Béréby", duration: "2 Jours", priceAdult: 65000, 
     images: ["https://images.unsplash.com/photo-1506477331477-33d5d8b3dc85?w=800&q=80"], avgRating: 5.0, reviews: 215 
   },
   { 
-    id: "lahou-azagny", title: "Safari Parc National d'Azagny", location: "Grand-Lahou", duration: "JournÃ©e", priceAdult: 28000, 
+    id: "lahou-azagny", title: "Safari Parc National d'Azagny", location: "Grand-Lahou", duration: "Journée", priceAdult: 28000, 
     images: ["https://images.unsplash.com/photo-1537726235470-1698299dc20a?w=800&q=80"], avgRating: 4.8, reviews: 134 
   },
   { 
-    id: "jacqueville-ebrie", title: "DÃ©tente Lagune Ã‰briÃ©", location: "Jacqueville", duration: "JournÃ©e", priceAdult: 12000, 
+    id: "jacqueville-ebrie", title: "Détente Lagune Ébrié", location: "Jacqueville", duration: "Journée", priceAdult: 12000, 
     images: ["https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800&q=80"], avgRating: 4.6, reviews: 180 
   },
   { 
-    id: "sanpedro-monogaga", title: "Plage de Monogaga", location: "San-PÃ©dro", duration: "JournÃ©e", priceAdult: 25000, 
+    id: "sanpedro-monogaga", title: "Plage de Monogaga", location: "San-Pédro", duration: "Journée", priceAdult: 25000, 
     images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&q=80"], avgRating: 4.9, reviews: 156 
   },
   { 
-    id: "sassandra-falaises", title: "CroisiÃ¨re Pont Weygand", location: "Sassandra", duration: "JournÃ©e", priceAdult: 20000, 
+    id: "sassandra-falaises", title: "Croisière Pont Weygand", location: "Sassandra", duration: "Journée", priceAdult: 20000, 
     images: ["https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=800&q=80"], avgRating: 4.7, reviews: 105 
   },
   { 
-    id: "tabou-tabaoule", title: "Surf & Plage de TabaoulÃ©", location: "Tabou", duration: "Week-end", priceAdult: 40000, 
+    id: "tabou-tabaoule", title: "Surf & Plage de Tabaoulé", location: "Tabou", duration: "Week-end", priceAdult: 40000, 
     images: ["https://images.unsplash.com/photo-1551882547-ff40c0d13966?w=800&q=80"], avgRating: 4.8, reviews: 75 
   }
 ];
@@ -86,7 +86,7 @@ export default function TourismePage() {
   const [excursions, setExcursions] = useState<Excursion[]>(DEFAULT_EXCURSIONS);
   const [selectedExcursion, setSelectedExcursion] = useState<Excursion | null>(null);
   
-  // Ã‰tats de filtrage
+  // États de filtrage
   const [selectedDestination, setSelectedDestination] = useState<string>("Toutes");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -116,13 +116,13 @@ export default function TourismePage() {
         <div className="relative overflow-hidden rounded-[2.5rem] bg-[#003b95] text-white p-8 md:p-14 shadow-xl">
           <div className="relative z-10 max-w-2xl">
             <span className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-3">
-              <Compass size={12} /> DÃ©couvertes CÃ´tiÃ¨res
+              <Compass size={12} /> Découvertes Côtières
             </span>
             <h1 className="!text-3xl md:text-5xl font-black leading-tight mb-3">
               Explorez le littoral Ivoirien
             </h1>
             <p className="text-white/80 text-sm md:text-base max-w-xl">
-              De Tabou Ã  Assinie, embarquez pour des excursions inoubliables avec nos guides locaux expÃ©rimentÃ©s.
+              De Tabou à Assinie, embarquez pour des excursions inoubliables avec nos guides locaux expérimentés.
             </p>
           </div>
           <div className="absolute top-0 right-0 w-full md:w-1/2 h-full opacity-30 md:opacity-40 bg-[url('https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80')] bg-cover bg-center" />
@@ -132,7 +132,7 @@ export default function TourismePage() {
 
       <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-4 gap-6">
         
-        {/* BARRE DE FILTRES LATÃ‰RALE */}
+        {/* BARRE DE FILTRES LATÉRALE */}
         <div className="bg-white p-5 rounded-[1.5rem] border border-slate-100 shadow-sm h-fit space-y-5 lg:sticky lg:top-28">
           <div className="flex items-center gap-2 font-black text-slate-900 text-base border-b border-slate-100 pb-2">
             <Filter size={16} className="text-[#003b95]" />
@@ -144,7 +144,7 @@ export default function TourismePage() {
               <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1.5">Recherche</label>
               <input 
                 type="text" 
-                placeholder="Ex: CroisiÃ¨re, Safari..." 
+                placeholder="Ex: Croisière, Safari..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full p-2.5 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-[#003b95] bg-slate-50 focus:bg-white transition-colors"
@@ -152,7 +152,7 @@ export default function TourismePage() {
             </div>
 
             <div>
-              <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1.5">Destination CÃ´tiÃ¨re</label>
+              <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1.5">Destination Côtière</label>
               <select
                 value={selectedDestination}
                 onChange={(e) => setSelectedDestination(e.target.value)}
@@ -167,7 +167,7 @@ export default function TourismePage() {
           </div>
         </div>
 
-        {/* GRILLE DES EXCURSIONS RÃ‰DUITES */}
+        {/* GRILLE DES EXCURSIONS RÉDUITES */}
         <div className="lg:col-span-3">
           <div className="text-slate-500 text-xs font-medium mb-4">
             {filteredExcursions.length} circuit(s) disponible(s)
@@ -175,13 +175,13 @@ export default function TourismePage() {
 
           {filteredExcursions.length === 0 ? (
             <div className="bg-white rounded-2xl border border-slate-100 p-8 text-center text-slate-500 text-sm shadow-sm">
-              Aucune excursion trouvÃ©e pour <strong>{selectedDestination}</strong>.
+              Aucune excursion trouvée pour <strong>{selectedDestination}</strong>.
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
               {filteredExcursions.map(e => (
                 <div key={e.id} className="group bg-white rounded-2xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col">
-                  {/* Image RÃ©duite */}
+                  {/* Image Réduite */}
                   <div className="relative h-40 w-full overflow-hidden bg-slate-100">
                     <img 
                       src={e.images[0]} 
@@ -220,13 +220,13 @@ export default function TourismePage() {
                           href={`/services/tourisme/${e.id}`} 
                           className="flex-1 text-center bg-slate-50 text-slate-600 font-bold py-2 rounded-lg text-xs hover:bg-slate-100 transition-colors"
                         >
-                          DÃ©tails
+                          Détails
                         </Link>
                         <button 
                           onClick={() => setSelectedExcursion(e)} 
                           className="flex-1 bg-[#003b95] text-white font-black py-2 rounded-lg text-xs hover:bg-blue-800 transition-colors"
                         >
-                          RÃ©server
+                          Réserver
                         </button>
                       </div>
                     </div>
@@ -238,7 +238,7 @@ export default function TourismePage() {
         </div>
       </div>
 
-      {/* MODAL DE RÃ‰SERVATION */}
+      {/* MODAL DE RÉSERVATION */}
       {selectedExcursion && (
         <ExcursionBookingForm
           excursion={{
@@ -258,4 +258,3 @@ export default function TourismePage() {
     </div>
   );
 }
-

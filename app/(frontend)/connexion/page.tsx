@@ -13,7 +13,7 @@ export default function ConnexionPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Initialisation mÃ©morisÃ©e pour Ã©viter de recrÃ©er le client Ã  chaque rendu
+  // Initialisation mémorisée pour éviter de recréer le client à chaque rendu
   const supabase = useMemo(() => 
     createBrowserClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -37,18 +37,18 @@ export default function ConnexionPage() {
       if (authError) throw authError;
       if (!authData.user) throw new Error("Erreur inattendue lors de la connexion.");
 
-      // 2. RÃ©cupÃ©ration du rÃ´le
+      // 2. Récupération du rôle
       const { data: profile, error: profileError } = await supabase
         .from('users')
         .select('role')
         .eq('id', authData.user.id)
         .maybeSingle(); 
 
-      if (profileError) throw new Error("Impossible de vÃ©rifier vos accÃ¨s.");
+      if (profileError) throw new Error("Impossible de vérifier vos accès.");
 
       const role = profile?.role || 'CLIENT';
       
-      // 3. Redirection sÃ©curisÃ©e
+      // 3. Redirection sécurisée
       const target = (role === 'ADMIN' || role === 'SUPER_ADMIN') 
         ? '/admin/dashboard' 
         : '/';
@@ -67,7 +67,8 @@ export default function ConnexionPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <Link href="/" className="inline-block">
-            <span className="text-[#c9a84c] font-black text-2xl">CÃ”TIÃˆRE</span>
+            {/* ✅ CORRIGÉ : L'encodage du logo texte */}
+            <span className="text-[#c9a84c] font-black text-2xl">CÔTIÈRE</span>
             <span className="text-[#0c4a6e] font-light text-sm ml-1">MEDIA GROUP</span>
           </Link>
           <h1 className="text-2xl font-bold text-[#0c4a6e] mt-4">Connexion</h1>
@@ -99,7 +100,10 @@ export default function ConnexionPage() {
               <div className="relative">
                 <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input 
-                  type={showPwd ? "text" : "password"} required placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  type={showPwd ? "text" : "password"} 
+                  required 
+                  // ✅ CORRIGÉ : L'encodage des points de mot de passe
+                  placeholder="••••••••"
                   value={form.password} 
                   onChange={e => setForm({ ...form, password: e.target.value })}
                   className="w-full pl-10 pr-10 py-3 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-[#38bdf8] outline-none" 
@@ -120,4 +124,3 @@ export default function ConnexionPage() {
     </div>
   );
 }
-
