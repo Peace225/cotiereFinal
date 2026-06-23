@@ -3,7 +3,11 @@ import { useEffect, useState, useRef } from "react";
 import { Bell, X, CheckCheck } from "lucide-react";
 
 type Notification = {
-  id: string; subject: string; content: string; isRead: boolean; createdAt: string;
+  id: string; 
+  subject: string; 
+  content: string; 
+  isRead: boolean; 
+  createdAt: string;
   type: string;
 };
 
@@ -15,23 +19,48 @@ export default function NotificationBell() {
 
   async function load() {
     try {
-      const res = await fetch("/api/admin/notifications");
+      const res = await fetch("/api/admin/notifications", {
+        method: "GET",
+        // Envoi du cookie uniquement sur le même domaine (idéal pour Next.js)
+        credentials: "same-origin", 
+      });
+
+      if (res.status === 401 || res.status === 403) {
+        console.warn("Session invalide, impossible de charger les notifications.");
+        return; // Arrêt silencieux sans crasher
+      }
+
+      if (!res.ok) throw new Error("Erreur réseau");
+
       const data = await res.json();
       setNotifications(data.data?.notifications ?? []);
       setUnread(data.data?.unreadCount ?? 0);
-    } catch {}
+    } catch (error) {
+      console.error("Erreur lors du chargement des notifications:", error);
+    }
   }
 
   async function markAllRead() {
-    await fetch("/api/admin/notifications", { method: "PATCH" });
-    setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
-    setUnread(0);
+    try {
+      const res = await fetch("/api/admin/notifications", { 
+        method: "PATCH",
+        credentials: "same-origin", 
+      });
+      
+      if (res.ok) {
+        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+        setUnread(0);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour des notifications:", error);
+    }
   }
 
   useEffect(() => {
     load();
-    const interval = setInterval(load, 30000); // refresh toutes les 30s
-    return () => clearInterval(interval);
+    // 🛑 INTERVAL DÉSACTIVÉ TEMPORAIREMENT pour éviter le spam d'erreurs 401
+    // const interval = setInterval(load, 30000); 
+    // return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {

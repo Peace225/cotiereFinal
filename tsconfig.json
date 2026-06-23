@@ -28,7 +28,7 @@
       "@/components/admin/NotificationBell": ["./admin/NotificationBell"],
       "@/components/admin/ReceiptButton": ["./admin/ReceiptButton"],
       "@/components/admin/VoucherButton": ["./admin/VoucherButton"],
-      "@/components/frontend/home/*": ["./frontend/components/home/*"],
+      "@/components/frontend/home/*": ["app/(frontend)/home/*"],
       "@/components/frontend/layout/*": ["./frontend/components/layout/*"],
       "@/components/frontend/studio/*": ["./frontend/components/studio/*"],
       "@/components/frontend/excursions/*": ["./frontend/components/excursions/*"],

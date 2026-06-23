@@ -23,8 +23,8 @@ const STATUS_COLORS: Record<string, string> = {
   COMPLETED: "bg-blue-100 text-blue-700 border-blue-200",
 };
 const STATUS_LABELS: Record<string, string> = {
-  PENDING: "En attente", CONFIRMED: "ConfirmÃ©", REFUSED: "RefusÃ©",
-  CANCELLED: "AnnulÃ©", COMPLETED: "TerminÃ©",
+  PENDING: "En attente", CONFIRMED: "Confirmé", REFUSED: "Refusé",
+  CANCELLED: "Annulé", COMPLETED: "Terminé",
 };
 
 export default function AdminDashboardPage() {
@@ -37,35 +37,46 @@ export default function AdminDashboardPage() {
   async function loadData() {
     setLoading(true);
     try {
+      const fetchOptions = { credentials: "same-origin" as RequestCredentials };
+
       const [studioRes, eventRes, excursionRes, musicRes, equipmentRes] = await Promise.all([
-        fetch("/api/studio/bookings?limit=500"),
-        fetch("/api/events/requests?limit=500"),
-        fetch("/api/excursions/bookings?limit=500"),
-        fetch("/api/music/bookings?limit=500"),
-        fetch("/api/equipment/rentals?limit=500"),
+        fetch("/api/studio/bookings?limit=500", fetchOptions),
+        fetch("/api/events/requests?limit=500", fetchOptions),
+        fetch("/api/excursions/bookings?limit=500", fetchOptions),
+        fetch("/api/music/bookings?limit=500", fetchOptions),
+        fetch("/api/equipment/rentals?limit=500", fetchOptions),
       ]);
+      
       const studioData = await studioRes.json();
       const eventData = await eventRes.json();
       const excursionData = await excursionRes.json();
       const musicData = await musicRes.json();
       const equipmentData = await equipmentRes.json();
 
-      const studioBookings: Booking[] = (studioData.data?.bookings ?? []).map((b: any) => ({ ...b, type: "studio" }));
-      const allEvents: any[] = eventData.data?.requests ?? eventData.data ?? [];
+      const studioBookings: Booking[] = (studioData.bookings ?? []).map((b: any) => ({ ...b, type: "studio" }));
+      
+      // ⚠️ CORRECTION FIABILITÉ : Vérifie explicitement que eventData est un tableau
+      const rawEvents = eventData?.requests ?? eventData;
+      const allEvents: any[] = Array.isArray(rawEvents) ? rawEvents : [];
+
       const eventBookings: Booking[] = allEvents
-        .filter((b: any) => !/chambre|suite|hÃ©bergement|hebergement/i.test(b.eventType ?? ""))
+        .filter((b: any) => !/chambre|suite|hébergement|hebergement/i.test(b.eventType ?? ""))
         .map((b: any) => ({ ...b, type: "event" }));
+        
       const hotelBookings: Booking[] = allEvents
-        .filter((b: any) => /chambre|suite|hÃ©bergement|hebergement/i.test(b.eventType ?? ""))
-        .map((b: any) => ({ ...b, type: "hotel", eventType: b.eventType ?? "HÃ©bergement" }));
-      const excursionBookings: Booking[] = (excursionData.data?.bookings ?? []).map((b: any) => ({ ...b, type: "excursion", eventType: b.excursion?.title ?? "Excursion", eventDate: b.bookingDate }));
-      const musicBookings: Booking[] = (musicData.data?.bookings ?? []).map((b: any) => ({ ...b, type: "music", eventType: b.serviceType, eventDate: b.sessionDate }));
-      const equipmentBookings: Booking[] = (equipmentData.data?.rentals ?? []).map((b: any) => ({ ...b, type: "equipment", eventType: "Guichet Unique", eventDate: b.startDate }));
+        .filter((b: any) => /chambre|suite|hébergement|hebergement/i.test(b.eventType ?? ""))
+        .map((b: any) => ({ ...b, type: "hotel", eventType: b.eventType ?? "Hébergement" }));
+        
+      const excursionBookings: Booking[] = (excursionData.bookings ?? []).map((b: any) => ({ ...b, type: "excursion", eventType: b.excursion?.title ?? "Excursion", eventDate: b.bookingDate }));
+      const musicBookings: Booking[] = (musicData.bookings ?? []).map((b: any) => ({ ...b, type: "music", eventType: b.serviceType, eventDate: b.sessionDate }));
+      const equipmentBookings: Booking[] = (equipmentData.rentals ?? []).map((b: any) => ({ ...b, type: "equipment", eventType: "Guichet Unique", eventDate: b.startDate }));
 
       setBookings([...studioBookings, ...eventBookings, ...hotelBookings, ...excursionBookings, ...musicBookings, ...equipmentBookings].sort((a, b) =>
         new Date(b.createdAt ?? b.eventDate ?? 0).getTime() - new Date(a.createdAt ?? a.eventDate ?? 0).getTime()
       ));
-    } catch {}
+    } catch (e) {
+      console.error("Erreur de chargement du dashboard :", e);
+    }
     setLoading(false);
   }
 
@@ -82,11 +93,14 @@ export default function AdminDashboardPage() {
       equipment: `/api/equipment/rentals/${id}`,
     };
     const url = urlMap[type] ?? `/api/events/requests/${id}`;
+    
     await fetch(url, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
+      credentials: "same-origin"
     });
+    
     setBookings(prev => prev.map(b => b.id === id ? { ...b, status } : b));
     setChangingId(null);
   }
@@ -111,16 +125,17 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navbar tableau de bord */}
       <AdminNavbar />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
           {[
-            { label: "Total RÃ©servations", value: total, icon: Calendar, color: "text-blue-500", bg: "bg-blue-50", filterVal: "ALL" },
+            { label: "Total Réservations", value: total, icon: Calendar, color: "text-blue-500", bg: "bg-blue-50", filterVal: "ALL" },
             { label: "En attente", value: pending, icon: Clock, color: "text-yellow-500", bg: "bg-yellow-50", filterVal: "PENDING" },
-            { label: "ConfirmÃ©es", value: confirmed, icon: CheckCircle, color: "text-green-500", bg: "bg-green-50", filterVal: "CONFIRMED" },
-            { label: "Revenu Total", value: revenue > 0 ? `${revenue.toLocaleString()} FCFA` : "â€”", icon: TrendingUp, color: "text-[#c9a84c]", bg: "bg-amber-50", filterVal: null },
+            { label: "Confirmées", value: confirmed, icon: CheckCircle, color: "text-green-500", bg: "bg-green-50", filterVal: "CONFIRMED" },
+            { label: "Revenu Total", value: revenue > 0 ? `${revenue.toLocaleString()} FCFA` : "—", icon: TrendingUp, color: "text-[#c9a84c]", bg: "bg-amber-50", filterVal: null },
           ].map((s) => {
             const Icon = s.icon;
             const isActive = s.filterVal && filter === s.filterVal;
@@ -149,24 +164,24 @@ export default function AdminDashboardPage() {
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
               <option value="ALL">Tous les statuts</option>
               <option value="PENDING">En attente</option>
-              <option value="CONFIRMED">ConfirmÃ©s</option>
-              <option value="COMPLETED">TerminÃ©s</option>
-              <option value="REFUSED">RefusÃ©s</option>
-              <option value="CANCELLED">AnnulÃ©s</option>
+              <option value="CONFIRMED">Confirmés</option>
+              <option value="COMPLETED">Terminés</option>
+              <option value="REFUSED">Refusés</option>
+              <option value="CANCELLED">Annulés</option>
             </select>
             <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
               className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
               <option value="ALL">Tous les services</option>
               <option value="studio">Studio+</option>
-              <option value="event">Ã‰vÃ©nements</option>
+              <option value="event">Événements</option>
               <option value="excursion">Tourisme & Voyage</option>
-              <option value="hotel">HÃ©bergement</option>
+              <option value="hotel">Hébergement</option>
               <option value="music">Musique</option>
               <option value="equipment">Guichet Unique</option>
-              <option value="market">CÃ”TIÃˆRE Market</option>
+              <option value="market">CÔTIÈRE Market</option>
             </select>
             <button onClick={loadData}
-              className="flex items-center gap-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+              className="flex items-center gap-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors cursor-pointer">
               <RefreshCw size={14} className={loading ? "animate-spin" : ""} /> Actualiser
             </button>
           </div>
@@ -180,9 +195,9 @@ export default function AdminDashboardPage() {
               reference: b.reference?.slice(-6) ?? b.id.slice(-6),
               client: b.clientFirstName + " " + b.clientLastName,
               telephone: b.clientPhone,
-              service: b.eventType ?? "â€”",
+              service: b.eventType ?? "—",
               type: b.type === "studio" ? "Studio+" : "Evenement",
-              date_commande: b.eventDate ? new Date(b.eventDate).toLocaleString("fr-FR") : "â€”",
+              date_commande: b.eventDate ? new Date(b.eventDate).toLocaleString("fr-FR") : "—",
               prix: b.totalAmount ? b.totalAmount.toLocaleString() + " FCFA" : b.estimatedPriceMin ? b.estimatedPriceMin.toLocaleString() + " FCFA" : "Sur devis",
               statut: b.status,
             }))}
@@ -206,8 +221,8 @@ export default function AdminDashboardPage() {
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
             <div className="w-1 h-5 bg-[#c9a84c] rounded-full" />
-            <h2 className="font-bold text-[#0c4a6e]">RÃ©servations</h2>
-            <span className="ml-auto text-xs text-gray-400">{filtered.length} rÃ©sultat(s)</span>
+            <h2 className="font-bold text-[#0c4a6e]">Réservations</h2>
+            <span className="ml-auto text-xs text-gray-400">{filtered.length} résultat(s)</span>
           </div>
 
           {loading ? (
@@ -216,7 +231,7 @@ export default function AdminDashboardPage() {
               Chargement...
             </div>
           ) : filtered.length === 0 ? (
-            <div className="py-16 text-center text-gray-400">Aucune rÃ©servation trouvÃ©e.</div>
+            <div className="py-16 text-center text-gray-400">Aucune réservation trouvée.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -236,7 +251,7 @@ export default function AdminDashboardPage() {
                       "Commande Market": "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=60&q=80",
                       "Chambre Standard": "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=60&q=80",
                       "Chambre Superieure": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=60&q=80",
-                      "Chambre SupÃ©rieure": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=60&q=80",
+                      "Chambre Supérieure": "https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=60&q=80",
                       "Suite Familiale": "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=60&q=80",
                       "Attieke frais (1kg)": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=60&q=80",
                       "Attieke frais (5kg)": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=60&q=80",
@@ -245,7 +260,7 @@ export default function AdminDashboardPage() {
                       "Homard": "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=60&q=80",
                     };
                     const MARKET_IDS: Record<string, string> = { "Attieke frais (1kg)": "1", "Attieke frais (5kg)": "2", "Poisson braise": "3", "Crevettes fraiches (500g)": "4", "Homard": "5", "Ananas frais": "6", "Mangues (1kg)": "7", "Panier mixte fruits de mer": "8" };
-                    const HOTEL_IDS: Record<string, string> = { "Chambre Standard": "1", "Chambre Superieure": "2", "Chambre SupÃ©rieure": "2", "Suite Familiale": "3" };
+                    const HOTEL_IDS: Record<string, string> = { "Chambre Standard": "1", "Chambre Superieure": "2", "Chambre Supérieure": "2", "Suite Familiale": "3" };
                     const produitName = (b.eventType ?? "").replace(/^Commander\s*:\s*/i, "").trim();
                     const imgSrc = SERVICE_IMAGES[produitName] ?? SERVICE_IMAGES[b.eventType ?? ""] ?? SERVICE_IMAGES[b.type] ?? "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=60&q=80";
                     const siteUrl = MARKET_IDS[produitName] ? `/services/market/${MARKET_IDS[produitName]}`
@@ -264,7 +279,7 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="px-4 py-3">
                         <p className="font-semibold text-[#0c4a6e]">{b.clientFirstName} {b.clientLastName}</p>
-                        <p className="text-xs text-gray-400">{b.type === "studio" ? "Studio+" : "Ã‰vÃ©nement"}</p>
+                        <p className="text-xs text-gray-400">{b.type === "studio" ? "Studio+" : "Événement"}</p>
                       </td>
                       <td className="px-4 py-3">
                         <a href={`https://wa.me/${b.clientPhone?.replace(/\s/g, "")}`} target="_blank" rel="noopener noreferrer"
@@ -275,7 +290,7 @@ export default function AdminDashboardPage() {
                       </td>
                       <td className="px-4 py-3 text-gray-600">
                         <a href={siteUrl} target="_blank" rel="noopener noreferrer" className="hover:underline text-[#0c4a6e] font-medium">
-                          {b.eventType} â†—
+                          {b.eventType} ↗
                         </a>
                       </td>
                       <td className="px-4 py-3 text-gray-600 text-xs">
@@ -287,7 +302,7 @@ export default function AdminDashboardPage() {
                               {createdDate.toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" })}
                             </div>
                           </div>
-                        ) : "â€”"}
+                        ) : "—"}
                       </td>
                       <td className="px-4 py-3 text-xs font-semibold text-[#0c4a6e]">
                         {b.totalAmount ? `${b.totalAmount.toLocaleString()} FCFA` :
@@ -324,5 +339,3 @@ export default function AdminDashboardPage() {
     </div>
   );
 }
-
-

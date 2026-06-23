@@ -1,8 +1,10 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, created, badRequest, serverError, forbidden } from "@/lib/api-response";
 import { requireAdmin } from "@/lib/auth";
 import { z } from "zod";
+
+export const dynamic = "force-dynamic";
 
 const bookingSchema = z.object({
   clientFirstName: z.string().min(1),
@@ -18,12 +20,21 @@ const bookingSchema = z.object({
 });
 
 export async function GET() {
-  try { await requireAdmin(); } catch { return forbidden(); }
+  try { 
+    await requireAdmin(); 
+  } catch (e) { 
+    return forbidden(); 
+  }
+
   try {
     const bookings = await prisma.musicBooking.findMany({
       orderBy: { createdAt: "desc" },
     });
-    return ok({ bookings });
+    
+    // Ajout des en-têtes pour autoriser les cookies/crédients vers l'origine
+    const response = ok({ bookings });
+    response.headers.set("Access-Control-Allow-Credentials", "true");
+    return response;
   } catch (e) {
     return serverError(e);
   }
@@ -33,7 +44,11 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const parsed = bookingSchema.safeParse(body);
-    if (!parsed.success) return badRequest(parsed.error.errors[0].message);
+    
+    if (!parsed.success) {
+      return badRequest(parsed.error.errors[0].message);
+    }
+    
     const d = parsed.data;
     const booking = await prisma.musicBooking.create({
       data: {
@@ -52,12 +67,9 @@ export async function POST(req: NextRequest) {
         totalAmount: d.totalAmount,
       },
     });
+    
     return created(booking);
   } catch (e) {
     return serverError(e);
   }
 }
-
-
-
-

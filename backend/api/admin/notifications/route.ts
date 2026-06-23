@@ -2,14 +2,14 @@ import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, serverError } from "@/lib/api-response";
 
-// GET â€” Toutes les notifications admin (non lues en premier)
+// GET — Toutes les notifications admin (non lues en premier)
 export async function GET() {
   try {
     const notifications = await prisma.notification.findMany({
       orderBy: [{ isRead: "asc" }, { createdAt: "desc" }],
       take: 50,
       include: {
-        // âœ… CORRIGÃ‰ : Utilisation des noms de relations exacts dÃ©finis dans le schÃ©ma Prisma
+        // ✅ CORRIGÉ : Utilisation des noms de relations exacts définis dans le schéma Prisma
         studio_bookings: { select: { clientFirstName: true, clientLastName: true } },
         event_requests: { select: { clientFirstName: true, clientLastName: true } },
         excursion_bookings: { select: { clientFirstName: true, clientLastName: true } },
@@ -24,13 +24,12 @@ export async function GET() {
   }
 }
 
-// PATCH â€” Marquer tout comme lu
+// PATCH — Marquer tout comme lu
 export async function PATCH() {
   try {
     await prisma.notification.updateMany({ where: { isRead: false }, data: { isRead: true } });
-    return ok({ message: "Tout marquÃ© comme lu" });
+    return ok({ message: "Tout marqué comme lu" });
   } catch (e) {
     return serverError(e);
   }
 }
-

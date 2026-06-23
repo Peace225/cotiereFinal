@@ -1,11 +1,13 @@
-import { NextRequest } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { generateReference } from "@/lib/reference";
-import { getSession, requireAdmin } from "@/lib/auth";
-import { created, ok, serverError, forbidden } from "@/lib/api-response";
-import { sendStudioBookingConfirmation, sendStudioBookingAdminNotif } from "@/lib/email";
+import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
+import { generateReference } from '@/lib/reference';
+import { getSession, requireAdmin } from '@/lib/auth';
+import { created, ok, serverError, forbidden } from '@/lib/api-response';
+import { sendStudioBookingConfirmation, sendStudioBookingAdminNotif } from '@/lib/email';
 
-// POST /api/studio/bookings â€” CrÃ©er une rÃ©servation
+export const dynamic = 'force-dynamic';
+
+// POST /api/studio/bookings — Créer une réservation
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -21,13 +23,16 @@ export async function POST(req: NextRequest) {
       livraison: [10000, 20000],
     };
 
-    const eventDate = body.eventDate? new Date(body.eventDate) : new Date();
+    const eventDate = body.eventDate ? new Date(body.eventDate) : new Date();
     const services = body.services || [];
 
     let minTotal = 0, maxTotal = 0;
     for (const svc of services) {
       const range = priceMap[svc];
-      if (range) { minTotal += range[0]; maxTotal += range[1]; }
+      if (range) {
+        minTotal += range[0];
+        maxTotal += range[1];
+      }
     }
 
     const bookingData: any = {
@@ -41,8 +46,8 @@ export async function POST(req: NextRequest) {
       description: body.description,
       estimatedPriceMin: minTotal,
       estimatedPriceMax: maxTotal,
-      attachments: body.attachments?? [],
-     ...(session?.user && { userId: (session.user as { id: string }).id }),
+      attachments: body.attachments ?? [],
+      ...(session?.user && { userId: (session.user as { id: string }).id }),
     };
 
     const booking = await prisma.studioBooking.create({
@@ -60,16 +65,21 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET /api/studio/bookings â€” Liste (admin uniquement)
+// GET /api/studio/bookings — Liste (admin uniquement)
 export async function GET(req: NextRequest) {
-  try { await requireAdmin(); } catch { return forbidden(); }
+  try {
+    await requireAdmin(); 
+  } catch (e) {
+    return forbidden();
+  }
+  
   try {
     const { searchParams } = new URL(req.url);
     const status = searchParams.get("status");
-    const page = parseInt(searchParams.get("page")?? "1");
-    const limit = parseInt(searchParams.get("limit")?? "500");
+    const page = parseInt(searchParams.get("page") ?? "1");
+    const limit = parseInt(searchParams.get("limit") ?? "500");
 
-    const where = status? { status: status as any } : {};
+    const where = status ? { status: status as any } : {};
 
     const [bookings, total] = await Promise.all([
       prisma.studioBooking.findMany({
@@ -81,9 +91,14 @@ export async function GET(req: NextRequest) {
       prisma.studioBooking.count({ where }),
     ]);
 
-    return ok({ bookings, total, page, limit });
+    // Renvoi propre des données avec gestion des cookies pour le front
+    const response = NextResponse.json({ bookings, total, page, limit });
+    
+    // Assure-toi que les credentials/cookies sont bien passés à l'appelant
+    response.headers.set('Access-Control-Allow-Credentials', 'true');
+    return response;
+    
   } catch (e) {
     return serverError(e);
   }
 }
-

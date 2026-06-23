@@ -4,14 +4,14 @@ import { prisma } from "@/lib/prisma";
 // =======================================================================
 // 1. IMPORTS DES SECTIONS COMPOSABLES
 // =======================================================================
-import HeroSection from "../frontend/components/home/HeroSection";
-import ResultatsRecherche from "../frontend/components/ResultatsRecherche";
-import ServicesGridPremium from "../frontend/components/home/ServicesGrid"; 
-import SectionGrid from "../frontend/components/home/SectionGrid"; 
-import DestinationsGrid from "../frontend/components/home/DestinationsGrid";
-import RestaurantCard from "../frontend/components/home/RestaurantCard";
-import StudioCard from "../frontend/components/home/StudioCard";
-import ActivitiesSection from "../frontend/components/home/ActivitiesSection";
+import HeroSection from "../app/(frontend)/home/HeroSection";
+import ResultatsRecherche from "../app/(frontend)/home/ResultatsRecherche";
+import ServicesGridPremium from "../app/(frontend)/home/ServicesGrid"; 
+import SectionGrid from "../app/(frontend)/home/SectionGrid"; 
+import DestinationsGrid from "../app/(frontend)/home/DestinationsGrid";
+import RestaurantCard from "../app/(frontend)/home/RestaurantCard";
+import StudioCard from "../app/(frontend)/home/StudioCard";
+import ActivitiesSection from "../app/(frontend)/home/ActivitiesSection";
 
 export default async function Home() {
   let enVogue: any[] = [];
