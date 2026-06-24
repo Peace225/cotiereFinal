@@ -11,19 +11,14 @@ export async function POST(req: NextRequest) {
 
     const user = await prisma.user.findUnique({ where: { email } });
     // On retourne toujours ok pour ne pas révéler si l'email existe
-    if (!user) {
-      return ok({ message: "Si cet email existe, un lien de réinitialisation a été envoyé." });
-    }
+    if (!user) return ok({ message: "Si cet email existe, un lien de réinitialisation a été envoyé." });
 
     const token = crypto.randomBytes(32).toString("hex");
     const expiry = new Date(Date.now() + 3600000); // 1h
 
     await prisma.user.update({
       where: { email },
-      data: { 
-        resetToken: token, 
-        resetExpiry: expiry  // ← champ Prisma correct
-      },
+      data: { resetToken: token, resetExpiry: expiry },
     });
 
     // Envoi de l'email de reset
