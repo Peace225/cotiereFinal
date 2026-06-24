@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+﻿import { NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { ok, badRequest, serverError } from "@/lib/api-response";
 import crypto from "crypto";
@@ -10,24 +10,22 @@ export async function POST(req: NextRequest) {
     if (!email) return badRequest("Email requis");
 
     const user = await prisma.user.findUnique({ where: { email } });
-    // On retourne toujours ok pour ne pas rÃ©vÃ©ler si l'email existe
-    if (!user) return ok({ message: "Si cet email existe, un lien de rÃ©initialisation a Ã©tÃ© envoyÃ©." });
+    // On retourne toujours ok pour ne pas révéler si l'email existe
+    if (!user) return ok({ message: "Si cet email existe, un lien de réinitialisation a été envoyé." });
 
     const token = crypto.randomBytes(32).toString("hex");
     const expiry = new Date(Date.now() + 3600000); // 1h
 
     await prisma.user.update({
       where: { email },
-      data: { resetToken: token, resetTokenExpiry: expiry },
+      data: { resetToken: token, resetExpiry: expiry },
     });
 
     // Envoi de l'email de reset
     await sendResetPasswordEmail(email, token);
 
-    return ok({ message: "Si cet email existe, un lien de rÃ©initialisation a Ã©tÃ© envoyÃ©." });
+    return ok({ message: "Si cet email existe, un lien de réinitialisation a été envoyé." });
   } catch (e) {
     return serverError(e);
   }
 }
-
-
