@@ -53,7 +53,8 @@ export default function Navbar({ session }: { session?: any }) {
         }
       `}} />
 
-      <nav className="bg-[#003b95] text-white w-full z-50 shadow-xl transition-all duration-300 relative">
+      {/* 🌟 C'est ici que la magie opère : ajout de 'sticky top-0' à la place de 'relative' */}
+      <nav className="bg-[#003b95] text-white w-full z-50 shadow-xl transition-all duration-300 sticky top-0">
         
         {/* ================= TOP HEADER (Devise, Drapeau, Authentification & Panier) ================= */}
         <div className="bg-[#002e7a]/50 border-b border-white/5 py-2">
