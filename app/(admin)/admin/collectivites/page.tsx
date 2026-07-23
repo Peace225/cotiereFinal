@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import AdminNavbar from "@/components/admin/AdminNavbar";
 import ExportButton from "@/components/admin/ExportButton";
-import ImageUploader from "@/components/admin/ImageUploader";
+import ImageUploader from "@/components/ui/ImageUploader";
 
 // --- Types ---
 
