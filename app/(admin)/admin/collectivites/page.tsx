@@ -228,6 +228,7 @@ export default function AdminCollectivitesPage() {
   });
 
   const filtered = filter === "ALL" ? requests : requests.filter(r => r.status === filter);
+  
   const exportData = filtered.map(r => ({
     reference: r.reference,
     client: `${r.clientFirstName} ${r.clientLastName}`,
@@ -236,6 +237,7 @@ export default function AdminCollectivitesPage() {
     date: new Date(r.createdAt).toLocaleDateString("fr-FR"),
     statut: STATUS_LABELS[r.status] ?? r.status,
   }));
+  
   const exportColumns = [
     { key: "reference", label: "Référence" },
     { key: "client", label: "Client" },
@@ -254,6 +256,7 @@ export default function AdminCollectivitesPage() {
     email: c.email ?? "",
     adresse: c.adresse ?? "",
   }));
+  
   const exportAnnuaireColumns = [
     { key: "nom", label: "Nom" },
     { key: "type", label: "Type" },
@@ -658,80 +661,81 @@ export default function AdminCollectivitesPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-gray-500 mb-1">Image (URL ou Upload)</label>
-                  <input type="text" value={form.image} onChange={e => setForm({ ...form, image: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] mb-2" placeholder="https://..." />
-                  <ImageUploader onUploadComplete={(url) => setForm({ ...form, image: url })} />
+                  <input type="text" value={form.image} onChange={e => setForm({ ...form, image: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] mb-3" placeholder="https://..." />
+                  {/* Intégration optionnelle du ImageUploader importé */}
+                  <ImageUploader onUpload={(url: string) => setForm({ ...form, image: url })} />
                 </div>
-                <div className="flex justify-end gap-2 pt-2">
-                  <button onClick={() => setShowModal(false)} className="px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 font-semibold">Annuler</button>
-                  <button onClick={saveService} className="px-4 py-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white rounded-lg text-sm font-bold shadow-md">Enregistrer</button>
-                </div>
+              </div>
+              <div className="mt-6 flex justify-end gap-3">
+                <button onClick={() => setShowModal(false)} className="px-4 py-2 text-sm font-semibold text-gray-500 hover:text-gray-700">Annuler</button>
+                <button onClick={saveService} className="flex items-center gap-2 bg-[#0c4a6e] hover:bg-[#08334c] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                  <CheckCircle size={16} /> Enregistrer
+                </button>
               </div>
             </div>
           </div>
         )}
 
-        {/* Modal Ajout/Modification Contact Annuaire */}
+        {/* Modal Ajout/Edit Annuaire */}
         {showAnnuaireModal && (
           <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl max-h-[90vh] overflow-y-auto">
               <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-bold text-[#0c4a6e]">{editingContact ? "Modifier le contact" : "Ajouter un contact"}</h3>
+                <h3 className="text-lg font-bold text-[#0c4a6e]">
+                  {editingContact ? "Modifier le contact" : "Ajouter un contact"}
+                </h3>
                 <button onClick={() => setShowAnnuaireModal(false)}><X size={20} className="text-gray-400" /></button>
               </div>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1">Nom de l&apos;institution / service</label>
-                  <input type="text" value={annuaireForm.nom} onChange={e => setAnnuaireForm({ ...annuaireForm, nom: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Mairie de Cocody" />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1">Type</label>
-                    <select value={annuaireForm.type} onChange={e => setAnnuaireForm({ ...annuaireForm, type: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
-                      <option value="mairie">Mairie</option>
-                      <option value="conseil">Conseil</option>
-                      <option value="service">Service public</option>
-                      <option value="prefecture">Préfecture</option>
-                      <option value="sous_prefecture">Sous-préfecture</option>
-                      <option value="autre">Autre</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1">Ville</label>
-                    <input type="text" value={annuaireForm.ville} onChange={e => setAnnuaireForm({ ...annuaireForm, ville: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Abidjan" />
-                  </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Nom *</label>
+                  <input type="text" value={annuaireForm.nom} onChange={e => setAnnuaireForm({ ...annuaireForm, nom: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" required />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1">Région / District</label>
-                  <input type="text" value={annuaireForm.region} onChange={e => setAnnuaireForm({ ...annuaireForm, region: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: District Autonome d'Abidjan" />
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1">Téléphone</label>
-                    <input type="text" value={annuaireForm.telephone} onChange={e => setAnnuaireForm({ ...annuaireForm, telephone: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="+225..." />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1">Email</label>
-                    <input type="email" value={annuaireForm.email} onChange={e => setAnnuaireForm({ ...annuaireForm, email: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="contact@..." />
-                  </div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Type *</label>
+                  <select value={annuaireForm.type} onChange={e => setAnnuaireForm({ ...annuaireForm, type: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]">
+                    <option value="mairie">Mairie</option>
+                    <option value="conseil">Conseil</option>
+                    <option value="service">Service public</option>
+                    <option value="prefecture">Préfecture</option>
+                    <option value="sous_prefecture">Sous-préfecture</option>
+                    <option value="autre">Autre</option>
+                  </select>
                 </div>
                 <div>
-                  <label className="block text-xs font-bold text-gray-500 mb-1">Adresse physique</label>
-                  <input type="text" value={annuaireForm.adresse} onChange={e => setAnnuaireForm({ ...annuaireForm, adresse: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Boulevard de la République" />
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Ville *</label>
+                  <input type="text" value={annuaireForm.ville} onChange={e => setAnnuaireForm({ ...annuaireForm, ville: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" required />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1">Site web</label>
-                    <input type="text" value={annuaireForm.siteWeb} onChange={e => setAnnuaireForm({ ...annuaireForm, siteWeb: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="https://..." />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold text-gray-500 mb-1">Horaires</label>
-                    <input type="text" value={annuaireForm.horaires} onChange={e => setAnnuaireForm({ ...annuaireForm, horaires: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Lun-Ven 7h30-16h30" />
-                  </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Région</label>
+                  <input type="text" value={annuaireForm.region} onChange={e => setAnnuaireForm({ ...annuaireForm, region: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
                 </div>
-                <div className="flex justify-end gap-2 pt-2">
-                  <button onClick={() => setShowAnnuaireModal(false)} className="px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 font-semibold">Annuler</button>
-                  <button onClick={saveContact} className="px-4 py-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white rounded-lg text-sm font-bold shadow-md">Enregistrer</button>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Téléphone</label>
+                  <input type="text" value={annuaireForm.telephone} onChange={e => setAnnuaireForm({ ...annuaireForm, telephone: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
                 </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Email</label>
+                  <input type="email" value={annuaireForm.email} onChange={e => setAnnuaireForm({ ...annuaireForm, email: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Horaires</label>
+                  <input type="text" value={annuaireForm.horaires} onChange={e => setAnnuaireForm({ ...annuaireForm, horaires: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Lun-Ven 08h-16h" />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Adresse</label>
+                  <input type="text" value={annuaireForm.adresse} onChange={e => setAnnuaireForm({ ...annuaireForm, adresse: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Site Web</label>
+                  <input type="text" value={annuaireForm.siteWeb} onChange={e => setAnnuaireForm({ ...annuaireForm, siteWeb: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="https://..." />
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end gap-3">
+                <button onClick={() => setShowAnnuaireModal(false)} className="px-4 py-2 text-sm font-semibold text-gray-500 hover:text-gray-700">Annuler</button>
+                <button onClick={saveContact} className="flex items-center gap-2 bg-[#0c4a6e] hover:bg-[#08334c] text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors">
+                  <CheckCircle size={16} /> Enregistrer
+                </button>
               </div>
             </div>
           </div>
