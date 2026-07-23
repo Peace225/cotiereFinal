@@ -1,33 +1,99 @@
 "use client";
+
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { MapPin, ChevronDown, Heart, Check, Star, Info, X, ChevronRight, Loader2 } from "lucide-react";
+
+// 🌊 DONNÉES DE DÉMONSTRATION : Hôtels du littoral (Fallback si l'API Supabase ne répond pas)
+const HOTELS_LITTORAL = [
+  {
+    id: "1",
+    titre: "Coucoué Lodge",
+    type: "Hôtel",
+    destination: "Assinie-Mafia",
+    description: "Situé au bord de la lagune et à deux pas de la mer, profitez d'un cadre idyllique avec piscine et restaurant gastronomique.",
+    prix: 85000,
+    rating: 8.8,
+    image: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80"
+  },
+  {
+    id: "2",
+    titre: "La Nouvelle Paillote",
+    type: "Hôtel",
+    destination: "Grand-Bassam",
+    description: "Hôtel historique de Grand-Bassam offrant une vue imprenable sur l'océan Atlantique et un accès direct à la plage.",
+    prix: 45000,
+    rating: 7.9,
+    image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80"
+  },
+  {
+    id: "3",
+    titre: "Deggo Espace",
+    type: "Hôtel",
+    destination: "San Pedro",
+    description: "Complexe hôtelier moderne avec vue sur la mer, idéal pour les voyages d'affaires ou de détente dans le sud-ouest.",
+    prix: 60000,
+    rating: 8.2,
+    image: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80"
+  },
+  {
+    id: "4",
+    titre: "Résidence Les Marines",
+    type: "Résidence",
+    destination: "Assinie-Mafia",
+    description: "Superbe résidence privée en bord de lagune. Entièrement équipée pour les séjours en famille ou entre amis.",
+    prix: 120000,
+    rating: 9.1,
+    image: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=600&q=80"
+  },
+  {
+    id: "5",
+    titre: "Hôtel Le Marlin Bleu",
+    type: "Hôtel",
+    destination: "San Pedro",
+    description: "Le repaire parfait pour les amateurs de pêche sportive et de tranquillité. Chambres climatisées avec vue mer.",
+    prix: 55000,
+    rating: 8.5,
+    image: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=600&q=80"
+  },
+  {
+    id: "6",
+    titre: "Espace Madou",
+    type: "Hôtel",
+    destination: "Jacqueville",
+    description: "Un cadre paisible et reposant les pieds dans l'eau, idéal pour s'évader du bruit d'Abidjan.",
+    prix: 35000,
+    rating: 7.5,
+    image: "https://images.unsplash.com/photo-1542314831-c6a4d1400810?w=600&q=80"
+  }
+];
 
 function ResultatsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
   const [data, setData] = useState<any[]>([]);
-  // 🚀 NOUVEAU : Deux états de loading distincts
-  const [isFirstLoad, setIsFirstLoad] = useState(true); // Pour le tout premier affichage
-  const [isFetching, setIsFetching] = useState(false);  // Pour les clics sur les filtres
-  
-  // Gestion des URL
-  const initialType = searchParams.get("type") || "Tous";
-  let normalizedType = "Tous";
-  if (initialType.toLowerCase() === "hotel") normalizedType = "Hôtel";
-  else if (initialType.toLowerCase() === "residence") normalizedType = "Résidence";
-  else if (initialType.toLowerCase() === "evenement") normalizedType = "Événement";
-  else if (initialType !== "Tous") normalizedType = initialType.charAt(0).toUpperCase() + initialType.slice(1);
-  
-  const [categorieActive, setCategorieActive] = useState(normalizedType);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const [isFetching, setIsFetching] = useState(false);
 
+  const initialType = searchParams.get("type") || "Tous";
+  
+  const normalizeType = (t: string) => {
+    const low = t.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    if (low.includes("hotel")) return "Hôtel";
+    if (low.includes("residence")) return "Résidence";
+    if (low.includes("villa")) return "Villa";
+    if (low.includes("restaurant")) return "Restaurant";
+    if (low.includes("complexe")) return "Complexe hôtelier";
+    return "Tous";
+  };
+
+  const [categorieActive, setCategorieActive] = useState(normalizeType(initialType));
   const dest = searchParams.get("dest") || "";
   const displayDest = dest || "La Côtière";
   const adults = searchParams.get("adults") || "2";
 
-  // Filtres statiques de démonstration
   const villesFiltres = [
     { nom: "Assinie-Mafia", count: 24 },
     { nom: "San Pedro", count: 18 },
@@ -39,61 +105,86 @@ function ResultatsContent() {
 
   const typeFiltres = [
     { nom: "Hôtel", count: 65 },
-    { nom: "Résidence", count: 119 }, // Modifié pour correspondre à ta DB
-    { nom: "Complexe hôtelier", count: 1 },
-    { nom: "Villa", count: 14 }
-  ];
-
-  const popFiltres = [
-    { nom: "Hôtel", count: 65 },
     { nom: "Résidence", count: 119 },
-    { nom: "Pas de prépaiement", count: 49 },
-    { nom: "Piscine", count: 39 }
+    { nom: "Villa", count: 14 },
+    { nom: "Restaurant", count: 22 },
+    { nom: "Complexe hôtelier", count: 1 }
   ];
 
-  // 🚀 NOUVEAU : Fonction unique pour mettre à jour TOUS les paramètres d'un coup de manière fluide
   const updateFiltersInUrl = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
-    if (value === null) {
+    if (!value) {
       params.delete(key);
-      if (key === "type") params.delete("categorie"); // Nettoyage de l'ancien format
+      if (key === "type") params.delete("categorie");
     } else {
       params.set(key, value);
     }
-    router.push(`/recherche?${params.toString()}`, { scroll: false }); // scroll: false évite que la page remonte d'un coup
+    router.push(`/recherche?${params.toString()}`, { scroll: false });
   };
 
-  const handleCityChange = (cityName: string) => {
-    const isChecked = dest.toLowerCase() === cityName.toLowerCase();
-    updateFiltersInUrl("dest", isChecked ? null : cityName);
+  const handleCityChange = (city: string) => {
+    const isChecked = dest.toLowerCase() === city.toLowerCase();
+    updateFiltersInUrl("dest", isChecked ? null : city);
   };
 
-  const handleCategoryChange = (catName: string) => {
-    const isChecked = categorieActive === catName;
-    const newValue = isChecked ? "Tous" : catName;
+  const handleCategoryChange = (cat: string) => {
+    const newValue = categorieActive === cat ? "Tous" : cat;
     setCategorieActive(newValue);
-    updateFiltersInUrl("type", newValue === "Tous" ? null : newValue.toLowerCase());
+    const apiValue = newValue === "Tous" ? null : newValue.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/ /g, "-");
+    updateFiltersInUrl("type", apiValue);
   };
 
-  // 🚀 NOUVEAU : Fetch optimisé
+  useEffect(() => { 
+    setCategorieActive(normalizeType(initialType)); 
+  }, [initialType]);
+
+  // Récupération des données dynamiques (Supabase) avec fallback sécurisé sur HOTELS_LITTORAL
   useEffect(() => {
     const fetchData = async () => {
-      setIsFetching(true); // Active l'effet visuel de transparence (ne vide pas l'écran)
+      setIsFetching(true);
+      let apiHasData = false;
+
       try {
         const res = await fetch(`/api/recherche?${searchParams.toString()}`);
-        const json = await res.json();
-        setData(json.data || json || []); 
+        if (res.ok) {
+          const json = await res.json();
+          const resultData = json.data || json || [];
+          if (resultData.length > 0) {
+            setData(resultData);
+            apiHasData = true;
+          }
+        }
       } catch (err) {
-        console.error("Erreur recherche:", err);
-      } finally {
-        setIsFetching(false);
-        setIsFirstLoad(false); // Le premier chargement est terminé pour de bon
+        console.warn("L'API n'a pas répondu, utilisation des données de secours.");
       }
+
+      if (!apiHasData) {
+        let filteredMock = HOTELS_LITTORAL;
+        
+        const currentType = searchParams.get("type");
+        if (currentType && currentType.toLowerCase() !== "tous") {
+          filteredMock = filteredMock.filter(h => 
+            h.type.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(
+              currentType.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/-/g, " ")
+            )
+          );
+        }
+
+        const currentDest = searchParams.get("dest");
+        if (currentDest) {
+          filteredMock = filteredMock.filter(h => h.destination.toLowerCase() === currentDest.toLowerCase());
+        }
+
+        setData(filteredMock);
+      }
+
+      setIsFetching(false);
+      setIsFirstLoad(false);
     };
+
     fetchData();
   }, [searchParams]);
 
-  // Si c'est le tout premier chargement de la page, on affiche le grand spinner
   if (isFirstLoad) return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4 bg-white">
       <div className="w-10 h-10 border-4 border-[#0071c2]/20 border-t-[#0071c2] rounded-full animate-spin" />
@@ -207,7 +298,6 @@ function ResultatsContent() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
             <h1 className="!text-[20px] md:!text-[22px] font-bold text-slate-900 flex items-center gap-3">
               {displayDest} : {data.length} établissements trouvés
-              {/* Petit loader discret quand on clique sur un filtre */}
               {isFetching && <Loader2 className="animate-spin text-[#0071c2]" size={20} />}
             </h1>
             <div className="flex items-center gap-2">
@@ -241,7 +331,6 @@ function ResultatsContent() {
             </div>
           </div>
           
-          {/* 🚀 L'EFFET DE FLUIDITÉ EST ICI : transition-opacity et pointer-events */}
           <div className={`flex flex-col gap-3 transition-opacity duration-300 ease-in-out ${isFetching ? 'opacity-50 pointer-events-none' : 'opacity-100'}`}>
             {data.length === 0 && !isFetching ? (
                <div className="bg-white border border-[#c6c6c6] rounded p-8 text-center mt-4 shadow-sm">
@@ -252,91 +341,101 @@ function ResultatsContent() {
                   </button>
                </div>
             ) : (
-              data.map((item) => (
-                <div key={item.id} className="bg-white border border-[#c6c6c6] rounded-lg p-3.5 flex flex-col sm:flex-row gap-4 hover:bg-[#f8f8f8] transition-colors relative">
-                  
-                  <button className="absolute top-3 right-3 sm:top-3 sm:left-[165px] z-10 w-8 h-8 flex items-center justify-center bg-white rounded-full text-slate-400 hover:text-red-500 shadow-sm border border-transparent hover:border-gray-200 shrink-0 transition-transform hover:scale-110">
-                    <Heart size={16} />
-                  </button>
+              data.map((item) => {
+                const itemTitle = item.titre || item.title || "Établissement sans nom";
+                const itemDest = item.destination || item.city || displayDest;
+                const itemType = item.type || "Hôtel";
+                const itemDesc = item.description || "Aucune description fournie.";
+                const itemRating = item.rating || 8.0;
+                const itemPrix = item.prix || item.price;
+                const itemImg = Array.isArray(item.images) ? item.images[0] : (item.image?.url || item.image || "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80");
 
-                  <div className="w-full sm:w-[200px] h-[200px] rounded overflow-hidden shrink-0 bg-slate-100">
-                    <img 
-                      src={item.image?.url || item.image || "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80"} 
-                      alt={item.titre} 
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
-                    />
-                  </div>
-
-                  <div className="flex-1 flex flex-col pt-0.5">
-                    <div className="flex items-start gap-2">
-                      <h3 className="!text-[15px] md:!text-[18px] font-bold text-[#0071c2] leading-tight hover:text-[#005999] cursor-pointer">
-                        {item.titre}
-                      </h3>
-                      <div className="flex gap-0.5 text-[#febb02] mt-1">
-                        <Star size={10} fill="currentColor" /><Star size={10} fill="currentColor" /><Star size={10} fill="currentColor" />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-1.5 mt-1 mb-3">
-                      <span className="text-[#0071c2] text-[11px] underline cursor-pointer hover:text-[#005999]">
-                        {item.destination || displayDest}
-                      </span>
-                      <span className="text-[#0071c2] text-[11px] underline cursor-pointer hover:text-[#005999]">Indiquer sur la carte</span>
-                      <span className="text-[11px] text-slate-600 ml-1">À proximité de la plage</span>
-                    </div>
+                return (
+                  <div key={item.id} className="bg-white border border-[#c6c6c6] rounded-lg p-3.5 flex flex-col sm:flex-row gap-4 hover:bg-[#f8f8f8] transition-colors relative shadow-sm">
                     
-                    <div className="border-l-[3px] border-[#c6c6c6] pl-2.5">
-                      <p className="text-[11px] font-bold text-slate-900 mb-0.5">{item.type}</p>
-                      <p className="text-[10px] text-slate-600 mb-2 line-clamp-2">{item.description || "Aucune description fournie."}</p>
-                      
-                      {item.type === 'Hôtel' && (
-                        <p className="text-sm font-bold text-[#008009] mb-1">Petit-déjeuner compris</p>
-                      )}
-                      
-                      <div className="flex items-start gap-1.5 text-[11px] font-bold text-[#008009]">
-                        <Check size={14} className="shrink-0 mt-[1px]" /> Annulation gratuite
-                      </div>
-                      <div className="flex items-start gap-1.5 text-[11px] font-bold text-[#008009]">
-                        <Check size={14} className="shrink-0 mt-[1px]" /> Aucun prépaiement requis <span className="font-normal text-slate-600">– Payez sur place</span>
-                      </div>
-                    </div>
-                  </div>
+                    <button className="absolute top-3 right-3 sm:top-3 sm:left-[165px] z-10 w-8 h-8 flex items-center justify-center bg-white rounded-full text-slate-400 hover:text-red-500 shadow-sm border border-transparent hover:border-gray-200 shrink-0 transition-transform hover:scale-110">
+                      <Heart size={16} />
+                    </button>
 
-                  <div className="flex flex-col justify-between items-end min-w-[140px] text-right border-t sm:border-t-0 sm:border-l border-[#e7e7e7] pt-3 sm:pt-0 sm:pl-3 mt-3 sm:mt-0">
-                    
-                    <div className="flex gap-2">
-                      <div className="flex flex-col items-end pt-0.5">
-                        <span className="font-bold text-slate-900 text-[14px] leading-tight">
-                          {item.rating >= 9 ? "Superbe" : item.rating >= 8 ? "Très bien" : "Bien"}
+                    <div className="w-full sm:w-[200px] h-[200px] rounded overflow-hidden shrink-0 bg-slate-100">
+                      <img 
+                        src={itemImg} 
+                        alt={itemTitle} 
+                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" 
+                      />
+                    </div>
+
+                    <div className="flex-1 flex flex-col pt-0.5">
+                      <div className="flex items-start gap-2">
+                        <h3 className="!text-[15px] md:!text-[18px] font-bold text-[#0071c2] leading-tight hover:text-[#005999] cursor-pointer">
+                          {itemTitle}
+                        </h3>
+                        <div className="flex gap-0.5 text-[#febb02] mt-1">
+                          <Star size={10} fill="currentColor" /><Star size={10} fill="currentColor" /><Star size={10} fill="currentColor" />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 mt-1 mb-3">
+                        <span className="text-[#0071c2] text-[11px] underline cursor-pointer hover:text-[#005999]">
+                          {itemDest}
                         </span>
-                        <span className="text-slate-500 text-[10px]">Expériences vécues</span>
+                        <span className="text-[#0071c2] text-[11px] underline cursor-pointer hover:text-[#005999]">Indiquer sur la carte</span>
+                        <span className="text-[11px] text-slate-600 ml-1">À proximité de la plage</span>
                       </div>
-                      <div className="bg-[#003b95] text-white font-bold px-1.5 py-1.5 rounded-t rounded-br text-[13px] flex items-center justify-center min-w-[28px] h-[28px]">
-                        {item.rating?.toString().replace('.', ',') || "8,0"}
+                      
+                      <div className="border-l-[3px] border-[#c6c6c6] pl-2.5">
+                        <p className="text-[11px] font-bold text-slate-900 mb-0.5">{itemType}</p>
+                        <p className="text-[10px] text-slate-600 mb-2 line-clamp-2">{itemDesc}</p>
+                        
+                        {itemType === 'Hôtel' && (
+                          <p className="text-sm font-bold text-[#008009] mb-1">Petit-déjeuner compris</p>
+                        )}
+                        
+                        <div className="flex items-start gap-1.5 text-[11px] font-bold text-[#008009]">
+                          <Check size={14} className="shrink-0 mt-[1px]" /> Annulation gratuite
+                        </div>
+                        <div className="flex items-start gap-1.5 text-[11px] font-bold text-[#008009]">
+                          <Check size={14} className="shrink-0 mt-[1px]" /> Aucun prépaiement requis <span className="font-normal text-slate-600">– Payez sur place</span>
+                        </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col items-end w-full mt-4">
-                      <span className="text-[11px] text-slate-500 mb-0.5">1 nuit, {adults} adultes</span>
-                      <span className="text-[16px] font-bold text-slate-900 leading-none mb-1">
-                        {item.prix ? `XOF ${item.prix.toLocaleString('fr-FR')}` : "Sur devis"}
-                      </span>
-                      {item.prix && (
-                        <span className="text-[10px] text-slate-500 mb-3">+ taxes et frais</span>
-                      )}
+                    <div className="flex flex-col justify-between items-end min-w-[140px] text-right border-t sm:border-t-0 sm:border-l border-[#e7e7e7] pt-3 sm:pt-0 sm:pl-3 mt-3 sm:mt-0">
                       
-                      <Link 
-                          href={`/services/${(item.type || 'hotel').toLowerCase()}/${item.id}`}
-                          className="bg-[#0071c2] hover:bg-[#005999] text-white font-bold py-2 px-4 rounded text-[13px] w-full text-center flex items-center justify-between"
-                        >
-                          Voir les disponibilités <ChevronRight size={14} />
-                      </Link>
+                      <div className="flex gap-2">
+                        <div className="flex flex-col items-end pt-0.5">
+                          <span className="font-bold text-slate-900 text-[14px] leading-tight">
+                            {itemRating >= 9 ? "Superbe" : itemRating >= 8 ? "Très bien" : "Bien"}
+                          </span>
+                          <span className="text-slate-500 text-[10px]">Expériences vécues</span>
+                        </div>
+                        <div className="bg-[#003b95] text-white font-bold px-1.5 py-1.5 rounded-t rounded-br text-[13px] flex items-center justify-center min-w-[28px] h-[28px]">
+                          {itemRating.toString().replace('.', ',')}
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col items-end w-full mt-4">
+                        <span className="text-[11px] text-slate-500 mb-0.5">1 nuit, {adults} adultes</span>
+                        <span className="text-[16px] font-bold text-slate-900 leading-none mb-1">
+                          {itemPrix ? `XOF ${Number(itemPrix).toLocaleString('fr-FR')}` : "Sur devis"}
+                        </span>
+                        {itemPrix && (
+                          <span className="text-[10px] text-slate-500 mb-3">+ taxes et frais</span>
+                        )}
+                        
+                        <Link 
+                            href={`/services/${itemType.toLowerCase()}/${item.id}`}
+                            className="bg-[#0071c2] hover:bg-[#005999] text-white font-bold py-2 px-4 rounded text-[13px] w-full text-center flex items-center justify-between"
+                          >
+                            Voir les disponibilités <ChevronRight size={14} />
+                        </Link>
+                      </div>
+
                     </div>
 
                   </div>
-
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </main>

@@ -1,172 +1,196 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Camera, Compass, Building2, Music, Users,
-  TrendingUp, LogOut, BarChart2, ListChecks,
-  CalendarOff, CreditCard, ShoppingBag, Star, Package,
-  FileText, Tv, Briefcase, Menu, X, CalendarDays, MapPin,
+  Camera, TrendingUp, LogOut, ListChecks,
+  ShoppingBag, Briefcase, Menu, X, CalendarDays,
+  LayoutGrid, UtensilsCrossed, Bus, Building2,
 } from "lucide-react";
 import NotificationBell from "@/components/admin/NotificationBell";
 
 const NAV_LINKS = [
   { label: "Vue d'ensemble", href: "/admin/dashboard", icon: TrendingUp },
-  { label: "CÔTIÈRE Studio", href: "/admin/studio", icon: Camera },
-  { label: "Guichet Unique", href: "/admin/location", icon: Package },
-  { label: "Tourisme & Véhicules", href: "/admin/excursions", icon: Compass },
-  { label: "CÔTIÈRE Hébergement", href: "/admin/hebergement", icon: Building2 },
+  { label: "Accueil - Hôtels & Résidences", href: "/admin/categories", icon: LayoutGrid },
+  { label: "Restaurants & Gastronomie", href: "/admin/restaurants", icon: UtensilsCrossed },
+  { label: "Côtière Transport", href: "/admin/transport", icon: Bus },
+  { label: "Annuaire Collectivités", href: "/admin/collectivites", icon: Building2 },
+  { label: "HBL Studio+", href: "/admin/studio", icon: Camera },
   { label: "CÔTIÈRE Market", href: "/admin/market", icon: ShoppingBag },
-  { label: "Réservations", href: "/admin/reservations", icon: ListChecks },
-  { label: "CÔTIÈRE Musique", href: "/admin/musique", icon: Music },
-  { label: "Médias & INFO+", href: "/admin/medias", icon: Tv },
-  { label: "Tout Le Monde A Droit À La Pub", href: "/admin/afrouba", icon: FileText },
-  { label: "CÔTIÈRE Collectivités", href: "/admin/collectivites", icon: Building2 },
   { label: "CÔTIÈRE Opportunités", href: "/admin/opportunites", icon: Briefcase },
-  { label: "Contenus par Ville", href: "/admin/villes", icon: MapPin },
   { label: "RDV Événements À Venir", href: "/admin/rdv", icon: CalendarDays },
-  { label: "Calendrier", href: "/admin/calendrier", icon: CalendarOff },
-  { label: "Paiements", href: "/admin/paiements", icon: CreditCard },
-  { label: "Avis", href: "/admin/avis", icon: Star },
-  { label: "Statistiques", href: "/admin/statistiques", icon: BarChart2 },
-  { label: "Clients", href: "/admin/clients", icon: Users },
 ];
 
-export default function AdminNavbar() {
+export default function AdminSidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  // Empêcher le scroll du body quand le menu mobile est ouvert
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+  }, [mobileOpen]);
+
   return (
     <>
-      <nav className="bg-[#0c4a6e] text-white shadow-lg sticky top-0 z-50">
-        {/* Ligne 1 : Logo + infos + actions */}
-        <div className="px-4 py-2 flex items-center justify-between border-b border-white/10">
-          <div className="flex items-center gap-3">
-            <Link href="/admin/dashboard">
-              <img
-                src="/Images/cotiere-media-group.png"
-                alt="COTIERE MEDIA GROUP"
-                className="h-7 w-auto object-contain rounded-lg border-2 border-[#c9a84c] p-0.5"
-              />
-            </Link>
-            <span className="text-white/50 text-xs hidden sm:block font-medium">Administration</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <NotificationBell />
-            <div className="flex items-center gap-1.5 text-xs text-white/60">
-              <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-              <span className="hidden sm:block">En ligne</span>
-            </div>
-            <Link
-              href="/"
-              className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white transition-colors"
-              title="Retour au site"
-            >
-              <LogOut size={14} />
-              <span className="hidden sm:block">Site</span>
-            </Link>
-            {/* Hamburger mobile */}
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-              aria-label="Menu"
-            >
-              {mobileOpen ? <X size={16} /> : <Menu size={16} />}
-            </button>
+      {/* ========================================== */}
+      {/* 1. BARRE SUPÉRIEURE MOBILE UNIQUEMENT      */}
+      {/* ========================================== */}
+      <div className="lg:hidden bg-[#0c4a6e] text-white sticky top-0 z-40 px-4 py-3 flex items-center justify-between border-b border-white/10 shadow-md">
+        <div className="flex items-center gap-3">
+          <Link href="/admin/dashboard" className="group">
+            <img
+              src="/Images/cotiere-media-group.png"
+              alt="COTIERE MEDIA GROUP"
+              className="h-7 w-auto object-contain rounded-lg border border-[#c9a84c]/70 p-0.5 bg-white/5"
+            />
+          </Link>
+          <div className="flex flex-col">
+            <span className="text-white text-xs font-bold">CÔTIÈRE</span>
+            <span className="text-[#c9a84c] text-[9px] uppercase tracking-wider font-semibold">Admin</span>
           </div>
         </div>
 
-        {/* Ligne 2 : Navigation desktop — scroll horizontal */}
-        <div className="hidden lg:block px-2 py-1 overflow-x-auto scrollbar-hide">
-          <div className="flex items-center gap-0.5 min-w-max">
-            {NAV_LINKS.map((l) => {
-              const Icon = l.icon;
-              const isActive = pathname === l.href;
-              return (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  title={l.label}
-                  className={`flex items-center gap-1 px-2 py-1.5 rounded-md text-[11px] font-semibold transition-all whitespace-nowrap ${
-                    isActive
-                      ? "bg-[#c9a84c] text-white"
-                      : "text-white/70 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  <Icon size={12} />
-                  {l.label}
-                </Link>
-              );
-            })}
+        <div className="flex items-center gap-3">
+          <NotificationBell />
+          <button 
+            onClick={() => setMobileOpen(true)} 
+            className="flex items-center justify-center w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 active:scale-95 transition-all text-white"
+            aria-label="Ouvrir le menu"
+          >
+            <Menu size={20} />
+          </button>
+        </div>
+      </div>
+
+      {/* ========================================== */}
+      {/* 2. SIDEBAR FIXE (DESKTOP)                  */}
+      {/* ========================================== */}
+      <aside className="hidden lg:flex flex-col fixed inset-y-0 left-0 w-72 bg-gradient-to-b from-[#0c4a6e] to-[#08334c] text-white shadow-2xl z-45 border-r border-white/10">
+        
+        {/* En-tête de la Sidebar */}
+        <div className="p-6 border-b border-white/10 flex items-center gap-3 bg-black/10">
+          <Link href="/admin/dashboard" className="group">
+            <img
+              src="/Images/cotiere-media-group.png"
+              alt="COTIERE MEDIA GROUP"
+              className="h-9 w-auto object-contain rounded-xl border-2 border-[#c9a84c]/70 group-hover:border-[#c9a84c] transition-colors p-0.5 shadow-sm bg-white/5"
+            />
+          </Link>
+          <div className="flex flex-col">
+            <span className="text-white font-bold tracking-wide text-sm">CÔTIÈRE</span>
+            <span className="text-[#c9a84c] text-[10px] font-semibold uppercase tracking-wider">Administration</span>
           </div>
         </div>
 
-        {/* Ligne 2 mobile : lien actif visible */}
-        <div className="lg:hidden px-4 py-1.5 border-t border-white/10">
-          {(() => {
-            const active = NAV_LINKS.find(l => l.href === pathname);
-            const Icon = active?.icon ?? TrendingUp;
+        {/* Statut & Notifications (Desktop Header interne) */}
+        <div className="px-6 py-3.5 border-b border-white/5 flex items-center justify-between bg-black/5">
+          <div className="flex items-center gap-2">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-green-500"></span>
+            </span>
+            <span className="text-xs font-medium text-white/80">En ligne</span>
+          </div>
+          <NotificationBell />
+        </div>
+
+        {/* Liens de Navigation */}
+        <nav className="flex-1 overflow-y-auto px-4 py-6 space-y-1.5 custom-scrollbar">
+          {NAV_LINKS.map((l) => {
+            const Icon = l.icon;
+            const isActive = pathname === l.href;
             return (
-              <div className="flex items-center gap-2 text-[#c9a84c] text-xs font-semibold">
-                <Icon size={13} />
-                <span>{active?.label ?? "Administration"}</span>
-              </div>
+              <Link 
+                key={l.href} 
+                href={l.href} 
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300 group
+                  ${isActive 
+                    ? "bg-[#c9a84c] text-[#0c4a6e] shadow-lg shadow-[#c9a84c]/25 font-bold" 
+                    : "text-white/75 hover:bg-white/10 hover:text-white hover:translate-x-1"
+                  }`}
+              >
+                <Icon size={18} className={`${isActive ? "text-[#0c4a6e]" : "text-[#c9a84c] group-hover:text-white"} transition-colors`} />
+                <span className="truncate">{l.label}</span>
+              </Link>
             );
-          })()}
-        </div>
-      </nav>
+          })}
+        </nav>
 
-      {/* Drawer mobile */}
+        {/* Pied de Sidebar */}
+        <div className="p-4 border-t border-white/10 bg-black/20">
+          <Link 
+            href="/" 
+            className="flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-white/80 hover:text-white transition-all text-sm font-medium group"
+          >
+            <LogOut size={16} className="text-[#c9a84c] group-hover:-translate-x-1 transition-transform" /> 
+            <span>Site public</span>
+          </Link>
+        </div>
+      </aside>
+
+      {/* ========================================== */}
+      {/* 3. MENU MOBILE DRAWER (GLISSEMENT LATÉRAL) */}
+      {/* ========================================== */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-40" onClick={() => setMobileOpen(false)}>
-          <div className="absolute inset-0 bg-black/50" />
-          <div
-            className="absolute top-0 left-0 h-full w-72 max-w-[85vw] bg-[#0c4a6e] shadow-2xl overflow-y-auto"
+        <div className="lg:hidden fixed inset-0 z-[60] flex">
+          {/* Arrière-plan sombre avec flou */}
+          <div 
+            className="absolute inset-0 bg-[#0c4a6e]/80 backdrop-blur-sm transition-opacity" 
+            onClick={() => setMobileOpen(false)} 
+          />
+          
+          {/* Panneau latéral mobile */}
+          <div 
+            className="relative flex flex-col h-full w-[85%] max-w-sm bg-gradient-to-b from-[#0c4a6e] to-[#08334c] shadow-2xl overflow-hidden ml-auto" 
             onClick={e => e.stopPropagation()}
           >
-            {/* Header drawer */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-white/10">
-              <div className="flex items-center gap-2">
-                <img
-                  src="/Images/cotiere-media-group.png"
-                  alt="COTIERE"
-                  className="h-7 w-auto object-contain rounded-lg border-2 border-[#c9a84c] p-0.5"
-                />
-                <span className="text-white text-sm font-bold">Admin</span>
+            <div className="flex items-center justify-between px-5 py-5 border-b border-white/10 bg-black/10">
+              <div className="flex items-center gap-3">
+                <img src="/Images/cotiere-media-group.png" alt="COTIERE" className="h-8 w-auto object-contain rounded-lg border-2 border-[#c9a84c] p-0.5 bg-white/5" />
+                <span className="text-white text-base font-bold tracking-wide">Menu Admin</span>
               </div>
-              <button onClick={() => setMobileOpen(false)} className="text-white/60 hover:text-white">
-                <X size={18} />
+              <button 
+                onClick={() => setMobileOpen(false)} 
+                className="text-white/70 hover:text-white bg-white/5 hover:bg-white/10 p-2 rounded-full transition-colors"
+                aria-label="Fermer le menu"
+              >
+                <X size={20} />
               </button>
             </div>
-
-            {/* Liens */}
-            <nav className="py-2">
+            
+            <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1.5 custom-scrollbar">
               {NAV_LINKS.map((l) => {
                 const Icon = l.icon;
                 const isActive = pathname === l.href;
                 return (
-                  <Link
-                    key={l.href}
-                    href={l.href}
+                  <Link 
+                    key={l.href} 
+                    href={l.href} 
                     onClick={() => setMobileOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors ${
-                      isActive
-                        ? "bg-[#c9a84c] text-white"
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-300
+                      ${isActive 
+                        ? "bg-[#c9a84c] text-[#0c4a6e] shadow-md shadow-[#c9a84c]/20 font-bold" 
                         : "text-white/75 hover:bg-white/10 hover:text-white"
-                    }`}
+                      }`}
                   >
-                    <Icon size={16} />
-                    {l.label}
+                    <Icon size={18} className={isActive ? "text-[#0c4a6e]" : "text-[#c9a84c]"} />
+                    <span>{l.label}</span>
                   </Link>
                 );
               })}
             </nav>
-
-            {/* Footer drawer */}
-            <div className="px-4 py-4 border-t border-white/10 mt-2">
-              <Link href="/" className="flex items-center gap-2 text-white/60 hover:text-white text-sm transition-colors">
-                <LogOut size={15} />
-                Retour au site
+            
+            <div className="p-4 border-t border-white/10 bg-black/20">
+              <Link 
+                href="/" 
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white transition-all text-sm font-medium"
+              >
+                <LogOut size={18} /> Retour au site public
               </Link>
             </div>
           </div>

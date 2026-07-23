@@ -29,10 +29,10 @@ const STATUS_COLORS: Record<string, string> = {
 };
 const STATUS_LABELS: Record<string, string> = {
   PENDING: "En attente",
-  CONFIRMED: "ConfirmÃ©",
-  REFUSED: "RefusÃ©",
-  CANCELLED: "AnnulÃ©",
-  COMPLETED: "TerminÃ©",
+  CONFIRMED: "Confirmé",
+  REFUSED: "Refusé",
+  CANCELLED: "Annulé",
+  COMPLETED: "Terminé",
 };
 
 const DEFAULT_CATALOGUE_SECTEURS: Secteur[] = [];
@@ -140,11 +140,11 @@ export default function AdminOpportunitesPage() {
           setCatalogueSecteurs(prev => [...prev, data.data]);
         } else {
           const msg = data.error ?? `Erreur ${res.status}`;
-          alert(`Impossible de sauvegarder le secteur : ${msg}\n\nVÃ©rifiez que vous Ãªtes bien connectÃ© en tant qu'admin.`);
+          alert(`Impossible de sauvegarder le secteur : ${msg}\n\nVérifiez que vous êtes bien connecté en tant qu'admin.`);
         }
       }
     } catch {
-      alert("Erreur rÃ©seau lors de la sauvegarde du secteur.");
+      alert("Erreur réseau lors de la sauvegarde du secteur.");
     }
     setSavingForm(false);
     setShowModal(false);
@@ -164,7 +164,7 @@ export default function AdminOpportunitesPage() {
   }
 
   function openEdit(s: Secteur) {
-    // Si l'image est une URL locale (/uploads/...), on la remplace par l'image par dÃ©faut
+    // Si l'image est une URL locale (/uploads/...), on la remplace par l'image par défaut
     const imageUrl = s.image?.startsWith("/uploads/") ? "" : s.image;
     setForm({ nom: s.nom, categorie: s.categorie, couleur: s.couleur, description: s.description, image: imageUrl });
     setEditId(s.id);
@@ -189,9 +189,9 @@ export default function AdminOpportunitesPage() {
   }));
 
   const exportColumns = [
-    { key: "reference", label: "RÃ©fÃ©rence" },
+    { key: "reference", label: "Référence" },
     { key: "client", label: "Client" },
-    { key: "telephone", label: "TÃ©lÃ©phone" },
+    { key: "telephone", label: "Téléphone" },
     { key: "secteur", label: "Secteur/Projet" },
     { key: "date", label: "Date" },
     { key: "statut", label: "Statut" },
@@ -208,7 +208,7 @@ export default function AdminOpportunitesPage() {
             <div className="w-10 h-10 bg-[#0c4a6e] rounded-xl flex items-center justify-center">
               <Briefcase size={20} className="text-[#c9a84c]" />
             </div>
-            <h1 className="text-2xl font-black text-[#0c4a6e]">CÃ”TIÃˆRE OpportunitÃ©s</h1>
+            <h1 className="text-2xl font-black text-[#0c4a6e]">CÔTIÈRE Opportunités</h1>
           </div>
           <div className="flex gap-2 flex-wrap">
             <button
@@ -275,7 +275,7 @@ export default function AdminOpportunitesPage() {
                     <button
                       onClick={() => toggleSecteurActive(s)}
                       className={`flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg transition-colors ${s.isActive !== false ? "bg-orange-100 text-orange-600 hover:bg-orange-200" : "bg-green-100 text-green-600 hover:bg-green-200"}`}>
-                      <CheckCircle size={13} /> {s.isActive !== false ? "DÃ©sactiver" : "Activer"}
+                      <CheckCircle size={13} /> {s.isActive !== false ? "Désactiver" : "Activer"}
                     </button>
                     <button
                       onClick={() => openEdit(s)}
@@ -302,7 +302,7 @@ export default function AdminOpportunitesPage() {
               {[
                 { label: "Total", value: requests.length, color: "text-blue-500", bg: "bg-blue-50", filterVal: "ALL" },
                 { label: "En attente", value: requests.filter(r => r.status === "PENDING").length, color: "text-yellow-500", bg: "bg-yellow-50", filterVal: "PENDING" },
-                { label: "ConfirmÃ©s", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50", filterVal: "CONFIRMED" },
+                { label: "Confirmés", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50", filterVal: "CONFIRMED" },
               ].map(s => {
                 const isActive = s.filterVal && filter === s.filterVal;
                 return (
@@ -334,9 +334,9 @@ export default function AdminOpportunitesPage() {
               >
                 <option value="ALL">Tous les statuts</option>
                 <option value="PENDING">En attente</option>
-                <option value="CONFIRMED">ConfirmÃ©s</option>
-                <option value="COMPLETED">TerminÃ©s</option>
-                <option value="REFUSED">RefusÃ©s</option>
+                <option value="CONFIRMED">Confirmés</option>
+                <option value="COMPLETED">Terminés</option>
+                <option value="REFUSED">Refusés</option>
               </select>
               <button
                 onClick={load}
@@ -353,8 +353,8 @@ export default function AdminOpportunitesPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
                 <div className="w-1 h-5 bg-[#c9a84c] rounded-full" />
-                <h2 className="font-bold text-[#0c4a6e]">Demandes CÃ”TIÃˆRE OpportunitÃ©s</h2>
-                <span className="ml-auto text-xs text-gray-400">{filtered.length} rÃ©sultat(s)</span>
+                <h2 className="font-bold text-[#0c4a6e]">Demandes CÔTIÈRE Opportunités</h2>
+                <span className="ml-auto text-xs text-gray-400">{filtered.length} résultat(s)</span>
               </div>
 
               {loading ? (
@@ -362,13 +362,13 @@ export default function AdminOpportunitesPage() {
                   <RefreshCw size={32} className="animate-spin mx-auto mb-3" /> Chargement...
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="py-16 text-center text-gray-400">Aucune demande trouvÃ©e.</div>
+                <div className="py-16 text-center text-gray-400">Aucune demande trouvée.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b border-gray-100">
                       <tr>
-                        {["RÃ©f.", "Client", "WhatsApp", "Secteur/Projet", "Date", "Statut", "Action"].map(h => (
+                        {["Réf.", "Client", "WhatsApp", "Secteur/Projet", "Date", "Statut", "Action"].map(h => (
                           <th key={h} className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">{h}</th>
                         ))}
                       </tr>
@@ -378,7 +378,7 @@ export default function AdminOpportunitesPage() {
                         <tr key={r.id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-3 py-3">
                             <div className="flex items-center gap-2">
-                              <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=60&q=80" alt="OpportunitÃ©s" className="w-9 h-9 rounded-lg object-cover shrink-0 border border-gray-100" />
+                              <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=60&q=80" alt="Opportunités" className="w-9 h-9 rounded-lg object-cover shrink-0 border border-gray-100" />
                               <span className="font-mono text-xs text-gray-400">{r.reference?.slice(-8) ?? r.id.slice(-8)}</span>
                             </div>
                           </td>
@@ -398,7 +398,7 @@ export default function AdminOpportunitesPage() {
                           </td>
                           <td className="px-4 py-3 text-sm font-medium text-[#0c4a6e]">
                             <a href="/services/opportunites" target="_blank" rel="noopener noreferrer" className="hover:underline">
-                              {r.eventType} â†—
+                              {r.eventType} ↗
                             </a>
                           </td>
                           <td className="px-4 py-3 text-xs text-gray-500">
@@ -454,7 +454,7 @@ export default function AdminOpportunitesPage() {
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">CatÃ©gorie</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Catégorie</label>
                 <input type="text" placeholder="Tourisme / Agriculture / Commerce..." value={form.categorie}
                   onChange={e => setForm(f => ({ ...f, categorie: e.target.value }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
@@ -483,8 +483,8 @@ export default function AdminOpportunitesPage() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
                 {editId && !form.image && (
                   <div className="mb-2 p-2.5 bg-orange-50 border border-orange-200 rounded-lg text-xs text-orange-700 flex items-start gap-2">
-                    <span className="shrink-0 mt-0.5">âš ï¸</span>
-                    <span>L'image prÃ©cÃ©dente Ã©tait stockÃ©e localement et n'est plus disponible. Veuillez uploader une nouvelle image.</span>
+                    <span className="shrink-0 mt-0.5">⚠️</span>
+                    <span>L'image précédente était stockée localement et n'est plus disponible. Veuillez uploader une nouvelle image.</span>
                   </div>
                 )}
                 <ImageUploader value={form.image} onChange={val => setForm(f => ({ ...f, image: val }))} />
@@ -503,5 +503,3 @@ export default function AdminOpportunitesPage() {
     </div>
   );
 }
-
-

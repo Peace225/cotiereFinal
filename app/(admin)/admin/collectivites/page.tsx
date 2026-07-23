@@ -8,7 +8,7 @@ import AdminNavbar from "@/components/admin/AdminNavbar";
 import ExportButton from "@/components/admin/ExportButton";
 import ImageUploader from "@/components/admin/ImageUploader";
 
-// â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Types ---
 
 type EventRequest = {
   id: string;
@@ -40,7 +40,15 @@ type AnnuaireContact = {
   createdAt: string;
 };
 
-// â”€â”€â”€ Constantes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+type CatalogueService = {
+  id: string;
+  nom: string;
+  description: string;
+  image: string;
+  categorie: string;
+};
+
+// --- Constantes ---
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: "bg-yellow-100 text-yellow-700 border-yellow-200",
@@ -49,20 +57,21 @@ const STATUS_COLORS: Record<string, string> = {
   CANCELLED: "bg-gray-100 text-gray-600 border-gray-200",
   COMPLETED: "bg-blue-100 text-blue-700 border-blue-200",
 };
+
 const STATUS_LABELS: Record<string, string> = {
   PENDING: "En attente",
-  CONFIRMED: "ConfirmÃ©",
-  REFUSED: "RefusÃ©",
-  CANCELLED: "AnnulÃ©",
-  COMPLETED: "TerminÃ©",
+  CONFIRMED: "Confirmé",
+  REFUSED: "Refusé",
+  CANCELLED: "Annulé",
+  COMPLETED: "Terminé",
 };
 
 const TYPE_LABELS: Record<string, string> = {
   mairie: "Mairie",
   conseil: "Conseil",
   service: "Service public",
-  prefecture: "PrÃ©fecture",
-  sous_prefecture: "Sous-prÃ©fecture",
+  prefecture: "Préfecture",
+  sous_prefecture: "Sous-préfecture",
   autre: "Autre",
 };
 
@@ -75,51 +84,6 @@ const TYPE_COLORS: Record<string, string> = {
   autre: "bg-gray-100 text-gray-600",
 };
 
-const DEFAULT_CATALOGUE_SERVICES = [
-  {
-    id: "coaching",
-    nom: "Coaching institutionnel",
-    description: "Accompagnement stratÃ©gique des institutions et collectivitÃ©s locales pour amÃ©liorer leur gouvernance.",
-    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
-    categorie: "Coaching",
-  },
-  {
-    id: "accompagnement",
-    nom: "Accompagnement collectivitÃ©s",
-    description: "Soutien opÃ©rationnel aux mairies et conseils rÃ©gionaux dans leurs projets de dÃ©veloppement.",
-    image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80",
-    categorie: "Accompagnement",
-  },
-  {
-    id: "formation",
-    nom: "Formation",
-    description: "Programmes de formation pour les Ã©lus locaux et agents des collectivitÃ©s territoriales.",
-    image: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&q=80",
-    categorie: "Formation",
-  },
-  {
-    id: "developpement",
-    nom: "DÃ©veloppement local",
-    description: "Conception et mise en Å“uvre de projets de dÃ©veloppement Ã©conomique et social local.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80",
-    categorie: "DÃ©veloppement",
-  },
-  {
-    id: "mediation",
-    nom: "MÃ©diation",
-    description: "Services de mÃ©diation et rÃ©solution de conflits entre acteurs locaux et institutions.",
-    image: "https://images.unsplash.com/photo-1521791136064-7986c2920216?w=400&q=80",
-    categorie: "MÃ©diation",
-  },
-  {
-    id: "conseil",
-    nom: "Conseil stratÃ©gique",
-    description: "Conseil en planification stratÃ©gique et Ã©laboration de plans de dÃ©veloppement communaux.",
-    image: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&q=80",
-    categorie: "Conseil",
-  },
-];
-
 const emptyServiceForm = { nom: "", categorie: "", description: "", image: "" };
 const emptyAnnuaireForm = {
   nom: "", type: "mairie", ville: "", region: "",
@@ -130,11 +94,10 @@ function matchesCollectivites(r: EventRequest) {
   return (r.eventType?.toLowerCase() ?? "").includes("collectivit");
 }
 
-// â”€â”€â”€ Composant principal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Composant principal ---
 
 export default function AdminCollectivitesPage() {
-  // Ã‰tats catalogue & demandes
-  const [catalogueServices, setCatalogueServices] = useState(DEFAULT_CATALOGUE_SERVICES);
+  const [catalogueServices, setCatalogueServices] = useState<CatalogueService[]>([]);
   const [requests, setRequests] = useState<EventRequest[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("ALL");
@@ -142,7 +105,6 @@ export default function AdminCollectivitesPage() {
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState(emptyServiceForm);
 
-  // Ã‰tats annuaire
   const [annuaire, setAnnuaire] = useState<AnnuaireContact[]>([]);
   const [annuaireLoading, setAnnuaireLoading] = useState(false);
   const [annuaireSearch, setAnnuaireSearch] = useState("");
@@ -151,7 +113,6 @@ export default function AdminCollectivitesPage() {
   const [editingContact, setEditingContact] = useState<AnnuaireContact | null>(null);
   const [annuaireForm, setAnnuaireForm] = useState(emptyAnnuaireForm);
 
-  // â”€â”€ Chargement demandes â”€â”€
   async function load() {
     setLoading(true);
     try {
@@ -163,7 +124,6 @@ export default function AdminCollectivitesPage() {
     setLoading(false);
   }
 
-  // â”€â”€ Chargement annuaire â”€â”€
   async function loadAnnuaire() {
     setAnnuaireLoading(true);
     try {
@@ -180,7 +140,6 @@ export default function AdminCollectivitesPage() {
   useEffect(() => { load(); }, []);
   useEffect(() => { if (tab === "annuaire") loadAnnuaire(); }, [tab, annuaireTypeFilter]);
 
-  // â”€â”€ Actions demandes â”€â”€
   async function changeStatus(id: string, status: string) {
     await fetch(`/api/events/requests/${id}`, {
       method: "PATCH",
@@ -209,7 +168,11 @@ export default function AdminCollectivitesPage() {
     setForm(emptyServiceForm);
   }
 
-  // â”€â”€ Actions annuaire â”€â”€
+  function deleteService(id: string) {
+    if (!confirm("Supprimer ce service du catalogue ?")) return;
+    setCatalogueServices(prev => prev.filter(s => s.id !== id));
+  }
+
   function openNewContact() {
     setEditingContact(null);
     setAnnuaireForm(emptyAnnuaireForm);
@@ -258,23 +221,12 @@ export default function AdminCollectivitesPage() {
     setAnnuaire(prev => prev.filter(c => c.id !== id));
   }
 
-  async function toggleContactActive(c: AnnuaireContact) {
-    await fetch(`/api/admin/collectivites/annuaire/${c.id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ isActive: !c.isActive }),
-    });
-    setAnnuaire(prev => prev.map(x => x.id === c.id ? { ...x, isActive: !x.isActive } : x));
-  }
-
-  // â”€â”€ Filtres locaux annuaire â”€â”€
   const filteredAnnuaire = annuaire.filter(c => {
     if (!annuaireSearch) return true;
     const q = annuaireSearch.toLowerCase();
     return c.nom.toLowerCase().includes(q) || c.ville.toLowerCase().includes(q) || (c.region ?? "").toLowerCase().includes(q);
   });
 
-  // â”€â”€ Export demandes â”€â”€
   const filtered = filter === "ALL" ? requests : requests.filter(r => r.status === filter);
   const exportData = filtered.map(r => ({
     reference: r.reference,
@@ -285,15 +237,14 @@ export default function AdminCollectivitesPage() {
     statut: STATUS_LABELS[r.status] ?? r.status,
   }));
   const exportColumns = [
-    { key: "reference", label: "RÃ©fÃ©rence" },
+    { key: "reference", label: "Référence" },
     { key: "client", label: "Client" },
-    { key: "telephone", label: "TÃ©lÃ©phone" },
-    { key: "service", label: "Service demandÃ©" },
+    { key: "telephone", label: "Téléphone" },
+    { key: "service", label: "Service demandé" },
     { key: "date", label: "Date" },
     { key: "statut", label: "Statut" },
   ];
 
-  // â”€â”€ Export annuaire â”€â”€
   const exportAnnuaire = filteredAnnuaire.map(c => ({
     nom: c.nom,
     type: TYPE_LABELS[c.type] ?? c.type,
@@ -307,8 +258,8 @@ export default function AdminCollectivitesPage() {
     { key: "nom", label: "Nom" },
     { key: "type", label: "Type" },
     { key: "ville", label: "Ville" },
-    { key: "region", label: "RÃ©gion" },
-    { key: "telephone", label: "TÃ©lÃ©phone" },
+    { key: "region", label: "Région" },
+    { key: "telephone", label: "Téléphone" },
     { key: "email", label: "Email" },
     { key: "adresse", label: "Adresse" },
   ];
@@ -324,7 +275,7 @@ export default function AdminCollectivitesPage() {
             <div className="w-10 h-10 bg-[#0c4a6e] rounded-xl flex items-center justify-center">
               <Building2 size={20} className="text-[#c9a84c]" />
             </div>
-            <h1 className="text-2xl font-black text-[#0c4a6e]">CÃ”TIÃˆRE CollectivitÃ©s & Services</h1>
+            <h1 className="text-2xl font-black text-[#0c4a6e]">Collectivités & Services</h1>
           </div>
           <div className="flex gap-2 flex-wrap">
             {tab === "catalogue" && (
@@ -343,7 +294,6 @@ export default function AdminCollectivitesPage() {
                 <Plus size={15} /> Ajouter un contact
               </button>
             )}
-            {/* Onglets */}
             <button
               onClick={() => setTab("catalogue")}
               className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${tab === "catalogue" ? "bg-[#0c4a6e] text-white" : "bg-white text-gray-500 border border-gray-200"}`}
@@ -365,45 +315,51 @@ export default function AdminCollectivitesPage() {
           </div>
         </div>
 
-        {/* â”€â”€ Onglet Catalogue â”€â”€ */}
+        {/* Onglet Catalogue */}
         {tab === "catalogue" && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {catalogueServices.map(s => (
-              <div key={s.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-                <div className="relative h-40 bg-gray-100">
-                  <img src={s.image} alt={s.nom} className="w-full h-full object-cover" />
-                  <span className="absolute top-3 right-3 bg-[#0c4a6e] text-[#c9a84c] text-xs font-bold px-2 py-1 rounded-full">
-                    {s.categorie}
-                  </span>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-bold text-[#0c4a6e] mb-1">{s.nom}</h3>
-                  <p className="text-xs text-gray-400 mb-3 line-clamp-2">{s.description}</p>
-                  <div className="flex gap-2">
-                    <button className="flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg bg-green-100 text-green-600 hover:bg-green-200 transition-colors">
-                      <CheckCircle size={13} /> Activer
-                    </button>
-                    <button className="flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors">
-                      <Pencil size={13} /> Modifier
-                    </button>
-                    <button className="flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors">
-                      <Trash2 size={13} /> Supprimer
-                    </button>
+            {catalogueServices.length === 0 ? (
+              <div className="col-span-full py-16 text-center text-gray-400 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <BookOpen size={40} className="mx-auto mb-3 text-gray-200" />
+                <p className="font-medium">Aucun service dans le catalogue</p>
+                <p className="text-sm mt-1">Cliquez sur &quot;Ajouter un service&quot; pour commencer</p>
+              </div>
+            ) : (
+              catalogueServices.map(s => (
+                <div key={s.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
+                  <div>
+                    <div className="relative h-40 bg-gray-100">
+                      <img src={s.image} alt={s.nom} className="w-full h-full object-cover" />
+                      <span className="absolute top-3 right-3 bg-[#0c4a6e] text-[#c9a84c] text-xs font-bold px-2 py-1 rounded-full">
+                        {s.categorie}
+                      </span>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-bold text-[#0c4a6e] mb-1">{s.nom}</h3>
+                      <p className="text-xs text-gray-400 mb-3 line-clamp-2">{s.description}</p>
+                    </div>
+                  </div>
+                  <div className="p-4 pt-0">
+                    <div className="flex gap-2">
+                      <button onClick={() => deleteService(s.id)} className="w-full flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors">
+                        <Trash2 size={13} /> Supprimer
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         )}
 
-        {/* â”€â”€ Onglet Demandes â”€â”€ */}
+        {/* Onglet Demandes */}
         {tab === "reservations" && (
           <>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
               {[
                 { label: "Total", value: requests.length, color: "text-blue-500", bg: "bg-blue-50", filterVal: "ALL" },
                 { label: "En attente", value: requests.filter(r => r.status === "PENDING").length, color: "text-yellow-500", bg: "bg-yellow-50", filterVal: "PENDING" },
-                { label: "ConfirmÃ©s", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50", filterVal: "CONFIRMED" },
+                { label: "Confirmés", value: requests.filter(r => r.status === "CONFIRMED").length, color: "text-green-500", bg: "bg-green-50", filterVal: "CONFIRMED" },
               ].map(s => {
                 const isActive = filter === s.filterVal;
                 return (
@@ -433,9 +389,9 @@ export default function AdminCollectivitesPage() {
               >
                 <option value="ALL">Tous les statuts</option>
                 <option value="PENDING">En attente</option>
-                <option value="CONFIRMED">ConfirmÃ©s</option>
-                <option value="COMPLETED">TerminÃ©s</option>
-                <option value="REFUSED">RefusÃ©s</option>
+                <option value="CONFIRMED">Confirmés</option>
+                <option value="COMPLETED">Terminés</option>
+                <option value="REFUSED">Refusés</option>
               </select>
               <button
                 onClick={load}
@@ -451,21 +407,21 @@ export default function AdminCollectivitesPage() {
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
                 <div className="w-1 h-5 bg-[#c9a84c] rounded-full" />
-                <h2 className="font-bold text-[#0c4a6e]">Demandes CollectivitÃ©s &amp; Services</h2>
-                <span className="ml-auto text-xs text-gray-400">{filtered.length} rÃ©sultat(s)</span>
+                <h2 className="font-bold text-[#0c4a6e]">Demandes Collectivités &amp; Services</h2>
+                <span className="ml-auto text-xs text-gray-400">{filtered.length} résultat(s)</span>
               </div>
               {loading ? (
                 <div className="py-16 text-center text-gray-400">
                   <RefreshCw size={32} className="animate-spin mx-auto mb-3" /> Chargement...
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="py-16 text-center text-gray-400">Aucune demande trouvÃ©e.</div>
+                <div className="py-16 text-center text-gray-400">Aucune demande trouvée.</div>
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b border-gray-100">
                       <tr>
-                        {["RÃ©f.", "Client", "WhatsApp", "Service demandÃ©", "Date", "Statut", "Action"].map(h => (
+                        {["Réf.", "Client", "WhatsApp", "Service demandé", "Date", "Statut", "Action"].map(h => (
                           <th key={h} className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">{h}</th>
                         ))}
                       </tr>
@@ -475,7 +431,6 @@ export default function AdminCollectivitesPage() {
                         <tr key={r.id} className="hover:bg-gray-50 transition-colors">
                           <td className="px-3 py-3">
                             <div className="flex items-center gap-2">
-                              <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=60&q=80" alt="CollectivitÃ©s" className="w-9 h-9 rounded-lg object-cover shrink-0 border border-gray-100" />
                               <span className="font-mono text-xs text-gray-400">{r.reference?.slice(-8) ?? r.id.slice(-8)}</span>
                             </div>
                           </td>
@@ -489,7 +444,7 @@ export default function AdminCollectivitesPage() {
                             </a>
                           </td>
                           <td className="px-4 py-3 text-sm font-medium text-[#0c4a6e]">
-                            <a href="/services/collectivites" target="_blank" rel="noopener noreferrer" className="hover:underline">{r.eventType} â†—</a>
+                            <span>{r.eventType}</span>
                           </td>
                           <td className="px-4 py-3 text-xs text-gray-500">
                             {new Date(r.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", year: "numeric" })}
@@ -524,10 +479,9 @@ export default function AdminCollectivitesPage() {
           </>
         )}
 
-        {/* â”€â”€ Onglet Annuaire â”€â”€ */}
+        {/* Onglet Annuaire */}
         {tab === "annuaire" && (
           <>
-            {/* Stats annuaire */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               {[
                 { label: "Total", value: annuaire.length, type: "ALL", color: "text-blue-500", bg: "bg-blue-50" },
@@ -555,13 +509,12 @@ export default function AdminCollectivitesPage() {
               })}
             </div>
 
-            {/* Barre de recherche & filtres */}
             <div className="flex items-center gap-3 mb-4 flex-wrap">
               <div className="relative flex-1 min-w-[200px]">
                 <Search size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="text"
-                  placeholder="Rechercher par nom, ville, rÃ©gion..."
+                  placeholder="Rechercher par nom, ville, région..."
                   value={annuaireSearch}
                   onChange={e => setAnnuaireSearch(e.target.value)}
                   className="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white"
@@ -578,8 +531,8 @@ export default function AdminCollectivitesPage() {
                   <option value="mairie">Mairies</option>
                   <option value="conseil">Conseils</option>
                   <option value="service">Services publics</option>
-                  <option value="prefecture">PrÃ©fectures</option>
-                  <option value="sous_prefecture">Sous-prÃ©fectures</option>
+                  <option value="prefecture">Préfectures</option>
+                  <option value="sous_prefecture">Sous-préfectures</option>
                   <option value="autre">Autres</option>
                 </select>
               </div>
@@ -594,7 +547,6 @@ export default function AdminCollectivitesPage() {
               </div>
             </div>
 
-            {/* Table annuaire */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
               <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-2">
                 <div className="w-1 h-5 bg-[#c9a84c] rounded-full" />
@@ -618,7 +570,7 @@ export default function AdminCollectivitesPage() {
                   <table className="w-full text-sm">
                     <thead className="bg-gray-50 border-b border-gray-100">
                       <tr>
-                        {["Nom", "Type", "Ville / RÃ©gion", "Contact", "Horaires", "Statut", "Actions"].map(h => (
+                        {["Nom", "Type", "Ville / Région", "Contact", "Horaires", "Actions"].map(h => (
                           <th key={h} className="px-4 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wide">{h}</th>
                         ))}
                       </tr>
@@ -660,38 +612,16 @@ export default function AdminCollectivitesPage() {
                               </a>
                             )}
                           </td>
-                          <td className="px-4 py-3">
-                            {c.horaires ? (
-                              <p className="text-xs text-gray-500 flex items-start gap-1">
-                                <Clock size={10} className="mt-0.5 shrink-0" /> {c.horaires}
-                              </p>
-                            ) : (
-                              <span className="text-xs text-gray-300">â€”</span>
-                            )}
-                          </td>
-                          <td className="px-4 py-3">
-                            <button
-                              onClick={() => toggleContactActive(c)}
-                              className={`text-xs px-2.5 py-1 rounded-full font-semibold border transition-colors ${c.isActive ? "bg-green-100 text-green-700 border-green-200 hover:bg-green-200" : "bg-gray-100 text-gray-500 border-gray-200 hover:bg-gray-200"}`}
-                            >
-                              {c.isActive ? "Actif" : "Inactif"}
-                            </button>
+                          <td className="px-4 py-3 text-xs text-gray-500">
+                            {c.horaires || "-"}
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center gap-2">
-                              <button
-                                onClick={() => openEditContact(c)}
-                                className="p-1.5 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 transition-colors"
-                                title="Modifier"
-                              >
-                                <Pencil size={13} />
+                              <button onClick={() => openEditContact(c)} className="text-blue-500 hover:text-blue-700">
+                                <Pencil size={14} />
                               </button>
-                              <button
-                                onClick={() => deleteContact(c.id)}
-                                className="p-1.5 rounded-lg bg-red-50 text-red-500 hover:bg-red-100 transition-colors"
-                                title="Supprimer"
-                              >
-                                <Trash2 size={13} />
+                              <button onClick={() => deleteContact(c.id)} className="text-red-400 hover:text-red-600">
+                                <Trash2 size={14} />
                               </button>
                             </div>
                           </td>
@@ -704,141 +634,110 @@ export default function AdminCollectivitesPage() {
             </div>
           </>
         )}
+
+        {/* Modal Ajout Service */}
+        {showModal && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold text-[#0c4a6e]">Ajouter un service</h3>
+                <button onClick={() => setShowModal(false)}><X size={20} className="text-gray-400" /></button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Nom du service</label>
+                  <input type="text" value={form.nom} onChange={e => setForm({ ...form, nom: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Conseil stratégique" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Catégorie</label>
+                  <input type="text" value={form.categorie} onChange={e => setForm({ ...form, categorie: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Conseil" />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Description</label>
+                  <textarea value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} rows={3} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Description du service..." />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Image (URL ou Upload)</label>
+                  <input type="text" value={form.image} onChange={e => setForm({ ...form, image: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] mb-2" placeholder="https://..." />
+                  <ImageUploader onUploadComplete={(url) => setForm({ ...form, image: url })} />
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <button onClick={() => setShowModal(false)} className="px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 font-semibold">Annuler</button>
+                  <button onClick={saveService} className="px-4 py-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white rounded-lg text-sm font-bold shadow-md">Enregistrer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Ajout/Modification Contact Annuaire */}
+        {showAnnuaireModal && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-bold text-[#0c4a6e]">{editingContact ? "Modifier le contact" : "Ajouter un contact"}</h3>
+                <button onClick={() => setShowAnnuaireModal(false)}><X size={20} className="text-gray-400" /></button>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Nom de l&apos;institution / service</label>
+                  <input type="text" value={annuaireForm.nom} onChange={e => setAnnuaireForm({ ...annuaireForm, nom: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Mairie de Cocody" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 mb-1">Type</label>
+                    <select value={annuaireForm.type} onChange={e => setAnnuaireForm({ ...annuaireForm, type: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
+                      <option value="mairie">Mairie</option>
+                      <option value="conseil">Conseil</option>
+                      <option value="service">Service public</option>
+                      <option value="prefecture">Préfecture</option>
+                      <option value="sous_prefecture">Sous-préfecture</option>
+                      <option value="autre">Autre</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 mb-1">Ville</label>
+                    <input type="text" value={annuaireForm.ville} onChange={e => setAnnuaireForm({ ...annuaireForm, ville: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Abidjan" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Région / District</label>
+                  <input type="text" value={annuaireForm.region} onChange={e => setAnnuaireForm({ ...annuaireForm, region: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: District Autonome d'Abidjan" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 mb-1">Téléphone</label>
+                    <input type="text" value={annuaireForm.telephone} onChange={e => setAnnuaireForm({ ...annuaireForm, telephone: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="+225..." />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 mb-1">Email</label>
+                    <input type="email" value={annuaireForm.email} onChange={e => setAnnuaireForm({ ...annuaireForm, email: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="contact@..." />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-gray-500 mb-1">Adresse physique</label>
+                  <input type="text" value={annuaireForm.adresse} onChange={e => setAnnuaireForm({ ...annuaireForm, adresse: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Boulevard de la République" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 mb-1">Site web</label>
+                    <input type="text" value={annuaireForm.siteWeb} onChange={e => setAnnuaireForm({ ...annuaireForm, siteWeb: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="https://..." />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-gray-500 mb-1">Horaires</label>
+                    <input type="text" value={annuaireForm.horaires} onChange={e => setAnnuaireForm({ ...annuaireForm, horaires: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" placeholder="Ex: Lun-Ven 7h30-16h30" />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-2 pt-2">
+                  <button onClick={() => setShowAnnuaireModal(false)} className="px-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-600 font-semibold">Annuler</button>
+                  <button onClick={saveContact} className="px-4 py-2 bg-[#c9a84c] hover:bg-[#b8973b] text-white rounded-lg text-sm font-bold shadow-md">Enregistrer</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
       </div>
-
-      {/* â”€â”€ Modal Ajouter un service â”€â”€ */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl max-h-[90vh] flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-gray-100 shrink-0">
-              <h3 className="font-bold text-[#0c4a6e] text-lg">Ajouter un service</h3>
-              <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
-            </div>
-            <div className="p-6 space-y-4 overflow-y-auto">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nom du service *</label>
-                <input type="text" placeholder="Coaching institutionnel" value={form.nom}
-                  onChange={e => setForm(f => ({ ...f, nom: e.target.value }))}
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">CatÃ©gorie</label>
-                <input type="text" placeholder="Coaching / Formation / Conseil..." value={form.categorie}
-                  onChange={e => setForm(f => ({ ...f, categorie: e.target.value }))}
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea rows={3} placeholder="Description du service..." value={form.description}
-                  onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] resize-none" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Image</label>
-                <ImageUploader value={form.image} onChange={val => setForm(f => ({ ...f, image: val }))} />
-              </div>
-            </div>
-            <div className="p-6 border-t border-gray-100 flex gap-3 shrink-0">
-              <button onClick={() => setShowModal(false)} className="flex-1 border border-gray-200 text-gray-600 font-semibold py-2.5 rounded-xl hover:bg-gray-50">Annuler</button>
-              <button onClick={saveService} disabled={!form.nom}
-                className="flex-1 bg-[#c9a84c] hover:bg-[#b8973b] text-white font-bold py-2.5 rounded-xl disabled:opacity-60">Ajouter</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* â”€â”€ Modal Annuaire (CrÃ©er / Modifier) â”€â”€ */}
-      {showAnnuaireModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl w-full max-w-xl shadow-2xl max-h-[90vh] flex flex-col overflow-hidden">
-            <div className="flex items-center justify-between p-6 border-b border-gray-100 shrink-0">
-              <div className="flex items-center gap-2">
-                <BookOpen size={18} className="text-[#0c4a6e]" />
-                <h3 className="font-bold text-[#0c4a6e] text-lg">
-                  {editingContact ? "Modifier le contact" : "Ajouter un contact"}
-                </h3>
-              </div>
-              <button onClick={() => setShowAnnuaireModal(false)} className="text-gray-400 hover:text-gray-600"><X size={20} /></button>
-            </div>
-            <div className="p-6 space-y-4 overflow-y-auto">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Nom *</label>
-                  <input type="text" placeholder="Mairie de Grand-Bassam" value={annuaireForm.nom}
-                    onChange={e => setAnnuaireForm(f => ({ ...f, nom: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Type *</label>
-                  <select value={annuaireForm.type} onChange={e => setAnnuaireForm(f => ({ ...f, type: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] bg-white">
-                    <option value="mairie">Mairie</option>
-                    <option value="conseil">Conseil</option>
-                    <option value="service">Service public</option>
-                    <option value="prefecture">PrÃ©fecture</option>
-                    <option value="sous_prefecture">Sous-prÃ©fecture</option>
-                    <option value="autre">Autre</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Ville *</label>
-                  <input type="text" placeholder="Grand-Bassam" value={annuaireForm.ville}
-                    onChange={e => setAnnuaireForm(f => ({ ...f, ville: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
-                </div>
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">RÃ©gion</label>
-                  <input type="text" placeholder="Sud-ComoÃ©" value={annuaireForm.region}
-                    onChange={e => setAnnuaireForm(f => ({ ...f, region: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">TÃ©lÃ©phone</label>
-                  <input type="text" placeholder="+225 27 21 30 00 00" value={annuaireForm.telephone}
-                    onChange={e => setAnnuaireForm(f => ({ ...f, telephone: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                  <input type="email" placeholder="contact@mairie.ci" value={annuaireForm.email}
-                    onChange={e => setAnnuaireForm(f => ({ ...f, email: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
-                </div>
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
-                  <input type="text" placeholder="BP 01, Rue de la Mairie" value={annuaireForm.adresse}
-                    onChange={e => setAnnuaireForm(f => ({ ...f, adresse: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Site web</label>
-                  <input type="url" placeholder="https://..." value={annuaireForm.siteWeb}
-                    onChange={e => setAnnuaireForm(f => ({ ...f, siteWeb: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Horaires</label>
-                  <input type="text" placeholder="Lun-Ven 8h-17h" value={annuaireForm.horaires}
-                    onChange={e => setAnnuaireForm(f => ({ ...f, horaires: e.target.value }))}
-                    className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8]" />
-                </div>
-              </div>
-            </div>
-            <div className="p-6 border-t border-gray-100 flex gap-3 shrink-0">
-              <button onClick={() => setShowAnnuaireModal(false)} className="flex-1 border border-gray-200 text-gray-600 font-semibold py-2.5 rounded-xl hover:bg-gray-50">Annuler</button>
-              <button
-                onClick={saveContact}
-                disabled={!annuaireForm.nom || !annuaireForm.ville}
-                className="flex-1 bg-[#c9a84c] hover:bg-[#b8973b] text-white font-bold py-2.5 rounded-xl disabled:opacity-60"
-              >
-                {editingContact ? "Enregistrer" : "Ajouter"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
-
-

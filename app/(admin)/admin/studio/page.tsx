@@ -7,7 +7,7 @@ import ImageUploader from "@/components/admin/ImageUploader";
 
 // --- Types ---
 type Booking = { id: string; reference: string; clientFirstName: string; clientLastName: string; clientPhone: string; eventType: string; status: string; createdAt?: string; };
-type Service = { id: string; label: string; description: string; image: string; isActive: boolean };
+type Service = { id: string; label: string; description: string; image: string; isActive?: boolean; is_active?: boolean };
 
 const STATUS_COLORS: any = {
   PENDING: "bg-amber-50 text-amber-700 border-amber-200",
@@ -16,6 +16,7 @@ const STATUS_COLORS: any = {
 };
 
 export default function AdminStudioPage() {
+  const [mounted, setMounted] = useState(false); // 👈 Évite les erreurs d'hydratation SSR/Client
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [services, setServices] = useState<Service[]>([]);
   const [tab, setTab] = useState<"reservations" | "services">("reservations");
@@ -24,6 +25,7 @@ export default function AdminStudioPage() {
   const [editId, setEditId] = useState<string | null>(null);
 
   useEffect(() => {
+    setMounted(true); // 👈 Indique que le composant est monté côté client
     Promise.all([
       fetch("/api/studio/bookings?limit=500").then(r => r.json()),
       fetch("/api/studio/services").then(r => r.json())
@@ -34,15 +36,45 @@ export default function AdminStudioPage() {
   }, []);
 
   async function saveService() {
-    const res = await fetch(editId ? `/api/studio/services/${editId}` : "/api/studio/services", {
-      method: editId ? "PATCH" : "POST",
-      body: JSON.stringify(form)
-    });
+  const payload = {
+    label: form.label.trim(),
+    description: form.description || null,
+    image: form.image || null,
+  };
+  const res = await fetch(editId ? `/api/studio/services/${editId}` : "/api/studio/services", {
+    method: editId ? "PATCH" : "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  });
+  if (res.ok) {
+    const { data } = await res.json();
+    setServices(prev => editId ? prev.map(s => s.id === editId ? data : s) : [...prev, data]);
+    setShowModal(false);
+    setForm({ label: "", description: "", image: "" });
+    setEditId(null);
+  }
+}
+
+  async function deleteService(id: string) {
+  if (!confirm("Voulez-vous vraiment supprimer cette prestation ?")) return;
+  try {
+    const res = await fetch(`/api/studio/services/${id}`, { method: "DELETE" });
+    const text = await res.text(); // lis une seule fois
+    console.log("STATUS:", res.status, "BODY:", text);
+
     if (res.ok) {
-      const { data } = await res.json();
-      setServices(prev => editId ? prev.map(s => s.id === editId ? data : s) : [...prev, data]);
-      setShowModal(false);
+      setServices(prev => prev.filter(s => s.id !== id));
+    } else {
+      alert(`Erreur ${res.status}: ${text}`);
     }
+  } catch (error) {
+    console.error("Erreur réseau:", error);
+  }
+}
+
+  // Empêche le rendu tant que le client n'a pas pris le relais
+  if (!mounted) {
+    return null;
   }
 
   return (
@@ -54,17 +86,23 @@ export default function AdminStudioPage() {
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
           <div>
             <h1 className="text-3xl font-extrabold text-[#0c4a6e] tracking-tight">HBL Studio+</h1>
-            <p className="text-slate-500 text-sm mt-1">Gestion administrative et opÃ©rationnelle du studio.</p>
+            <p className="text-slate-500 text-sm mt-1">Gestion administrative et opérationnelle du studio.</p>
           </div>
-          <button onClick={() => { setEditId(null); setShowModal(true); }} 
-            className="bg-[#0c4a6e] text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-[#083344] transition-all shadow-lg shadow-[#0c4a6e]/20">
+          <button 
+            onClick={() => { 
+              setEditId(null); 
+              setForm({ label: "", description: "", image: "" }); 
+              setShowModal(true); 
+            }} 
+            className="bg-[#0c4a6e] text-white px-6 py-3 rounded-2xl font-bold flex items-center gap-2 hover:bg-[#083344] transition-all shadow-lg shadow-[#0c4a6e]/20"
+          >
             <Plus size={18} /> Nouvelle prestation
           </button>
         </div>
 
         {/* Tabs */}
         <div className="flex gap-2 mb-8">
-          {[ { id: "reservations", label: "RÃ©servations", icon: Calendar }, { id: "services", label: "Prestations", icon: Package } ].map(item => (
+          {[ { id: "reservations", label: "Réservations", icon: Calendar }, { id: "services", label: "Prestations", icon: Package } ].map(item => (
             <button key={item.id} onClick={() => setTab(item.id as any)} 
               className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${tab === item.id ? "bg-[#c9a84c] text-white shadow-md" : "bg-white text-slate-600 border border-slate-200"}`}>
               <item.icon size={18} /> {item.label}
@@ -76,14 +114,34 @@ export default function AdminStudioPage() {
         {tab === "services" ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {services.map(s => (
-              <div key={s.id} className="bg-white rounded-3xl p-3 shadow-sm border border-slate-100 hover:shadow-lg transition-all">
-                <div className="h-40 bg-slate-100 rounded-2xl overflow-hidden relative">
-                  <img src={s.image} className="w-full h-full object-cover" alt={s.label} />
-                  <button onClick={() => { setEditId(s.id); setForm(s); setShowModal(true); }} className="absolute top-2 right-2 p-2 bg-white/90 rounded-full text-slate-700 hover:text-[#c9a84c]"><Pencil size={14}/></button>
-                </div>
-                <div className="p-2">
-                  <h3 className="font-bold text-slate-800 truncate">{s.label}</h3>
-                  <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">{s.description}</p>
+              <div key={s.id} className="bg-white rounded-3xl p-3 shadow-sm border border-slate-100 hover:shadow-lg transition-all flex flex-col justify-between">
+                <div>
+                  <div className="h-40 bg-slate-100 rounded-2xl overflow-hidden relative">
+                    <img src={s.image} className="w-full h-full object-cover" alt={s.label} />
+                    
+                    {/* Boutons Modifier & Supprimer superposés sur l'image */}
+                    <div className="absolute top-2 right-2 flex gap-1.5">
+                      <button 
+                        onClick={() => { setEditId(s.id); setForm({ label: s.label, description: s.description, image: s.image }); setShowModal(true); }} 
+                        className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-slate-700 hover:text-[#c9a84c] shadow-md transition-colors"
+                        title="Modifier"
+                      >
+                        <Pencil size={14}/>
+                      </button>
+                      <button 
+                        onClick={() => deleteService(s.id)} 
+                        className="p-2 bg-white/90 backdrop-blur-sm rounded-full text-rose-600 hover:text-rose-700 shadow-md transition-colors"
+                        title="Supprimer"
+                      >
+                        <Trash2 size={14}/>
+                      </button>
+                    </div>
+
+                  </div>
+                  <div className="p-2">
+                    <h3 className="font-bold text-slate-800 truncate">{s.label}</h3>
+                    <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">{s.description}</p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -94,7 +152,7 @@ export default function AdminStudioPage() {
               {bookings.map(b => (
                 <div key={b.id} className="p-4 border-b border-slate-50 space-y-2">
                   <div className="flex justify-between font-bold text-sm text-[#0c4a6e]">{b.clientFirstName} {b.clientLastName}</div>
-                  <p className="text-xs text-slate-500">{b.eventType} â€¢ {b.clientPhone}</p>
+                  <p className="text-xs text-slate-500">{b.eventType} • {b.clientPhone}</p>
                 </div>
               ))}
             </div>
@@ -120,22 +178,51 @@ export default function AdminStudioPage() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl w-full max-w-md shadow-2xl p-6">
-            <h2 className="text-lg font-black text-[#0c4a6e] mb-4">{editId ? "Modifier" : "Nouvelle"} prestation</h2>
-            <div className="space-y-4">
-              <input value={form.label} onChange={e => setForm({...form, label: e.target.value})} className="w-full bg-slate-50 p-3 rounded-xl border-none" placeholder="Nom du service" />
-              <textarea value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="w-full bg-slate-50 p-3 rounded-xl border-none" rows={3} placeholder="Description" />
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[100] flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl sm:rounded-3xl w-full max-w-sm sm:max-w-md max-h-[90vh] overflow-y-auto shadow-2xl p-4 sm:p-6">
+            
+            {/* Titre réduit */}
+            <h2 className="text-base sm:text-lg font-black text-[#0c4a6e] mb-3 sm:mb-4">
+              {editId ? "Modifier" : "Nouvelle"} prestation
+            </h2>
+
+            {/* Formulaire avec textes et espaces ajustés */}
+            <div className="space-y-3 sm:space-y-4">
+              <input 
+                value={form.label} 
+                onChange={e => setForm({...form, label: e.target.value})} 
+                className="w-full bg-slate-50 p-2.5 sm:p-3 rounded-xl border-none text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0c4a6e]/20" 
+                placeholder="Nom du service" 
+              />
+              <textarea 
+                value={form.description} 
+                onChange={e => setForm({...form, description: e.target.value})} 
+                className="w-full bg-slate-50 p-2.5 sm:p-3 rounded-xl border-none text-xs sm:text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0c4a6e]/20 resize-none" 
+                rows={3} 
+                placeholder="Description" 
+              />
               <ImageUploader value={form.image} onChange={val => setForm({...form, image: val})} />
             </div>
-            <div className="flex gap-3 mt-6">
-              <button onClick={() => setShowModal(false)} className="flex-1 py-3 font-bold text-slate-500">Annuler</button>
-              <button onClick={saveService} className="flex-1 py-3 bg-[#c9a84c] text-white font-bold rounded-xl shadow-lg">Enregistrer</button>
+
+            {/* Boutons compacts */}
+            <div className="flex gap-2 sm:gap-3 mt-4 sm:mt-6 text-xs sm:text-sm">
+              <button 
+                onClick={() => setShowModal(false)} 
+                className="flex-1 py-2.5 sm:py-3 font-bold text-slate-500 rounded-xl hover:bg-slate-50 transition-colors"
+              >
+                Annuler
+              </button>
+              <button 
+                onClick={saveService} 
+                className="flex-1 py-2.5 sm:py-3 bg-[#c9a84c] text-white font-bold rounded-xl shadow-md hover:bg-[#b8973b] transition-colors"
+              >
+                Enregistrer
+              </button>
             </div>
+
           </div>
         </div>
       )}
     </div>
   );
 }
-

@@ -6,21 +6,18 @@ import {
   Menu, X, UserCircle, HelpCircle, ShoppingCart, 
   Bed, Camera, Plane, Handshake, Newspaper, 
   Music, Tv, Briefcase, CalendarDays, FileText, Building2,
-  LogIn, UserPlus
+  LogIn, UserPlus, Bus
 } from "lucide-react";
 import { useCart } from "@/components/frontend/CartContext";
 
 const services = [
   { label: "Séjours", href: "/services/sejours", Icon: Bed },
   { label: "HBL Studio+", href: "/services/studio", Icon: Camera },
-  { label: "Tourisme & Voyage", href: "/services/tourisme", Icon: Plane },
-  { label: "Partenaires Événementiels", href: "/services/evenements", Icon: Handshake },
+  { label: "Côtière Transport", href: "/services/transport", Icon: Bus },
+  { label: "Sites Touristiques", href: "/services/tourisme", Icon: Plane },
   { label: "Cotier Info+", href: "/services/info", Icon: Newspaper },
-  { label: "Music & Management", href: "/services/music", Icon: Music },
-  { label: "Médias", href: "/services/medias", Icon: Tv },
   { label: "Market & Distribution", href: "/services/market", Icon: ShoppingCart },
-  { label: "100% Pub", href: "/services/afrouba", Icon: FileText },
-  { label: "Collectivités", href: "/services/collectivites", Icon: Building2 },
+  { label: "Annuaire des collectivités", href: "/services/collectivites", Icon: Building2 },
   { label: "Opportunités", href: "/services/opportunites", Icon: Briefcase },
   { label: "Agenda", href: "/services/rdv", Icon: CalendarDays },
 ];

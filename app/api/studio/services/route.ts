@@ -10,35 +10,19 @@ async function getSupabaseClient() {
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() { return cookieStore.getAll() },
-        setAll() {}
-      }
-    }
+    { cookies: { getAll() { return cookieStore.getAll() }, setAll() {} } }
   );
 }
 
 export async function GET() {
-  try {
-    const supabase = await getSupabaseClient();
-    
-    // Tentative de rÃ©cupÃ©ration depuis la table 'studio_services'
-    const { data, error } = await supabase
-      .from('studio_services')
-      .select('*');
-
-    if (error) {
-      // C'EST ICI QUE NOUS VERRONS L'ERREUR DANS LE TERMINAL VS CODE
-      console.error("ERREUR SUPABASE (DÃ©tail):", JSON.stringify(error, null, 2));
-      throw error;
-    }
-
-    return NextResponse.json({ data: data || [] });
-  } catch (e: any) {
-    console.error("ERREUR API (Catch):", e.message);
-    return NextResponse.json({ error: e.message }, { status: 500 });
-  }
+  const supabase = await getSupabaseClient();
+  const { data, error } = await supabase
+    .from('studio_services')
+    .select('*')
+    .eq('isActive', true) // le client ne voit que ça
+    .order('createdAt', { ascending: false });
+  if (error) throw error;
+  return NextResponse.json({ data: data || [] });
 }
 
 export async function POST(req: NextRequest) {
@@ -46,12 +30,17 @@ export async function POST(req: NextRequest) {
     await requireAdmin();
     const body = await req.json();
     const supabase = await getSupabaseClient();
-    
-    const { data, error } = await supabase
-      .from('studio_services')
-      .insert([body])
-      .select()
-      .single();
+    const now = new Date().toISOString();
+
+    const { data, error } = await supabase.from('studio_services').insert([{
+      id: crypto.randomUUID(), // on ignore le "srv_" du front
+      label: body.label,
+      description: body.description || null,
+      image: body.image || null,
+      isActive: true,
+      createdAt: now,
+      updatedAt: now,
+    }]).select().single();
 
     if (error) throw error;
     return NextResponse.json({ data }, { status: 201 });
@@ -59,5 +48,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: e.message }, { status: 500 });
   }
 }
-
-

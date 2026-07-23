@@ -6,16 +6,13 @@ import { Phone, MapPin, ArrowRight, ChevronDown, MessageCircle } from "lucide-re
 
 const services = [
   ["HBL Studio+", "/services/studio"],
-  ["CÔTIÈRE Tourisme & Voyage", "/services/tourisme"],
-  ["CÔTIÈRE Hébergement & Restauration", "/services/hebergement"],
-  ["CÔTIÈRE Music & Management", "/services/music"],
-  ["Guichet Unique Événementiel", "/services/location"],
-  ["CÔTIÈRE MÉDIAS", "/services/medias"],
-  ["CÔTIÈRE Market & Distribution", "/services/market"],
-  ["Tout Le Monde A Droit À La Pub", "/services/afrouba"],
-  ["CÔTIÈRE Collectivités", "/services/collectivites"],
+   ["Côtière Transport", "/services/transport"],
+  ["Sites Touristiques", "/services/tourisme"],
+  ["Côtière Restauration & Gastronomie", "/services/hebergement"],
+  ["Côtière Market & Distribution", "/services/market"],
+  ["Annuaire des collectivités", "/services/collectivites"],
   ["CÔTIÈRE Opportunités", "/services/opportunites"],
-  ["Le RDV Des Événements", "/services/rdv"],
+ 
 ];
 
 export default function Footer() {

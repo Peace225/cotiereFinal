@@ -1,39 +1,42 @@
 "use client";
 
 import Link from "next/link";
-import { Camera, Video, Mic, Aperture, Play, ArrowRight, Image as ImageIcon, MessageCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Play, ArrowRight, Image as ImageIcon, MessageCircle } from "lucide-react";
 
 // Remplace par le numéro WhatsApp de réservation
 const STUDIO_WHATSAPP = "2250700000000";
 
-const services = [
-  {
-    icon: <Camera size={32} className="text-[#003b95]" />,
-    title: "Shooting Photo Pro",
-    desc: "Portraits, mode, corporate ou produits. Captation haute résolution en studio ou en extérieur.",
-    price: "À partir de 50.000 XOF"
-  },
-  {
-    icon: <Video size={32} className="text-[#003b95]" />,
-    title: "Production Vidéo",
-    desc: "Clips, spots publicitaires, interviews et aftermovies réalisés avec du matériel de pointe.",
-    price: "Sur devis"
-  },
-  {
-    icon: <Aperture size={32} className="text-[#003b95]" />,
-    title: "Prises de vue Drone",
-    desc: "Sublimez vos projets avec des plans aériens spectaculaires en 4K.",
-    price: "À partir de 100.000 XOF"
-  },
-  {
-    icon: <Mic size={32} className="text-[#003b95]" />,
-    title: "Studio Podcast & Audio",
-    desc: "Enregistrement vocal, mixage et création de podcasts dans un espace insonorisé premium.",
-    price: "À partir de 25.000 XOF / H"
-  }
-];
+// --- Type correspondant à votre base de données ---
+type DBService = { 
+  id: string; 
+  label: string; 
+  description: string; 
+  image: string; 
+  is_active: boolean 
+};
 
 export default function SejoursPage() {
+  // 1. Déclaration de l'état pour stocker les services de la base de données
+  const [services, setServices] = useState<DBService[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // 2. Récupération des données au chargement de la page
+  useEffect(() => {
+    fetch("/api/studio/services")
+      .then(res => res.json())
+      .then(data => {
+        // On ne garde que les services qui sont actifs (is_active !== false)
+        const activeServices = (data.data || []).filter((s: DBService) => s.is_active !== false);
+        setServices(activeServices);
+        setIsLoading(false);
+      })
+      .catch(err => {
+        console.error("Erreur lors du chargement des services:", err);
+        setIsLoading(false);
+      });
+  }, []);
+
   const handleBooking = () => {
     const message = `*NOUVELLE DEMANDE - SÉJOURS* 🎥\n\nBonjour, je souhaite avoir plus d'informations sur vos services et réserver.`;
     window.open(`https://wa.me/${STUDIO_WHATSAPP}?text=${encodeURIComponent(message)}`, "_blank");
@@ -46,7 +49,6 @@ export default function SejoursPage() {
       <div className="max-w-7xl mx-auto px-4 mb-12 md:mb-16">
         <div className="relative overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-slate-900 text-white shadow-2xl h-[420px] md:h-[500px] flex items-center px-6 md:px-12 lg:px-16">
           
-          {/* Image de fond avec overlay */}
           <div className="absolute inset-0 z-0">
             <img 
               src="https://images.unsplash.com/photo-1605371924599-2d0365da1ae0?w=1200&q=80" 
@@ -86,7 +88,7 @@ export default function SejoursPage() {
         </div>
       </div>
 
-      {/* SECTION SERVICES */}
+      {/* SECTION SERVICES DYNAMIQUES */}
       <div className="max-w-7xl mx-auto px-4 mb-16 md:mb-20">
         <div className="text-center mb-10 md:mb-12">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-900 mb-3 md:mb-4">Nos Expertises</h2>
@@ -95,28 +97,48 @@ export default function SejoursPage() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => (
-            <div key={index} className="bg-white p-6 md:p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between">
-              <div>
-                <div className="w-14 h-14 md:w-16 md:h-16 bg-blue-50 rounded-2xl flex items-center justify-center mb-5 md:mb-6 group-hover:scale-110 transition-transform shrink-0">
-                  {service.icon}
+        {/* 3. Affichage conditionnel pendant le chargement */}
+        {isLoading ? (
+          <div className="flex justify-center items-center h-40">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#003b95]"></div>
+          </div>
+        ) : services.length === 0 ? (
+          <p className="text-center text-slate-500">Aucune prestation disponible pour le moment.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* 4. Boucle sur les données de la Base de Données */}
+            {services.map((service) => (
+              <div key={service.id} className="bg-white p-4 md:p-5 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl transition-all group flex flex-col justify-between">
+                <div>
+                  {/* Utilisation de l'image ajoutée par l'admin */}
+                  <div className="w-full h-40 md:h-48 bg-slate-100 rounded-2xl overflow-hidden mb-5 relative shrink-0">
+                    <img 
+                      src={service.image} 
+                      alt={service.label}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                    />
+                  </div>
+                  
+                  {/* Titre et description dynamiques */}
+                  <h3 className="text-lg font-black text-slate-900 mb-2">{service.label}</h3>
+                  <p className="text-slate-500 text-sm mb-6 leading-relaxed line-clamp-3">
+                    {service.description}
+                  </p>
                 </div>
-                <h3 className="text-lg md:text-xl font-black text-slate-900 mb-2 md:mb-3">{service.title}</h3>
-                <p className="text-slate-500 text-xs md:text-sm mb-6 leading-relaxed line-clamp-3">
-                  {service.desc}
-                </p>
+                
+                {/* Le prix a été remplacé par un bouton d'action puisqu'il n'y a pas de prix en base */}
+                <div className="pt-4 border-t border-slate-50 mt-auto">
+                  <button onClick={handleBooking} className="text-[12px] font-black text-[#003b95] uppercase tracking-wider flex items-center gap-1 group-hover:gap-2 transition-all block w-full text-left">
+                    Demander un devis <ArrowRight size={14} />
+                  </button>
+                </div>
               </div>
-              <div className="pt-4 border-t border-slate-50 mt-auto">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-0.5">Tarif indicatif</span>
-                <span className="font-black text-[#003b95] text-sm md:text-base">{service.price}</span>
-              </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* SECTION PORTFOLIO / GALERIE PREVIEW */}
+      {/* SECTION PORTFOLIO / GALERIE PREVIEW (Conservée telle quelle) */}
       <div className="max-w-7xl mx-auto px-4 mb-16 md:mb-20">
         <div className="flex justify-between items-end mb-6 md:mb-8">
           <div>
