@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Play, ArrowRight, Image as ImageIcon, MessageCircle } from "lucide-react";
 
 // Remplace par le numéro WhatsApp de réservation
-const STUDIO_WHATSAPP = "2250700000000";
+const STUDIO_WHATSAPP = "2250747722931";
 
 // --- Type correspondant à votre base de données ---
 type DBService = { 

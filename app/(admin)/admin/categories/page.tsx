@@ -693,7 +693,7 @@ export default function AdminHotelsPage() {
                       onChange={(e) =>
                         setForm({ ...form, telephone: e.target.value })
                       }
-                      placeholder="+225 0700000000"
+                      placeholder="+225 0747722931"
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-sm"
                     />
                   </div>
@@ -708,7 +708,7 @@ export default function AdminHotelsPage() {
                       onChange={(e) =>
                         setForm({ ...form, whatsapp: e.target.value })
                       }
-                      placeholder="+225 0700000000"
+                      placeholder="+225 0747722931"
                       className="w-full rounded-xl border border-slate-200 bg-slate-50 p-3.5 text-sm"
                     />
                   </div>

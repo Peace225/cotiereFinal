@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles, Play, Camera, Video } from "lucide-react";
+import { ArrowRight, Sparkles, Play, Camera, MessageCircle } from "lucide-react";
 import Link from "next/link";
 import StudioBookingForm from "@/components/frontend/studio/StudioBookingForm";
 import ReviewsSection from "@/components/frontend/ReviewsSection";
@@ -10,6 +10,12 @@ export const metadata: Metadata = buildMeta({
   description: "Studio de production professionnel : tournage vidéo, photographie, streaming en direct, drone, régie mobile. Devis sous 24h.",
   path: "/services/studio",
 });
+
+// 📱 Numéro WhatsApp officiel de l'administrateur configuré
+const ADMIN_WHATSAPP = "2250747722931";
+const WHATSAPP_URL = `https://api.whatsapp.com/send?phone=${ADMIN_WHATSAPP}&text=${encodeURIComponent(
+  "✨ Bonjour *HBL Studio+ (CÔTIÈRE)*, je souhaite obtenir un devis ou réserver une prestation."
+)}`;
 
 const services = [
   { slug: "tournage-video", image: "https://images.unsplash.com/photo-1601506521793-dc748fc80b67?w=600&q=80", label: "Tournage vidéo", desc: "4K, multi-cam" },
@@ -53,7 +59,7 @@ export default function StudioPage() {
   return (
     <div className="min-h-screen bg-[#020617]">
       {/* HERO */}
-      <section className="relative min-h- flex items-center overflow-hidden">
+      <section className="relative min-h-[80vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-b from-[#0c4a6e] via-[#0b3f5c] to-[#020617]" />
           <div className="absolute inset-0 opacity-20" style={{backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`}} />
@@ -64,7 +70,7 @@ export default function StudioPage() {
             <div>
               <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur border border-white/10 px-3 py-1.5 rounded-full mb-6">
                 <Sparkles size={14} className="text-[#c9a84c]" />
-                <span className="text- font-semibold tracking-widest uppercase text-white/80">Production Pro</span>
+                <span className="text-xs font-semibold tracking-widest uppercase text-white/80">Production Pro</span>
               </div>
 
               <h1 className="text-[clamp(2.5rem,7vw,4rem)] font-black leading-[0.9] tracking-tighter text-white mb-4">
@@ -76,10 +82,18 @@ export default function StudioPage() {
                 Tournage 4K, photo studio, drone FPV, streaming live. Pour mariages, entreprises et événements. Devis en 24h.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-3">
                 <a href="#reservation" className="group inline-flex items-center justify-center gap-2 bg-[#c9a84c] hover:bg-[#d4b456] text-black font-semibold px-6 py-3.5 rounded-xl transition-all active:scale-[0.98]">
                   Réserver maintenant
                   <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
+                </a>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-center gap-2 bg-[#25D366]/90 hover:bg-[#25D366] text-white font-semibold px-6 py-3.5 rounded-xl transition-all"
+                >
+                  <MessageCircle size={18} /> WhatsApp Direct (07 47 72 29 31)
                 </a>
                 <Link href="#prestations" className="inline-flex items-center justify-center gap-2 bg-white/5 hover:bg-white/10 backdrop-blur border border-white/15 text-white px-6 py-3.5 rounded-xl transition-all">
                   <Play size={16} /> Voir nos réalisations
@@ -89,15 +103,15 @@ export default function StudioPage() {
               <div className="flex items-center gap-6 mt-10 pt-8 border-t border-white/5">
                 <div>
                   <p className="text-2xl font-bold text-white">500+</p>
-                  <p className="text- text-white/50 uppercase tracking-wide">Projets</p>
+                  <p className="text-xs text-white/50 uppercase tracking-wide">Projets</p>
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-white">24h</p>
-                  <p className="text- text-white/50 uppercase tracking-wide">Devis</p>
+                  <p className="text-xs text-white/50 uppercase tracking-wide">Devis</p>
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-white">4K</p>
-                  <p className="text- text-white/50 uppercase tracking-wide">Qualité</p>
+                  <p className="text-xs text-white/50 uppercase tracking-wide">Qualité</p>
                 </div>
               </div>
             </div>
@@ -105,7 +119,7 @@ export default function StudioPage() {
             <div className="relative hidden lg:block">
               <div className="relative">
                 <img src="/Images/hbl-entreprise.png" alt="HBL Studio" className="w-full max-w-md mx-auto drop-shadow-2xl" />
-                <div className="absolute -inset-10 bg-[#c9a84c]/20 blur- -z-10" />
+                <div className="absolute -inset-10 bg-[#c9a84c]/20 blur-3xl -z-10" />
               </div>
             </div>
           </div>
@@ -129,7 +143,7 @@ export default function StudioPage() {
 
                 <div className="absolute bottom-0 left-0 right-0 p-4">
                   <h3 className="text-white font-semibold text-sm mb-0.5 group-hover:text-[#c9a84c] transition-colors">{s.label}</h3>
-                  <p className="text-white/60 text-">{s.desc}</p>
+                  <p className="text-white/60 text-xs">{s.desc}</p>
                 </div>
 
                 <div className="absolute top-3 right-3 w-7 h-7 bg-black/50 backdrop-blur rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all">
@@ -150,44 +164,60 @@ export default function StudioPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {pricing.map((p) => (
-              <div key={p.label} className={`relative group ${p.popular? "md:-mt-4 md:mb-4" : ""}`}>
-                {p.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-                    <span className="bg-[#c9a84c] text-black text- font-bold uppercase tracking-wider px-3 py-1 rounded-full">Populaire</span>
-                  </div>
-                )}
+            {pricing.map((p) => {
+              const packWhatsappUrl = `https://api.whatsapp.com/send?phone=${ADMIN_WHATSAPP}&text=${encodeURIComponent(
+                `✨ Bonjour *HBL Studio+*, je souhaite réserver le pack *${p.label}* (${p.price} FCFA).`
+              )}`;
 
-                <div className={`relative h-full bg-white/[0.03] backdrop-blur border rounded- overflow-hidden transition-all ${p.popular? "border-[#c9a84c]/50 shadow-[0_0_40px_-10px_rgba(201,168,76,0.3)]" : "border-white/10 hover:border-white/20"}`}>
-                  <div className="relative h-32">
-                    <img src={p.image} alt={p.label} className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1c] to-transparent" />
-                  </div>
+              return (
+                <div key={p.label} className={`relative group ${p.popular ? "md:-mt-4 md:mb-4" : ""}`}>
+                  {p.popular && (
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
+                      <span className="bg-[#c9a84c] text-black text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full">Populaire</span>
+                    </div>
+                  )}
 
-                  <div className="p-6">
-                    <h3 className="text-white font-bold text-lg mb-1">{p.label}</h3>
-                    <div className="flex items-baseline gap-1 mb-4">
-                      <span className="text- text-white/50">{p.range}</span>
-                      <span className="text-2xl font-bold text-[#c9a84c]">{p.price}</span>
-                      <span className="text- text-white/50">FCFA</span>
+                  <div className={`relative h-full bg-white/[0.03] backdrop-blur border rounded-2xl overflow-hidden transition-all ${p.popular ? "border-[#c9a84c]/50 shadow-[0_0_40px_-10px_rgba(201,168,76,0.3)]" : "border-white/10 hover:border-white/20"}`}>
+                    <div className="relative h-32">
+                      <img src={p.image} alt={p.label} className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f1c] to-transparent" />
                     </div>
 
-                    <ul className="space-y-2 mb-6">
-                      {p.features.map(f => (
-                        <li key={f} className="flex items-center gap-2 text-white/70 text-">
-                          <div className="w-1 h-1 bg-[#c9a84c] rounded-full" />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="p-6">
+                      <h3 className="text-white font-bold text-lg mb-1">{p.label}</h3>
+                      <div className="flex items-baseline gap-1 mb-4">
+                        <span className="text-xs text-white/50">{p.range}</span>
+                        <span className="text-2xl font-bold text-[#c9a84c]">{p.price}</span>
+                        <span className="text-xs text-white/50">FCFA</span>
+                      </div>
 
-                    <a href="#reservation" className={`block text-center font-medium text-sm py-2.5 rounded-xl transition-all ${p.popular? "bg-[#c9a84c] text-black hover:bg-[#d4b456]" : "bg-white/5 text-white hover:bg-white/10 border border-white/10"}`}>
-                      Choisir
-                    </a>
+                      <ul className="space-y-2 mb-6">
+                        {p.features.map(f => (
+                          <li key={f} className="flex items-center gap-2 text-white/70 text-sm">
+                            <div className="w-1.5 h-1.5 bg-[#c9a84c] rounded-full" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+
+                      <div className="space-y-2">
+                        <a href="#reservation" className={`block text-center font-medium text-sm py-2.5 rounded-xl transition-all ${p.popular ? "bg-[#c9a84c] text-black hover:bg-[#d4b456]" : "bg-white/5 text-white hover:bg-white/10 border border-white/10"}`}>
+                          Choisir ce pack
+                        </a>
+                        <a
+                          href={packWhatsappUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-1.5 text-center font-medium text-xs py-2 rounded-xl bg-[#25D366]/15 text-[#25D366] hover:bg-[#25D366]/25 border border-[#25D366]/30 transition-all"
+                        >
+                          <MessageCircle size={14} /> Commander via WhatsApp
+                        </a>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -198,13 +228,13 @@ export default function StudioPage() {
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-2 mb-3">
               <Camera size={16} className="text-[#c9a84c]" />
-              <span className="text-[#c9a84c] text- font-semibold uppercase tracking-widest">Réservation</span>
+              <span className="text-[#c9a84c] text-xs font-semibold uppercase tracking-widest">Réservation</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2">Parlons de votre projet</h2>
-            <p className="text-white/50 text-sm">Réponse garantie sous 24h avec devis détaillé</p>
+            <p className="text-white/50 text-sm">Réponse garantie sous 24h avec devis détaillé ou discussion directe sur WhatsApp</p>
           </div>
 
-          <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded- p-6 sm:p-8">
+          <div className="bg-white/[0.03] backdrop-blur-xl border border-white/10 rounded-2xl p-6 sm:p-8">
             <StudioBookingForm />
           </div>
         </div>

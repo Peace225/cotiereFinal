@@ -641,8 +641,8 @@ export default function AdminRestaurantsPage() {
                       ["adresse", "Adresse complète", "Boulevard Lagunaire"],
                       ["quartier", "Quartier ou zone", "Plateau"],
                       ["ville", "Ville *", "Abidjan"],
-                      ["telephone", "Téléphone", "+225 0700000000"],
-                      ["whatsapp", "WhatsApp", "+225 0700000000"],
+                      ["telephone", "Téléphone", "+225 0747722931"],
+                      ["whatsapp", "WhatsApp", "+225 0747722931"],
                       ["email", "Email", "contact@restaurant.com"],
                       ["site_internet", "Site internet / Menu en ligne", "https://www.restaurant.com"],
                     ] as const
