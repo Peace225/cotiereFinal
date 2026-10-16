@@ -3,15 +3,24 @@ import { NextResponse, type NextRequest } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
 export default async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  })
+  let supabaseResponse = NextResponse.next({ request })
+
+  const path = request.nextUrl.pathname
+
+  // 1. Laisse toujours passer Next-Auth et les assets
+  if (
+    path.startsWith('/connexion') ||
+    path.startsWith('/api/auth') ||
+    path.startsWith('/_next') ||
+    path.includes('favicon')
+  ) {
+    return supabaseResponse
+  }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn('[PROXY] SUPABASE ENV manquant')
     return supabaseResponse
   }
 
@@ -21,15 +30,10 @@ export default async function proxy(request: NextRequest) {
         return request.cookies.getAll()
       },
       setAll(cookiesToSet) {
-        // 1. On set sur la request
         cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value)
         })
-        // 2. On recrée UNE SEULE FOIS la response
-        supabaseResponse = NextResponse.next({
-          request,
-        })
-        // 3. On set sur la response
+        supabaseResponse = NextResponse.next({ request })
         cookiesToSet.forEach(({ name, value, options }) => {
           supabaseResponse.cookies.set(name, value, options)
         })
@@ -37,7 +41,8 @@ export default async function proxy(request: NextRequest) {
     },
   })
 
-  // Rafraîchit la session, c'est ça qui crée les sb-... cookies
+  // Rafraîchit UNIQUEMENT si l'user est log via Supabase
+  // Si tu utilises Next-Auth, ça va juste retourner null et c'est OK
   await supabase.auth.getUser()
 
   return supabaseResponse
