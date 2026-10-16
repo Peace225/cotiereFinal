@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import {
   RefreshCw, Building2, Phone, Trash2, CheckCircle, Pencil, Plus, X,
-  BookOpen, Mail, Globe, MapPin, Clock, Search, Filter,
+  BookOpen, Mail, Globe, MapPin, Search, Filter,
 } from "lucide-react";
 import AdminNavbar from "@/components/admin/AdminNavbar";
 import ExportButton from "@/components/admin/ExportButton";
@@ -270,7 +270,8 @@ export default function AdminCollectivitesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="min-w-0 lg:ml-72">
+        <div className="mx-auto w-full min-w-0 max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
@@ -662,7 +663,6 @@ export default function AdminCollectivitesPage() {
                 <div>
                   <label className="block text-xs font-bold text-gray-500 mb-1">Image (URL ou Upload)</label>
                   <input type="text" value={form.image} onChange={e => setForm({ ...form, image: e.target.value })} className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#38bdf8] mb-3" placeholder="https://..." />
-                  {/* Intégration optionnelle du ImageUploader importé */}
                   <ImageUploader onUpload={(url: string) => setForm({ ...form, image: url })} />
                 </div>
               </div>
@@ -741,7 +741,8 @@ export default function AdminCollectivitesPage() {
           </div>
         )}
 
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

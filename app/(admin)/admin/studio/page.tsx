@@ -80,7 +80,8 @@ export default function AdminStudioPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       <AdminNavbar />
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <main className="min-w-0 w-full lg:ml-72 lg:w-[calc(100%-18rem)]">
+        <div className="mx-auto w-full min-w-0 max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
         
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
@@ -101,7 +102,7 @@ export default function AdminStudioPage() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-8">
+        <div className="flex flex-wrap gap-2 mb-8">
           {[ { id: "reservations", label: "Réservations", icon: Calendar }, { id: "services", label: "Prestations", icon: Package } ].map(item => (
             <button key={item.id} onClick={() => setTab(item.id as any)} 
               className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all ${tab === item.id ? "bg-[#c9a84c] text-white shadow-md" : "bg-white text-slate-600 border border-slate-200"}`}>
@@ -112,7 +113,7 @@ export default function AdminStudioPage() {
 
         {/* Content */}
         {tab === "services" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6">
             {services.map(s => (
               <div key={s.id} className="bg-white rounded-3xl p-3 shadow-sm border border-slate-100 hover:shadow-lg transition-all flex flex-col justify-between">
                 <div>
@@ -174,6 +175,7 @@ export default function AdminStudioPage() {
             </div>
           </div>
         )}
+        </div>
       </main>
 
       {/* Modal */}

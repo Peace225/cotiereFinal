@@ -1,8 +1,15 @@
+
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+
 import "./globals.css";
+
 import { Toaster } from "@/components/ui/Toaster";
 import { Providers } from "./Providers";
+
+// ======================================================
+// POLICE PRINCIPALE : MONTSERRAT
+// ======================================================
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -11,20 +18,58 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
+// ======================================================
+// SEO - CÔTIÈRE MEDIA GROUP
+// ======================================================
+
 export const metadata: Metadata = {
-  title: "CÔTIÈRE MEDIA GROUP",
-  description: "Découvrez les services CÔTIÈRE.",
+  title: {
+    default: "CÔTIÈRE MEDIA GROUP",
+    template: "%s | CÔTIÈRE MEDIA GROUP",
+  },
+
+  description:
+    "Découvrez Côtière Media Group : séjours, hébergements, tourisme, transport, services audiovisuels, marketplace et opportunités en Côte d'Ivoire.",
+
+  applicationName: "Côtière Media Group",
+
+  keywords: [
+    "Côtière Media Group",
+    "Côte d'Ivoire",
+    "Abidjan",
+    "Hébergement",
+    "Réservation",
+    "Tourisme",
+    "Transport",
+    "HBL Studio+",
+    "Marketplace",
+  ],
+
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+// ======================================================
+// ROOT LAYOUT
+// ======================================================
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="fr" className={montserrat.variable}>
-      <head>
-        <meta charSet="UTF-8" />
-      </head>
-      <body className="font-sans antialiased" suppressHydrationWarning>
+      <body
+        className="min-h-screen antialiased"
+        style={{ fontFamily: "var(--font-montserrat), sans-serif" }}
+        suppressHydrationWarning
+      >
         <Providers>
-          <main>{children}</main>
+          {children}
+
           <Toaster />
         </Providers>
       </body>

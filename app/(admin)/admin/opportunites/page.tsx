@@ -200,7 +200,8 @@ export default function AdminOpportunitesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="min-w-0 w-full lg:ml-72 lg:w-[calc(100%-18rem)]">
+        <div className="mx-auto w-full min-w-0 max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
@@ -436,7 +437,8 @@ export default function AdminOpportunitesPage() {
             </div>
           </>
         )}
-      </div>
+        </div>
+      </main>
 
       {/* Modal Ajouter / Modifier un secteur */}
       {showModal && (

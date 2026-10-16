@@ -1,97 +1,406 @@
-// app/admin/AdminDashboard.jsx
+
 "use client";
 
-import React from 'react';
-import { Users, FileClock, Building2, TrendingUp, CheckCircle, XCircle, Eye, ShieldAlert } from 'lucide-react';
+import React from "react";
+import {
+  Users,
+  FileClock,
+  Building2,
+  TrendingUp,
+  CheckCircle,
+  XCircle,
+  Eye,
+  ShieldAlert,
+} from "lucide-react";
 
 export default function AdminDashboard() {
-  // Simulation des dossiers reçus depuis le formulaire de soumission
+  // Données de démonstration
   const pendingApplications = [
-    { id: 1, name: "Hôtel Ivoire", category: "Hôtel / Résidence", date: "09 Juin 2026", status: "PENDING", type: "Partenaire" },
-    { id: 2, name: "Transport Express", category: "Transport", date: "08 Juin 2026", status: "PENDING", type: "Partenaire" },
-    { id: 3, name: "Festival National de l'Attiéké", category: "Événements", date: "08 Juin 2026", status: "PENDING", type: "Organisateur" },
+    {
+      id: 1,
+      name: "Hôtel Ivoire",
+      category: "Hôtel / Résidence",
+      date: "09 Juin 2026",
+      status: "PENDING",
+      type: "Partenaire",
+    },
+    {
+      id: 2,
+      name: "Transport Express",
+      category: "Transport",
+      date: "08 Juin 2026",
+      status: "PENDING",
+      type: "Partenaire",
+    },
+    {
+      id: 3,
+      name: "Festival National de l'Attiéké",
+      category: "Événements",
+      date: "08 Juin 2026",
+      status: "PENDING",
+      type: "Organisateur",
+    },
+  ];
+
+  const stats = [
+    {
+      label: "Dossiers en attente",
+      value: "12",
+      icon: FileClock,
+      color: "text-amber-600",
+      bg: "bg-amber-100",
+    },
+    {
+      label: "Partenaires Actifs",
+      value: "148",
+      icon: Building2,
+      color: "text-[#0c4a6e]",
+      bg: "bg-[#0c4a6e]/10",
+    },
+    {
+      label: "Organisateurs Validés",
+      value: "34",
+      icon: Users,
+      color: "text-[#c9a84c]",
+      bg: "bg-[#c9a84c]/10",
+    },
+    {
+      label: "Revenus Mensuels",
+      value: "2.4M FCFA",
+      icon: TrendingUp,
+      color: "text-emerald-600",
+      bg: "bg-emerald-100",
+    },
   ];
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-end">
-        <div>
-          <h2 className="text-3xl font-bold text-slate-900">Tableau de bord de Direction</h2>
-          <p className="text-slate-500 mt-1">Supervisez l'activité de la plateforme, des partenaires et des organisateurs d'événements.</p>
+    <section
+      className="
+        w-full min-w-0 max-w-full
+        space-y-6
+        pb-8
+        sm:space-y-8
+      "
+    >
+      {/* EN-TÊTE */}
+      <div
+        className="
+          flex flex-col gap-4
+          lg:flex-row
+          lg:items-center
+          lg:justify-between
+        "
+      >
+        <div className="min-w-0 flex-1">
+          <h1
+            className="
+              text-xl font-extrabold
+              leading-tight tracking-tight
+              text-slate-900
+              sm:text-2xl
+              xl:text-3xl
+            "
+          >
+            Tableau de bord de Direction
+          </h1>
+
+          <p
+            className="
+              mt-2 max-w-3xl
+              text-sm leading-6
+              text-slate-500
+            "
+          >
+            Supervisez l'activité de la plateforme,
+            des partenaires et des organisateurs
+            d'événements.
+          </p>
         </div>
-        <div className="bg-[#0c4a6e]/10 text-[#0c4a6e] px-4 py-2 rounded-lg font-semibold text-sm flex items-center gap-2">
-          <ShieldAlert size={16} />
+
+        <div
+          className="
+            inline-flex shrink-0
+            items-center gap-2
+            self-start rounded-xl
+            border border-[#0c4a6e]/10
+            bg-[#0c4a6e]/10
+            px-4 py-2.5
+            text-xs font-bold
+            text-[#0c4a6e]
+            sm:text-sm
+          "
+        >
+          <ShieldAlert size={17} />
           Accès Superviseur
         </div>
       </div>
 
-      {/* Cartes Statistiques (KPIs) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[
-          { label: "Dossiers en attente", value: "12", icon: FileClock, color: "text-amber-600", bg: "bg-amber-100" },
-          { label: "Partenaires Actifs", value: "148", icon: Building2, color: "text-[#0c4a6e]", bg: "bg-[#0c4a6e]/10" },
-          { label: "Organisateurs Validés", value: "34", icon: Users, color: "text-[#c9a84c]", bg: "bg-[#c9a84c]/10" },
-          { label: "Revenus Mensuels", value: "2.4M FCFA", icon: TrendingUp, color: "text-emerald-600", bg: "bg-emerald-100" },
-        ].map((stat, i) => (
-          <div key={i} className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4 hover:shadow-md transition-shadow">
-            <div className={`p-4 rounded-xl ${stat.bg}`}>
-              <stat.icon className={`w-6 h-6 ${stat.color}`} />
+      {/* CARTES STATISTIQUES */}
+      <div
+        className="
+          grid min-w-0
+          grid-cols-1 gap-4
+          sm:grid-cols-2
+          xl:grid-cols-4
+          xl:gap-5
+        "
+      >
+        {stats.map((stat) => {
+          const Icon = stat.icon;
+
+          return (
+            <div
+              key={stat.label}
+              className="
+                flex min-w-0
+                items-center gap-4
+                rounded-2xl
+                border border-slate-200/70
+                bg-white p-5
+                shadow-sm
+                transition-shadow
+                hover:shadow-md
+              "
+            >
+              <div
+                className={`
+                  flex h-12 w-12
+                  shrink-0 items-center
+                  justify-center rounded-xl
+                  ${stat.bg}
+                `}
+              >
+                <Icon
+                  size={23}
+                  className={stat.color}
+                />
+              </div>
+
+              <div className="min-w-0 flex-1">
+                <p
+                  className="
+                    text-xs font-semibold
+                    leading-5 text-slate-500
+                    sm:text-sm
+                  "
+                >
+                  {stat.label}
+                </p>
+
+                <p
+                  className="
+                    mt-1 break-words
+                    text-xl font-extrabold
+                    leading-tight text-slate-900
+                    2xl:text-2xl
+                  "
+                >
+                  {stat.value}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-medium text-slate-500">{stat.label}</p>
-              <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Tableau des dossiers récents - Vue Organisationnelle */}
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-        <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
-          <h3 className="text-lg font-bold text-slate-900">Nouvelles demandes (Partenaires & Organisateurs)</h3>
-          <button className="text-sm text-[#0c4a6e] font-semibold hover:underline">Voir tout l'historique</button>
+      {/* TABLEAU DES DEMANDES */}
+      <div
+        className="
+          w-full min-w-0
+          overflow-hidden
+          rounded-2xl
+          border border-slate-200/70
+          bg-white shadow-sm
+        "
+      >
+        {/* EN-TÊTE TABLEAU */}
+        <div
+          className="
+            flex flex-col gap-3
+            border-b border-slate-100
+            bg-slate-50/60
+            px-4 py-5
+            sm:flex-row
+            sm:items-center
+            sm:justify-between
+            sm:px-6
+          "
+        >
+          <div className="min-w-0">
+            <h2
+              className="
+                text-base font-bold
+                leading-6 text-slate-900
+                sm:text-lg
+              "
+            >
+              Nouvelles demandes
+            </h2>
+
+            <p className="mt-1 text-xs text-slate-500 sm:text-sm">
+              Partenaires et organisateurs
+            </p>
+          </div>
+
+          <span
+            className="
+              inline-flex shrink-0
+              self-start rounded-full
+              bg-[#0c4a6e]/10
+              px-3 py-1.5
+              text-xs font-bold
+              text-[#0c4a6e]
+            "
+          >
+            {pendingApplications.length} dossiers
+          </span>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+
+        {/* SCROLL HORIZONTAL LIMITÉ AU TABLEAU */}
+        <div className="w-full max-w-full overflow-x-auto">
+          <table
+            className="
+              w-full min-w-[780px]
+              border-collapse
+              text-left text-sm
+            "
+          >
             <thead>
-              <tr className="bg-white text-slate-500 text-sm border-b border-slate-100">
-                <th className="p-4 font-medium">Structure / Projet</th>
-                <th className="p-4 font-medium">Type de Profil</th>
-                <th className="p-4 font-medium">Catégorie</th>
-                <th className="p-4 font-medium">Date de soumission</th>
-                <th className="p-4 font-medium text-right">Actions Superviseur</th>
+              <tr className="border-b border-slate-100 bg-white">
+                <th className="whitespace-nowrap px-5 py-4 font-semibold text-slate-500">
+                  Structure / Projet
+                </th>
+
+                <th className="whitespace-nowrap px-5 py-4 font-semibold text-slate-500">
+                  Type de profil
+                </th>
+
+                <th className="whitespace-nowrap px-5 py-4 font-semibold text-slate-500">
+                  Catégorie
+                </th>
+
+                <th className="whitespace-nowrap px-5 py-4 font-semibold text-slate-500">
+                  Date de soumission
+                </th>
+
+                <th className="whitespace-nowrap px-5 py-4 text-right font-semibold text-slate-500">
+                  Actions
+                </th>
               </tr>
             </thead>
+
             <tbody className="divide-y divide-slate-100">
               {pendingApplications.map((app) => (
-                <tr key={app.id} className="hover:bg-slate-50 transition-colors bg-white">
-                  <td className="p-4 font-bold text-slate-900">{app.name}</td>
-                  <td className="p-4">
-                    <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                      app.type === 'Organisateur' ? 'bg-[#c9a84c]/10 text-[#c9a84c]' : 'bg-[#0c4a6e]/10 text-[#0c4a6e]'
-                    }`}>
+                <tr
+                  key={app.id}
+                  className="transition-colors hover:bg-slate-50"
+                >
+                  <td className="px-5 py-4">
+                    <span className="font-bold text-slate-900">
+                      {app.name}
+                    </span>
+                  </td>
+
+                  <td className="px-5 py-4">
+                    <span
+                      className={`
+                        inline-flex whitespace-nowrap
+                        rounded-full px-3 py-1.5
+                        text-xs font-bold
+                        ${
+                          app.type === "Organisateur"
+                            ? "bg-[#c9a84c]/10 text-[#9a772b]"
+                            : "bg-[#0c4a6e]/10 text-[#0c4a6e]"
+                        }
+                      `}
+                    >
                       {app.type}
                     </span>
                   </td>
-                  <td className="p-4 text-slate-600 text-sm">{app.category}</td>
-                  <td className="p-4 text-slate-600 text-sm">{app.date}</td>
-                  <td className="p-4 text-right flex justify-end gap-2">
-                    <button className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition" title="Examiner le dossier complet">
-                      <Eye size={18} />
-                    </button>
-                    <button className="p-2 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition" title="Valider et générer les accès">
-                      <CheckCircle size={18} />
-                    </button>
-                    <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Rejeter la demande">
-                      <XCircle size={18} />
-                    </button>
+
+                  <td className="px-5 py-4 text-slate-600">
+                    {app.category}
+                  </td>
+
+                  <td className="whitespace-nowrap px-5 py-4 text-slate-600">
+                    {app.date}
+                  </td>
+
+                  <td className="px-5 py-4">
+                    <div className="flex justify-end gap-1.5">
+                      <button
+                        type="button"
+                        title="Examiner le dossier"
+                        aria-label={`Examiner ${app.name}`}
+                        className="
+                          rounded-lg p-2
+                          text-slate-400
+                          transition-colors
+                          hover:bg-blue-50
+                          hover:text-blue-600
+                        "
+                      >
+                        <Eye size={18} />
+                      </button>
+
+                      <button
+                        type="button"
+                        title="Valider"
+                        aria-label={`Valider ${app.name}`}
+                        className="
+                          rounded-lg p-2
+                          text-slate-400
+                          transition-colors
+                          hover:bg-emerald-50
+                          hover:text-emerald-600
+                        "
+                      >
+                        <CheckCircle size={18} />
+                      </button>
+
+                      <button
+                        type="button"
+                        title="Rejeter"
+                        aria-label={`Rejeter ${app.name}`}
+                        className="
+                          rounded-lg p-2
+                          text-slate-400
+                          transition-colors
+                          hover:bg-red-50
+                          hover:text-red-600
+                        "
+                      >
+                        <XCircle size={18} />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+
+        {/* PIED DU TABLEAU */}
+        <div
+          className="
+            flex flex-wrap items-center
+            justify-between gap-2
+            border-t border-slate-100
+            bg-slate-50/40
+            px-4 py-3
+            text-xs text-slate-500
+            sm:px-6
+          "
+        >
+          <span>
+            {pendingApplications.length} demandes affichées
+          </span>
+
+          <span>
+            Données de démonstration
+          </span>
+        </div>
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,87 +1,136 @@
-import { cookies } from "next/headers";
+import "server-only";
+
+import { cookies, headers } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { prisma } from "./prisma";
 
-async function createClient() {
+// =====================================================
+// TYPES
+// =====================================================
+export type AuthSession = {
+  user: {
+    id: string;
+    email: string | null;
+    name: string;
+    role: string;
+    supabaseId: string;
+  };
+};
+
+// =====================================================
+// CLIENT SUPABASE SERVEUR
+// =====================================================
+export async function createClient() {
   const cookieStore = await cookies();
 
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll();
-        },
-        setAll(cookiesToSet) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            );
-          } catch (error) {
-            // Ignoré de manière sécurisée (normal dans les Server Components)
-          }
-        },
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl ||!supabaseAnonKey) {
+    throw new Error("SUPABASE_CONFIG_MISSING");
+  }
+
+  return createServerClient(supabaseUrl, supabaseAnonKey, {
+    cookies: {
+      getAll() {
+        return cookieStore.getAll();
       },
-    }
-  );
+      setAll(cookiesToSet) {
+        try {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            cookieStore.set(name, value, options);
+          });
+        } catch {}
+      },
+    },
+  });
 }
 
-export async function getSession() {
+// =====================================================
+// SESSION - CORRIGÉ POUR TA DB RÉELLE
+// =====================================================
+export async function getSession(): Promise<AuthSession | null> {
   try {
     const supabase = await createClient();
-    const { data: { user }, error } = await supabase.auth.getUser();
 
-    if (error || !user) {
-      console.log("❌ [AUTH] Supabase n'a pas trouvé de session active :", error?.message);
-      return null;
+    let {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      const headerStore = await headers();
+      const authorization = headerStore.get("authorization");
+      const match = authorization?.match(/^Bearer\s+(\S+)$/i);
+      if (match?.[1]) {
+        const bearerResult = await supabase.auth.getUser(match[1]);
+        if (!bearerResult.error && bearerResult.data.user) {
+          user = bearerResult.data.user;
+        }
+      }
     }
 
-    // Utilisation de l'ID Supabase (UUID) pour chercher dans Prisma
-   const dbUser = await prisma.user.findUnique({
-  where: { id: user.id }, 
-  select: { id: true, email: true, role: true }
-});
+    if (!user) return null;
+
+    // ON NE SÉLECTIONNE QUE LES COLONNES QUI EXISTENT VRAIMENT
+    const dbUser = await prisma.user.findFirst({
+      where: {
+        OR: [{ supabaseUserId: user.id }, { id: user.id }],
+      },
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        supabaseUserId: true,
+      },
+    });
 
     if (!dbUser) {
-      console.log("❌ [AUTH] Prisma n'a pas trouvé l'utilisateur dans la table 'users'. ID :", user.id);
+      console.warn("[AUTH] PRISMA_ACCOUNT_NOT_LINKED", {
+        supabaseId: user.id,
+        email: user.email,
+      });
       return null;
     }
+
+    const role = String(dbUser.role).trim().toUpperCase();
 
     return {
       user: {
         id: dbUser.id,
         email: dbUser.email,
-        name: dbUser.email, // ou 'Admin' si tu préfères
-        role: dbUser.role,
-      }
+        name: dbUser.email || "Admin",
+        role,
+        supabaseId: user.id,
+      },
     };
-
-  } catch (e) {
-    console.error("🔥 [AUTH] Erreur critique lors de la récupération de la session :", e);
+  } catch (error) {
+    console.error("[AUTH] SESSION_ERROR", error);
     return null;
   }
 }
 
-export async function requireAuth() {
+// =====================================================
+// GUARDS
+// =====================================================
+export async function requireAuth(): Promise<AuthSession> {
   const session = await getSession();
-  if (!session) throw new Error("UNAUTHORIZED");
+  if (!session) {
+    const err: any = new Error("UNAUTHORIZED");
+    err.status = 401;
+    err.statusCode = 401;
+    throw err;
+  }
   return session;
 }
 
-export async function requireAdmin() {
-  const session = await getSession();
-  
-  if (!session) {
-    console.log("⛔ [AUTH] requireAdmin a bloqué l'accès : Aucune session valide (UNAUTHORIZED).");
-    throw new Error("UNAUTHORIZED");
+export async function requireAdmin(): Promise<AuthSession> {
+  const session = await requireAuth();
+  if (!session.user.role.includes("ADMIN")) {
+    console.warn("[AUTH] FORBIDDEN - role:", session.user.role);
+    const err: any = new Error("FORBIDDEN");
+    err.status = 403;
+    err.statusCode = 403;
+    throw err;
   }
-  
-  // Vérification stricte du rôle
-  if (session.user.role !== "ADMIN" && session.user.role !== "SUPER_ADMIN") {
-    console.log(`⛔ [AUTH] requireAdmin a bloqué l'accès : Rôle insuffisant (${session.user.role}).`);
-    throw new Error("FORBIDDEN");
-  }
-  
   return session;
 }

@@ -180,7 +180,8 @@ export default function AdminRdvPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <AdminNavbar />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="min-w-0 w-full lg:ml-72 lg:w-[calc(100%-18rem)]">
+        <div className="mx-auto w-full min-w-0 max-w-[1500px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
 
         {/* Header */}
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
@@ -210,7 +211,7 @@ export default function AdminRdvPage() {
 
         {/* ── ONGLET EVENEMENTS ── */}
         {tab === "evenements" && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
             {evenements.map(ev => (
               <div key={ev.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
                 <div className="relative h-40 bg-gray-100">
@@ -231,7 +232,7 @@ export default function AdminRdvPage() {
                     <p className="text-xs text-gray-400 flex items-center gap-1"><Users size={11} /> {ev.capacite}</p>
                   </div>
                   <p className="text-xs text-gray-400 mb-3 line-clamp-2">{ev.description}</p>
-                  <div className="flex gap-2">
+                  <div className="flex flex-wrap gap-2">
                     <button onClick={() => toggleActive(ev)}
                       className={`flex-1 flex items-center justify-center gap-1 text-xs font-bold py-2 rounded-lg transition-colors ${ev.isActive ? "bg-orange-100 text-orange-600 hover:bg-orange-200" : "bg-green-100 text-green-600 hover:bg-green-200"}`}>
                       <CheckCircle size={13} /> {ev.isActive ? "Desactiver" : "Activer"}
@@ -256,7 +257,7 @@ export default function AdminRdvPage() {
         {tab === "inscriptions" && (
           <>
             {/* Stats */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
               {[
                 { label: "Total inscriptions", value: inscriptions.length, color: "text-blue-500", bg: "bg-blue-50", filterVal: "ALL" },
                 { label: "En attente", value: inscriptions.filter(i => i.status === "PENDING").length, color: "text-yellow-500", bg: "bg-yellow-50", filterVal: "PENDING" },
@@ -341,7 +342,7 @@ export default function AdminRdvPage() {
                 </div>
               ) : (
                 <div className="overflow-x-auto">
-                  <table className="w-full text-sm">
+                  <table className="w-full min-w-[1050px] text-sm">
                     <thead className="bg-gray-50 border-b border-gray-100">
                       <tr>
                         {["Ref", "Client", "WhatsApp", "Evenement", "Date / Lieu", "Participants", "Inscription le", "Statut", "Actions"].map(h => (
@@ -428,8 +429,8 @@ export default function AdminRdvPage() {
             </div>
           </>
         )}
-      </div>
-
+        </div>
+      </main>
 
       {/* Modal Ajouter/Modifier evenement */}
       {showModal && (

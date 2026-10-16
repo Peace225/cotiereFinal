@@ -1,115 +1,408 @@
+
 "use client";
-import { useEffect, useState, useRef } from "react";
-import { Bell, X, CheckCheck } from "lucide-react";
+
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+import {
+  Bell,
+  X,
+  CheckCheck,
+  Loader2,
+  RefreshCw,
+  ShieldAlert,
+} from "lucide-react";
 
 type Notification = {
-  id: string; 
-  subject: string; 
-  content: string; 
-  isRead: boolean; 
+  id: string;
+  subject: string;
+  content: string;
+  isRead: boolean;
   createdAt: string;
   type: string;
 };
 
+type NotificationsResponse = {
+  data?: {
+    notifications?: Notification[];
+    unreadCount?: number;
+  };
+  error?: string;
+};
+
 export default function NotificationBell() {
   const [open, setOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  const [notifications, setNotifications] = useState<
+    Notification[]
+  >([]);
+
   const [unread, setUnread] = useState(0);
-  const ref = useRef<HTMLDivElement>(null);
+  const [loading, setLoading] = useState(false);
+  const [updating, setUpdating] = useState(false);
+  const [authError, setAuthError] = useState(false);
+  const [error, setError] = useState("");
 
-  async function load() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const requestRef = useRef(false);
+
+  const load = useCallback(async () => {
+    if (requestRef.current) return;
+
+    requestRef.current = true;
+    setLoading(true);
+    setError("");
+
     try {
-      const res = await fetch("/api/admin/notifications", {
-        method: "GET",
-        // Envoi du cookie uniquement sur le même domaine (idéal pour Next.js)
-        credentials: "same-origin", 
-      });
+      const response = await fetch(
+        "/api/admin/notifications",
+        {
+          method: "GET",
+          credentials: "same-origin",
+          cache: "no-store",
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
 
-      if (res.status === 401 || res.status === 403) {
-        console.warn("Session invalide, impossible de charger les notifications.");
-        return; // Arrêt silencieux sans crasher
-      }
-
-      if (!res.ok) throw new Error("Erreur réseau");
-
-      const data = await res.json();
-      setNotifications(data.data?.notifications ?? []);
-      setUnread(data.data?.unreadCount ?? 0);
-    } catch (error) {
-      console.error("Erreur lors du chargement des notifications:", error);
-    }
-  }
-
-  async function markAllRead() {
-    try {
-      const res = await fetch("/api/admin/notifications", { 
-        method: "PATCH",
-        credentials: "same-origin", 
-      });
-      
-      if (res.ok) {
-        setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      if (
+        response.status === 401 ||
+        response.status === 403
+      ) {
+        setAuthError(true);
+        setNotifications([]);
         setUnread(0);
+        return;
       }
-    } catch (error) {
-      console.error("Erreur lors de la mise à jour des notifications:", error);
-    }
-  }
 
-  useEffect(() => {
-    load();
-    // 🛑 INTERVAL DÉSACTIVÉ TEMPORAIREMENT pour éviter le spam d'erreurs 401
-    // const interval = setInterval(load, 30000); 
-    // return () => clearInterval(interval);
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP ${response.status}`
+        );
+      }
+
+      const result =
+        (await response.json()) as NotificationsResponse;
+
+      const items = Array.isArray(
+        result.data?.notifications
+      )
+        ? result.data.notifications
+        : [];
+
+      setNotifications(items);
+
+      setUnread(
+        typeof result.data?.unreadCount === "number"
+          ? result.data.unreadCount
+          : items.filter((item) => !item.isRead).length
+      );
+
+      setAuthError(false);
+    } catch (err) {
+      console.error(
+        "Erreur de chargement des notifications :",
+        err
+      );
+
+      setError(
+        "Impossible de charger les notifications."
+      );
+    } finally {
+      setLoading(false);
+      requestRef.current = false;
+    }
   }, []);
 
-  useEffect(() => {
-    function handleClick(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+  const markAllRead = useCallback(async () => {
+    if (updating || authError || unread === 0) {
+      return;
     }
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
+
+    setUpdating(true);
+    setError("");
+
+    try {
+      const response = await fetch(
+        "/api/admin/notifications",
+        {
+          method: "PATCH",
+          credentials: "same-origin",
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+
+      if (
+        response.status === 401 ||
+        response.status === 403
+      ) {
+        setAuthError(true);
+        setNotifications([]);
+        setUnread(0);
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP ${response.status}`
+        );
+      }
+
+      setNotifications((previous) =>
+        previous.map((notification) => ({
+          ...notification,
+          isRead: true,
+        }))
+      );
+
+      setUnread(0);
+    } catch (err) {
+      console.error(
+        "Erreur de mise à jour des notifications :",
+        err
+      );
+
+      setError(
+        "Impossible de marquer les notifications comme lues."
+      );
+    } finally {
+      setUpdating(false);
+    }
+  }, [updating, authError, unread]);
+
+  // Chargement uniquement à l'ouverture.
+  // Cela évite une requête inutile sur chaque page admin.
+  useEffect(() => {
+    if (open && !authError) {
+      void load();
+    }
+  }, [open, authError, load]);
+
+  // Fermeture au clic extérieur.
+  useEffect(() => {
+    if (!open) return;
+
+    function handleOutsideClick(event: MouseEvent) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(
+          event.target as Node
+        )
+      ) {
+        setOpen(false);
+      }
+    }
+
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener(
+      "mousedown",
+      handleOutsideClick
+    );
+
+    document.addEventListener(
+      "keydown",
+      handleEscape
+    );
+
+    return () => {
+      document.removeEventListener(
+        "mousedown",
+        handleOutsideClick
+      );
+
+      document.removeEventListener(
+        "keydown",
+        handleEscape
+      );
+    };
+  }, [open]);
 
   return (
-    <div className="relative" ref={ref}>
-      <button onClick={() => setOpen(!open)}
-        className="relative p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors">
+    <div
+      ref={containerRef}
+      className="relative"
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((previous) => !previous)}
+        aria-label="Ouvrir les notifications"
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        className="relative rounded-lg p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+      >
         <Bell size={18} />
+
         {unread > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+          <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-0.5 text-[10px] font-bold text-white">
             {unread > 9 ? "9+" : unread}
           </span>
         )}
       </button>
 
       {open && (
-        <div className="absolute right-0 top-10 w-80 bg-white rounded-2xl shadow-2xl border border-gray-100 z-50 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-            <h3 className="font-bold text-[#0c4a6e] text-sm">Notifications</h3>
+        <div
+          role="dialog"
+          aria-label="Notifications administrateur"
+          className="absolute right-0 top-11 z-50 w-[min(20rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-2xl"
+        >
+          <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
+            <h3 className="text-sm font-bold text-[#0c4a6e]">
+              Notifications
+            </h3>
+
             <div className="flex items-center gap-2">
-              {unread > 0 && (
-                <button onClick={markAllRead} className="text-xs text-[#38bdf8] hover:text-[#0c4a6e] flex items-center gap-1 font-medium">
-                  <CheckCheck size={13} /> Tout lire
+              {unread > 0 && !authError && (
+                <button
+                  type="button"
+                  onClick={() => void markAllRead()}
+                  disabled={updating}
+                  className="flex items-center gap-1 text-xs font-medium text-sky-500 hover:text-[#0c4a6e] disabled:opacity-50"
+                >
+                  {updating ? (
+                    <Loader2
+                      size={13}
+                      className="animate-spin"
+                    />
+                  ) : (
+                    <CheckCheck size={13} />
+                  )}
+                  Tout lire
                 </button>
               )}
-              <button onClick={() => setOpen(false)} className="text-gray-400 hover:text-gray-600"><X size={16} /></button>
+
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Fermer les notifications"
+                className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+              >
+                <X size={16} />
+              </button>
             </div>
           </div>
 
           <div className="max-h-80 overflow-y-auto">
-            {notifications.length === 0 ? (
-              <div className="py-8 text-center text-gray-400 text-sm">Aucune notification</div>
+            {authError ? (
+              <div className="px-5 py-8 text-center">
+                <ShieldAlert
+                  size={30}
+                  className="mx-auto mb-3 text-amber-500"
+                />
+
+                <p className="text-sm font-semibold text-[#0c4a6e]">
+                  Session non autorisée
+                </p>
+
+                <p className="mt-2 text-xs leading-relaxed text-gray-500">
+                  Votre session administrateur n'est
+                  pas reconnue par le service des
+                  notifications.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setAuthError(false);
+                    setError("");
+                    void load();
+                  }}
+                  className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#0c4a6e] px-4 py-2 text-xs font-semibold text-white"
+                >
+                  <RefreshCw size={13} />
+                  Réessayer
+                </button>
+              </div>
+            ) : loading ? (
+              <div className="flex items-center justify-center gap-2 py-10 text-sm text-gray-500">
+                <Loader2
+                  size={17}
+                  className="animate-spin"
+                />
+                Chargement...
+              </div>
+            ) : error ? (
+              <div className="px-5 py-8 text-center">
+                <p
+                  role="alert"
+                  className="text-sm text-red-600"
+                >
+                  {error}
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => void load()}
+                  className="mt-3 text-xs font-semibold text-[#0c4a6e] underline"
+                >
+                  Réessayer
+                </button>
+              </div>
+            ) : notifications.length === 0 ? (
+              <div className="px-4 py-10 text-center">
+                <Bell
+                  size={28}
+                  className="mx-auto mb-3 text-gray-300"
+                />
+
+                <p className="text-sm text-gray-400">
+                  Aucune notification
+                </p>
+              </div>
             ) : (
-              notifications.map(n => (
-                <div key={n.id} className={`px-4 py-3 border-b border-gray-50 last:border-0 ${!n.isRead ? "bg-blue-50/50" : ""}`}>
+              notifications.map((notification) => (
+                <div
+                  key={notification.id}
+                  className={`border-b border-gray-50 px-4 py-3 last:border-0 ${
+                    !notification.isRead
+                      ? "bg-blue-50/50"
+                      : ""
+                  }`}
+                >
                   <div className="flex items-start gap-2">
-                    {!n.isRead && <div className="w-2 h-2 bg-blue-500 rounded-full mt-1.5 shrink-0" />}
-                    <div className={!n.isRead ? "" : "ml-4"}>
-                      <p className="text-xs font-semibold text-[#0c4a6e]">{n.subject}</p>
-                      <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.content}</p>
-                      <p className="text-[10px] text-gray-400 mt-1">
-                        {new Date(n.createdAt).toLocaleDateString("fr-FR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                    {!notification.isRead && (
+                      <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-blue-500" />
+                    )}
+
+                    <div
+                      className={
+                        notification.isRead
+                          ? "ml-4 min-w-0"
+                          : "min-w-0"
+                      }
+                    >
+                      <p className="text-xs font-semibold text-[#0c4a6e]">
+                        {notification.subject}
+                      </p>
+
+                      <p className="mt-0.5 line-clamp-2 text-xs text-gray-500">
+                        {notification.content}
+                      </p>
+
+                      <p className="mt-1 text-[10px] text-gray-400">
+                        {Number.isNaN(
+                          Date.parse(notification.createdAt)
+                        )
+                          ? ""
+                          : new Date(
+                              notification.createdAt
+                            ).toLocaleString("fr-FR", {
+                              day: "2-digit",
+                              month: "short",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
                       </p>
                     </div>
                   </div>
@@ -117,6 +410,14 @@ export default function NotificationBell() {
               ))
             )}
           </div>
+
+          {!authError &&
+            !loading &&
+            notifications.length > 0 && (
+              <div className="border-t border-gray-100 px-4 py-2 text-center text-[11px] text-gray-400">
+                {notifications.length} notification(s)
+              </div>
+            )}
         </div>
       )}
     </div>

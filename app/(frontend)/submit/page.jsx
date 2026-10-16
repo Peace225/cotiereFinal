@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { MailCheck, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase/client';
 
 export default function SubmitPage() {
   const [loading, setLoading] = useState(false);

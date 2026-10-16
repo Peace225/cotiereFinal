@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useMemo } from "react";
 import { Star, MessageSquare, ThumbsUp, RefreshCw, Send } from "lucide-react";
-import { supabase } from "../../lib/supabase"; // 👈 Ajuste le chemin relatif pointant vers ton fichier supabaseClient
+import { supabase } from "../../lib/supabase/client"; // 👈 Ajuste le chemin relatif pointant vers ton fichier supabaseClient
 import Link from "next/link";
 
 interface Review {

@@ -35,20 +35,28 @@ export default function ConnexionPage() {
       });
 
       if (authError) throw authError;
-      if (!authData.user) throw new Error("Erreur inattendue lors de la connexion.");
+      if (!authData.user || !authData.session) throw new Error("Erreur inattendue lors de la connexion.");
 
-      // 2. Récupération du rôle
+      // 💡 2. Forcer explicitement l'écriture de la session dans les cookies du navigateur
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token: authData.session.access_token,
+        refresh_token: authData.session.refresh_token,
+      });
+
+      if (sessionError) throw sessionError;
+
+      // 3. Récupération du rôle
       const { data: profile, error: profileError } = await supabase
         .from('users')
         .select('role')
-        .eq('id', authData.user.id)
+        .eq('supabase_user_id', authData.user.id)
         .maybeSingle(); 
 
       if (profileError) throw new Error("Impossible de vérifier vos accès.");
 
       const role = profile?.role || 'CLIENT';
       
-      // 3. Redirection sécurisée
+      // 4. Redirection sécurisée
       const target = (role === 'ADMIN' || role === 'SUPER_ADMIN') 
         ? '/admin/dashboard' 
         : '/';
