@@ -1,10 +1,17 @@
 "use client";
 import { useState, useEffect } from "react";
-import { ArrowRight, Phone, X, Clock, Video, Mic2, Calendar, FileText, ChevronLeft, Loader2, CheckCircle } from "lucide-react";
+import { ArrowRight, Phone, X, Clock, Video, Mic2, Calendar, FileText, ChevronLeft, Loader2, CheckCircle, MapPin } from "lucide-react";
 import Link from "next/link";
 
 type DbPrestation = {
   id: string; nom: string; categorie: string; description: string; prix: string; image: string;
+};
+
+type DbEvenement = {
+  id: string; slug?: string; titre: string; categorie: string; date: string;
+  heure: string; lieu: string; ville: string; prix: string; capacite: string;
+  organisateur: string; description: string; image: string; badge: string; badgeColor: string;
+  isActive?: boolean;
 };
 
 const ICON_MAP: Record<string, React.ReactNode> = {
@@ -14,18 +21,13 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   "Digital": <FileText size={16} />,
 };
 
-const actualites = [
-  { id: "grand-bassam-patrimoine", titre: "Grand-Bassam : le patrimoine UNESCO à l'honneur", date: "Avril 2026", image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80", categorie: "Patrimoine" },
-  { id: "tourisme-saison-record", titre: "Tourisme littoral : une saison record attendue", date: "Mars 2026", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&q=80", categorie: "Tourisme" },
-  { id: "pecheurs-littoral", titre: "Les pêcheurs du littoral à l'honneur", date: "Mars 2026", image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80", categorie: "Culture" },
-  { id: "developpement-economique", titre: "Développement économique de la Côtière ivoirienne", date: "Février 2026", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&q=80", categorie: "Économie" },
-  { id: "festival-musique-2026", titre: "Festival de musique du littoral 2026", date: "Février 2026", image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&q=80", categorie: "Culture" },
-  { id: "nouvelles-infrastructures", titre: "Nouvelles infrastructures pour la Côtière", date: "Janvier 2026", image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&q=80", categorie: "Infrastructure" },
-];
-
 export default function InfoPage() {
   const [prestations, setPrestations] = useState<DbPrestation[]>([]);
   const [prestationsLoaded, setPrestationsLoaded] = useState(false);
+  
+  const [evenements, setEvenements] = useState<DbEvenement[]>([]);
+  const [evenementsLoaded, setEvenementsLoaded] = useState(false);
+
   const [active, setActive] = useState<DbPrestation | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ firstName: "", phone: "", email: "", message: "" });
@@ -34,10 +36,21 @@ export default function InfoPage() {
   const [err, setErr] = useState("");
 
   useEffect(() => {
-    fetch("/api/info/prestations")
+    // 1. Charger les prestations
+    fetch("/api/info/prestations", { cache: "no-store" })
       .then(r => r.json())
       .then(d => { if (d.data?.length > 0) setPrestations(d.data); setPrestationsLoaded(true); })
       .catch(() => setPrestationsLoaded(true));
+
+    // 2. Charger les vrais événements créés par l'admin avec filtrage isActive
+    fetch("/api/evenements", { cache: "no-store" })
+      .then(r => r.json())
+      .then(d => {
+        const items = d.data?.evenements || d.data || [];
+        setEvenements(items.filter((e: any) => e.isActive !== false));
+        setEvenementsLoaded(true);
+      })
+      .catch(() => setEvenementsLoaded(true));
   }, []);
 
   function closeModal() {
@@ -125,30 +138,57 @@ export default function InfoPage() {
         </div>
       </section>
 
-      {/* Actualités */}
+      {/* Actualités / Vrais Événements de la Base de Données */}
       <section id="actualites" className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <span className="text-[#c9a84c] text-sm font-semibold uppercase tracking-widest">Actualités</span>
+            <span className="text-[#c9a84c] text-sm font-semibold uppercase tracking-widest">Actualités & Événements</span>
             <h2 className="section-title mt-2">Les dernières nouvelles du littoral</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {actualites.map((a) => (
-              <div key={a.titre} className="group bg-white rounded-xl overflow-hidden shadow-sm card-hover border border-gray-100">
-                <div className="relative h-44 overflow-hidden">
-                  <img src={a.image} alt={a.titre} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                  <span className="absolute top-3 left-3 bg-[#c9a84c] text-white text-xs font-bold px-2.5 py-1 rounded-full">{a.categorie}</span>
+
+          {!evenementsLoaded ? (
+            <div className="flex justify-center py-12"><Loader2 size={32} className="animate-spin text-[#c9a84c]" /></div>
+          ) : evenements.length === 0 ? (
+            <div className="text-center py-16 bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+              <Calendar size={40} className="mx-auto text-gray-300 mb-2" />
+              <p className="text-gray-500 font-medium">Aucun événement ou actualité publié pour le moment.</p>
+              <p className="text-xs text-gray-400 mt-1">Ajoutez vos actualités depuis l'espace administrateur.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {evenements.map((ev) => (
+                <div key={ev.id} className="group bg-white rounded-xl overflow-hidden shadow-sm card-hover border border-gray-100 flex flex-col justify-between">
+                  <div>
+                    <div className="relative h-44 overflow-hidden bg-gray-100">
+                      <img 
+                        src={ev.image || "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&q=80"} 
+                        alt={ev.titre} 
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+                      />
+                      <span className="absolute top-3 left-3 bg-[#c9a84c] text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                        {ev.categorie}
+                      </span>
+                    </div>
+                    <div className="p-5">
+                      <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
+                        <span className="flex items-center gap-1"><Calendar size={12} className="text-[#c9a84c]" /> {ev.date}</span>
+                        {ev.lieu && <span className="flex items-center gap-1"><MapPin size={12} className="text-[#c9a84c]" /> {ev.lieu}</span>}
+                      </div>
+                      <h3 className="font-bold text-[#0a1628] mb-2 leading-tight text-base">{ev.titre}</h3>
+                      {ev.description && (
+                        <p className="text-xs text-gray-500 line-clamp-2 mb-3">{ev.description}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="px-5 pb-5 pt-0">
+                    <Link href={`/services/rdv/${ev.slug || ev.id}`} className="text-[#38bdf8] text-sm font-semibold hover:underline flex items-center gap-1">
+                      En savoir plus <ArrowRight size={14} />
+                    </Link>
+                  </div>
                 </div>
-                <div className="p-5">
-                  <p className="text-xs text-gray-400 mb-2">{a.date}</p>
-                  <h3 className="font-bold text-[#0a1628] mb-3 leading-tight">{a.titre}</h3>
-                  <Link href={"/services/info/" + a.id} className="text-[#38bdf8] text-sm font-semibold hover:underline flex items-center gap-1">
-                    Lire la suite <ArrowRight size={14} />
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

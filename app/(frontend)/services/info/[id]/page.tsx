@@ -1,32 +1,38 @@
-import { ArrowRight, ChevronLeft, Calendar } from "lucide-react";
+import { ArrowRight, ChevronLeft, Calendar, MapPin, Ticket, Users, Clock } from "lucide-react";
 import Link from "next/link";
+import { prisma } from "@/lib/prisma";
 
-const actualites: Record<string, {
-  titre: string; date: string; image: string; categorie: string; contenu: string;
-}> = {
-  "grand-bassam-patrimoine": { titre: "Grand-Bassam : le patrimoine UNESCO à l'honneur", date: "Avril 2026", image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80", categorie: "Patrimoine", contenu: "Grand-Bassam, première capitale de la Côte d'Ivoire, continue de rayonner sur la scène internationale grâce à son classement au patrimoine mondial de l'UNESCO. La ville historique attire chaque année des milliers de visiteurs venus découvrir son architecture coloniale unique, ses musées et ses plages. Les autorités locales et le gouvernement ivoirien ont lancé un vaste programme de restauration des bâtiments historiques du Quartier France, afin de préserver ce joyau culturel pour les générations futures. CÔTIÈRE INFO+ vous invite à découvrir cette destination exceptionnelle à travers nos excursions guidées." },
-  "tourisme-saison-record": { titre: "Tourisme littoral : une saison record attendue", date: "Mars 2026", image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&q=80", categorie: "Tourisme", contenu: "Les professionnels du tourisme sur le littoral ivoirien s'attendent à une saison 2026 exceptionnelle. Après plusieurs années de reprise post-pandémie, les réservations dans les hôtels et résidences de Grand-Bassam, Assinie et Jacqueville affichent une hausse de 35% par rapport à 2025. Cette tendance positive est portée par le développement des infrastructures touristiques, la promotion internationale de la destination Côte d'Ivoire et l'essor du tourisme intérieur. CÔTIÈRE accompagne cette dynamique en proposant des excursions et séjours sur mesure pour découvrir les plus belles destinations du littoral." },
-  "pecheurs-littoral": { titre: "Les pêcheurs du littoral à l'honneur", date: "Mars 2026", image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&q=80", categorie: "Culture", contenu: "Une cérémonie de reconnaissance a été organisée à Grand-Lahou pour honorer les pêcheurs artisanaux du littoral ivoirien. Ces gardiens de la mer, dont le savoir-faire ancestral se transmet de génération en génération, jouent un rôle crucial dans l'économie locale et la préservation des traditions maritimes. L'événement a réuni plus de 500 pêcheurs venus de toutes les villes côtières, de Tabou à Aboisso. CÔTIÈRE INFO+ a assuré la couverture complète de cet événement culturel majeur." },
-  "developpement-economique": { titre: "Développement économique de la Côtière ivoirienne", date: "Février 2026", image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80", categorie: "Économie", contenu: "Le littoral ivoirien connaît une dynamique économique sans précédent. De nouveaux investissements dans les infrastructures portuaires, hôtelières et touristiques transforment le visage des villes côtières. San-Pédro, deuxième port de Côte d'Ivoire, voit ses capacités doubler avec la construction d'un nouveau terminal. Grand-Bassam accueille de nouveaux hôtels et résidences de luxe. Cette croissance crée des milliers d'emplois et améliore le niveau de vie des populations locales. CÔTIÈRE accompagne ce développement en connectant les acteurs économiques du littoral." },
-  "festival-musique-2026": { titre: "Festival de musique du littoral 2026", date: "Février 2026", image: "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=800&q=80", categorie: "Culture", contenu: "Le Festival de Musique du Littoral 2026 s'annonce comme l'événement musical de l'année en Côte d'Ivoire. Prévu du 14 au 16 mai sur la plage de Grand-Bassam, il réunira plus de 30 artistes locaux et internationaux sur 3 jours de concerts. La programmation mêle afrobeat, coupé-décalé, reggae et musiques du monde. Plus de 15 000 festivaliers sont attendus chaque soir. CÔTIÈRE EVENT est partenaire officiel de l'événement et propose des packages tout inclus (transport, hébergement, billets)." },
-  "nouvelles-infrastructures": { titre: "Nouvelles infrastructures pour la Côtière", date: "Janvier 2026", image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800&q=80", categorie: "Infrastructure", contenu: "Le gouvernement ivoirien a annoncé un plan d'investissement massif de 500 milliards FCFA pour moderniser les infrastructures du littoral ivoirien sur la période 2026-2030. Ce plan comprend la réhabilitation des routes côtières, la construction de nouveaux ports de plaisance, l'extension du réseau électrique et l'amélioration de l'accès à l'eau potable dans les villages côtiers. Ces investissements visent à renforcer l'attractivité touristique et économique du littoral tout en améliorant les conditions de vie des populations locales." },
-};
+export const dynamic = 'force-dynamic';
 
 export default async function ActualiteDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const article = actualites[id];
+
+  // Recherche de l'événement dans la base de données par ID ou par Slug
+  let article: any = null;
+  try {
+    article = await prisma.evenement.findFirst({
+      where: {
+        OR: [
+          { id: id },
+          { slug: id }
+        ]
+      }
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération de l'événement :", error);
+  }
 
   if (!article) return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-      <p className="text-gray-500 text-lg">Article introuvable.</p>
+    <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-gray-50 px-4 text-center">
+      <p className="text-gray-500 text-lg">Événement ou actualité introuvable.</p>
       <Link href="/services/info" className="btn-primary">Retour aux actualités</Link>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-20">
       <div className="bg-white border-b border-gray-100">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-gray-500">
+        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-2 text-sm text-gray-500 overflow-x-auto whitespace-nowrap">
           <Link href="/" className="hover:text-[#0c4a6e]">Accueil</Link>
           <span>/</span>
           <Link href="/services/info" className="hover:text-[#0c4a6e]">CÔTIÈRE INFO+</Link>
@@ -41,28 +47,64 @@ export default async function ActualiteDetailPage({ params }: { params: Promise<
         </Link>
 
         <article className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="relative h-64 sm:h-80">
-            <img src={article.image} alt={article.titre} className="w-full h-full object-cover" />
+          <div className="relative h-64 sm:h-80 bg-gray-100">
+            <img 
+              src={article.image || "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80"} 
+              alt={article.titre} 
+              className="w-full h-full object-cover" 
+            />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            <span className="absolute top-4 left-4 bg-[#c9a84c] text-white text-xs font-bold px-3 py-1.5 rounded-full">{article.categorie}</span>
+            <span className={`absolute top-4 left-4 ${article.badgeColor || 'bg-[#c9a84c]'} text-white text-xs font-bold px-3 py-1.5 rounded-full shadow`}>
+              {article.categorie || "Événement"}
+            </span>
           </div>
 
-          <div className="p-8">
-            <div className="flex items-center gap-2 text-sm text-gray-400 mb-4">
-              <Calendar size={14} className="text-[#c9a84c]" />
-              <span>{article.date}</span>
-              <span>·</span>
-              <span>CÔTIÈRE INFO+</span>
+          <div className="p-6 sm:p-8">
+            <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500 mb-4">
+              <span className="flex items-center gap-1.5 font-semibold text-[#c9a84c]">
+                <Calendar size={14} /> {article.date}
+              </span>
+              {article.heure && (
+                <span className="flex items-center gap-1.5">
+                  <Clock size={14} /> {article.heure}
+                </span>
+              )}
+              {article.lieu && (
+                <span className="flex items-center gap-1.5">
+                  <MapPin size={14} /> {article.lieu} {article.ville ? `(${article.ville})` : ""}
+                </span>
+              )}
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-bold text-[#0c4a6e] mb-6 leading-tight">{article.titre}</h1>
 
-            <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed">
-              <p className="text-base leading-relaxed">{article.contenu}</p>
+            {/* Détails supplémentaires de l'événement */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl mb-6 border border-gray-100 text-sm">
+              {article.prix && (
+                <div className="flex items-center gap-2 text-gray-700">
+                  <Ticket size={16} className="text-[#c9a84c] shrink-0" />
+                  <span><strong>Tarif :</strong> {article.prix}</span>
+                </div>
+              )}
+              {article.capacite && (
+                <div className="flex items-center gap-2 text-gray-700">
+                  <Users size={16} className="text-[#c9a84c] shrink-0" />
+                  <span><strong>Capacité :</strong> {article.capacite}</span>
+                </div>
+              )}
+              {article.organisateur && (
+                <div className="flex items-center gap-2 text-gray-700 sm:col-span-2">
+                  <span className="font-semibold text-[#0c4a6e]">Organisateur :</span> {article.organisateur}
+                </div>
+              )}
             </div>
 
-            <div className="mt-8 pt-6 border-t border-gray-100">
-              <p className="text-xs text-gray-400 mb-4">Publié par <strong className="text-[#0c4a6e]">CÔTIÈRE INFO+</strong> — La voix officielle du littoral ivoirien</p>
+            <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed">
+              <p className="text-base leading-relaxed whitespace-pre-line">{article.description || "Aucune description détaillée fournie pour le moment."}</p>
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <p className="text-xs text-gray-400">Publié par <strong className="text-[#0c4a6e]">CÔTIÈRE INFO+</strong></p>
               <Link href="/services/info" className="btn-primary inline-flex">
                 Voir toutes les actualités <ArrowRight size={16} />
               </Link>
