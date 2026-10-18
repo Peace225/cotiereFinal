@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { ArrowRight, Phone, X, Clock, Video, Mic2, Calendar, FileText, ChevronLeft, Loader2, CheckCircle, MapPin } from "lucide-react";
+import { ArrowRight, Phone, X, Clock, Video, Mic2, Calendar, FileText, ChevronLeft, Loader2, CheckCircle, MapPin, Play } from "lucide-react";
 import Link from "next/link";
 
 type DbPrestation = {
@@ -10,7 +10,7 @@ type DbPrestation = {
 type DbEvenement = {
   id: string; slug?: string; titre: string; categorie: string; date: string;
   heure: string; lieu: string; ville: string; prix: string; capacite: string;
-  organisateur: string; description: string; image: string; badge: string; badgeColor: string;
+  organisateur: string; description: string; image: string; videoUrl?: string; badge: string; badgeColor: string;
   isActive?: boolean;
 };
 
@@ -21,12 +21,28 @@ const ICON_MAP: Record<string, React.ReactNode> = {
   "Digital": <FileText size={16} />,
 };
 
+const MOIS_NOMS = [
+  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+];
+
+function formatDateFR(dateVal: string): string {
+  if (!dateVal) return "";
+  if (!dateVal.includes("T") && !/^\d{4}-\d{2}-\d{2}/.test(dateVal)) return dateVal;
+  const d = new Date(dateVal);
+  if (isNaN(d.getTime())) return dateVal;
+  return `${d.getUTCDate()} ${MOIS_NOMS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
+
 export default function InfoPage() {
   const [prestations, setPrestations] = useState<DbPrestation[]>([]);
   const [prestationsLoaded, setPrestationsLoaded] = useState(false);
   
   const [evenements, setEvenements] = useState<DbEvenement[]>([]);
   const [evenementsLoaded, setEvenementsLoaded] = useState(false);
+
+  // État pour ouvrir la vidéo en lecture plein écran / modale
+  const [playingVideo, setPlayingVideo] = useState<{ url: string; titre: string } | null>(null);
 
   const [active, setActive] = useState<DbPrestation | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -159,28 +175,60 @@ export default function InfoPage() {
               {evenements.map((ev) => (
                 <div key={ev.id} className="group bg-white rounded-xl overflow-hidden shadow-sm card-hover border border-gray-100 flex flex-col justify-between">
                   <div>
-                    <div className="relative h-44 overflow-hidden bg-gray-100">
+                    {/* 1. IMAGE PRINCIPALE À PART */}
+                    <div className="relative h-48 overflow-hidden bg-gray-100">
                       <img 
                         src={ev.image || "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600&q=80"} 
                         alt={ev.titre} 
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
                       />
-                      <span className="absolute top-3 left-3 bg-[#c9a84c] text-white text-xs font-bold px-2.5 py-1 rounded-full">
+                      <span className="absolute top-3 left-3 bg-[#c9a84c] text-white text-xs font-bold px-2.5 py-1 rounded-full z-10">
                         {ev.categorie}
                       </span>
+                      {ev.videoUrl && (
+                        <span className="absolute top-3 right-3 bg-black/75 text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 z-10">
+                          <Video size={11} /> Vidéo incluse
+                        </span>
+                      )}
                     </div>
+
                     <div className="p-5">
                       <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
-                        <span className="flex items-center gap-1"><Calendar size={12} className="text-[#c9a84c]" /> {ev.date}</span>
+                        <span className="flex items-center gap-1"><Calendar size={12} className="text-[#c9a84c]" /> {formatDateFR(ev.date)}</span>
                         {ev.lieu && <span className="flex items-center gap-1"><MapPin size={12} className="text-[#c9a84c]" /> {ev.lieu}</span>}
                       </div>
                       <h3 className="font-bold text-[#0a1628] mb-2 leading-tight text-base">{ev.titre}</h3>
                       {ev.description && (
                         <p className="text-xs text-gray-500 line-clamp-2 mb-3">{ev.description}</p>
                       )}
+
+                      {/* 2. MINIATURE DE LA VIDÉO SÉPARÉE + BOUTON LIRE LA VIDÉO */}
+                      {ev.videoUrl && (
+                        <div 
+                          onClick={() => setPlayingVideo({ url: ev.videoUrl!, titre: ev.titre })}
+                          className="mt-3 relative rounded-xl overflow-hidden bg-black h-28 cursor-pointer group/vid border border-gray-200 shadow-sm"
+                        >
+                          <video
+                            src={`${ev.videoUrl}#t=0.5`}
+                            preload="metadata"
+                            muted
+                            playsInline
+                            className="w-full h-full object-cover opacity-75 group-hover/vid:scale-105 transition-transform duration-300 pointer-events-none"
+                          />
+                          <div className="absolute inset-0 bg-black/40 group-hover/vid:bg-black/50 transition-colors flex flex-col items-center justify-center gap-1.5">
+                            <div className="w-10 h-10 rounded-full bg-[#c9a84c] text-white flex items-center justify-center shadow-lg group-hover/vid:scale-110 transition-transform">
+                              <Play size={18} className="fill-white ml-0.5" />
+                            </div>
+                            <span className="text-white text-xs font-bold tracking-wide bg-black/60 px-3 py-1 rounded-full">
+                              Lire la vidéo
+                            </span>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
-                  <div className="px-5 pb-5 pt-0">
+
+                  <div className="px-5 pb-5 pt-0 flex items-center justify-between">
                     <Link href={`/services/rdv/${ev.slug || ev.id}`} className="text-[#38bdf8] text-sm font-semibold hover:underline flex items-center gap-1">
                       En savoir plus <ArrowRight size={14} />
                     </Link>
@@ -206,7 +254,32 @@ export default function InfoPage() {
         </div>
       </section>
 
-      {/* Modal */}
+      {/* MODALE LECTEUR VIDÉO */}
+      {playingVideo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setPlayingVideo(null)}>
+          <div className="relative bg-black rounded-2xl overflow-hidden shadow-2xl w-full max-w-3xl border border-white/10" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-4 py-3 bg-[#0a1628] text-white border-b border-white/10">
+              <h3 className="font-bold text-sm truncate pr-4 flex items-center gap-2">
+                <Video size={16} className="text-[#c9a84c]" /> {playingVideo.titre}
+              </h3>
+              <button onClick={() => setPlayingVideo(null)} className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors">
+                <X size={16} />
+              </button>
+            </div>
+            <div className="aspect-video bg-black flex items-center justify-center">
+              <video
+                src={playingVideo.url}
+                controls
+                autoPlay
+                playsInline
+                className="w-full h-full max-h-[75vh] object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Prestation */}
       {active && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={closeModal}>
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />

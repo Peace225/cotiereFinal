@@ -1,99 +1,63 @@
 import { NextRequest } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { createClient } from "@supabase/supabase-js";
 import { ok, badRequest, serverError, unauthorized } from "@/lib/api-response";
 import { getSession } from "@/lib/auth";
 
-const MAX_SIZE = 10 * 1024 * 1024; // 10MB
-const ALLOWED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
-const ALLOWED_DOC_TYPES = [
-  "application/pdf",
-  "application/msword",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+const MAX_SIZE = 100 * 1024 * 1024; // 100MB
+const ALLOWED_TYPES = [
+  "image/jpeg", "image/png", "image/webp", "image/gif",
+  "video/mp4", "video/webm", "video/quicktime", "video/x-m4v",
+  "application/pdf", "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 ];
-const ALLOWED_TYPES = [...ALLOWED_IMAGE_TYPES, ...ALLOWED_DOC_TYPES];
 
-// Upload vers Cloudinary si configurÃ© (images uniquement), sinon stockage local
-async function uploadFile(file: File): Promise<string> {
-  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
-  const apiKey = process.env.CLOUDINARY_API_KEY;
-  const apiSecret = process.env.CLOUDINARY_API_SECRET;
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY! // OBLIGATOIRE, pas de fallback ANON
+);
 
-  const isImage = file.type.startsWith("image/");
-
-  if (isImage && cloudName && apiKey && apiSecret) {
-    // Upload Cloudinary
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const base64 = buffer.toString("base64");
-    const dataUri = `data:${file.type};base64,${base64}`;
-
-    const timestamp = Math.round(Date.now() / 1000);
-    const str = `folder=cotiere&timestamp=${timestamp}${apiSecret}`;
-    const crypto = await import("crypto");
-    const signature = crypto.createHash("sha1").update(str).digest("hex");
-
-    const fd = new FormData();
-    fd.append("file", dataUri);
-    fd.append("api_key", apiKey);
-    fd.append("timestamp", String(timestamp));
-    fd.append("signature", signature);
-    fd.append("folder", "cotiere");
-
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, { method: "POST", body: fd });
-    const data = await res.json();
-    if (data.secure_url) return data.secure_url;
-    throw new Error("Cloudinary upload failed");
-  }
-
-  // Stockage local
-  const uploadDir = join(process.cwd(), "public", "uploads");
-  await mkdir(uploadDir, { recursive: true });
+async function uploadToSupabaseStorage(file: File): Promise<string> {
   const bytes = await file.arrayBuffer();
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-  const filename = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  await writeFile(join(uploadDir, filename), Buffer.from(bytes));
-  return `/uploads/${filename}`;
+  const buffer = Buffer.from(bytes);
+  const ext = file.name.split(".").pop()?.toLowerCase() ?? "bin";
+  const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const filePath = `uploads/${fileName}`;
+
+  const { error } = await supabaseAdmin.storage.from("annonces").upload(filePath, buffer, {
+    contentType: file.type,
+    upsert: false,
+  });
+  if (error) throw new Error(`Supabase: ${error.message}`);
+
+  const { data } = supabaseAdmin.storage.from("annonces").getPublicUrl(filePath);
+  return data.publicUrl;
 }
 
-// POST /api/upload
 export async function POST(req: NextRequest) {
   try {
-    // VÃ©rifier l'authentification
     const session = await getSession();
     if (!session) return unauthorized();
 
     const formData = await req.formData();
-    const files = formData.getAll("files") as File[];
-
-    if (!files || files.length === 0) return badRequest("Aucun fichier fourni");
-    if (files.length > 10) return badRequest("Maximum 10 fichiers Ã  la fois");
-
-    const urls: string[] = [];
-    const errors: string[] = [];
-
-    for (const file of files) {
-      if (!ALLOWED_TYPES.includes(file.type)) {
-        errors.push(`${file.name} : format non supportÃ© (JPG, PNG, WEBP, PDF, DOC, DOCX)`);
-        continue;
-      }
-      if (file.size > MAX_SIZE) {
-        errors.push(`${file.name} : fichier trop lourd (max 10MB)`);
-        continue;
-      }
-      try {
-        const url = await uploadFile(file);
-        urls.push(url);
-      } catch {
-        errors.push(`${file.name} : erreur lors de l'upload`);
-      }
+    let files = formData.getAll("files") as File[];
+    if (files.length === 0) {
+      const singleFile = formData.get("file") || formData.get("image");
+      if (singleFile instanceof File) files = [singleFile];
     }
 
-    if (urls.length === 0 && errors.length > 0) return badRequest(errors[0]);
-    return ok({ urls, errors: errors.length > 0 ? errors : undefined });
-  } catch (e) {
-    return serverError(e);
+    if (!files || files.length === 0) return badRequest("Aucun fichier fourni");
+
+    const urls: string[] = [];
+    for (const file of files) {
+      if (!ALLOWED_TYPES.includes(file.type)) return badRequest(`${file.name}: format ${file.type} non supporté`);
+      if (file.size > MAX_SIZE) return badRequest(`${file.name}: trop lourd (max 100MB)`);
+      const url = await uploadToSupabaseStorage(file);
+      urls.push(url);
+    }
+
+    return ok({ url: urls[0], urls });
+  } catch (e: any) {
+    console.error("UPLOAD ERROR:", e);
+    return serverError(e.message);
   }
 }
-
-

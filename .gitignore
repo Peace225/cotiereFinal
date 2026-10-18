@@ -42,3 +42,4 @@ next-env.d.ts
 
 # backups base de données (ne pas commiter)
 *.sql
+public/uploads/

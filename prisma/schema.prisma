@@ -26,6 +26,7 @@ model Evenement {
   organisateur String?
   description String?
   image String?
+  videoUrl String?     // <--- AJOUTÉ : Champ pour stocker l'URL ou le chemin de la vidéo
   badge String?
   badgeColor String?
   artistes Json?
@@ -72,7 +73,6 @@ model RdvInscription {
   @@schema("public")
 }
 
-// AJOUTÉ : ta table qui manquait pour l'erreur 42P01
 model residences {
   id String @id @default(cuid())
   name String
@@ -92,35 +92,44 @@ model residences {
 
   @@schema("public")
 }
+
 model homepage_categories {
-  id String @id @default(cuid())
-  key String? @unique
-  label String?
-  title String?
-  is_active Boolean @default(true) @map("is_active")
-  created_at DateTime @default(now()) @map("created_at")
+  id          String   @id @default(cuid())
+  key         String?  @unique
+  label       String?
+  title       String?
+  description String?
+  type        String?
+  href        String?
+  image       String?
+  images      String[]
+  amenities   String[]
+  order_index Int?
+  is_active   Boolean  @default(true) @map("is_active")
+  created_at  DateTime @default(now()) @map("created_at")
+  updated_at  DateTime @default(now()) @updatedAt @map("updated_at")
 
   @@map("homepage_categories")
   @@schema("public")
 }
 
 model User {
-  id                String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("id")
-  supabaseUserId    String?  @unique @map("supabase_user_id") @db.Uuid
-  email             String   @unique @map("email")
-  password          String?  @map("password")
-  firstName         String?  @map("first_name")
-  lastName          String?  @map("last_name")
-  phone             String?  @map("phone")
-  whatsapp          String?  @map("whatsapp")
-  nationality       String?  @map("nationality")
-  role              String   @default("CLIENT") @map("role")
-  emailVerified     Boolean  @default(false) @map("email_verified")
-  emailVerifyToken  String?  @map("email_verify_token")
-  resetToken        String?  @map("reset_token")
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid @map("id")
+  supabaseUserId    String?   @unique @map("supabase_user_id") @db.Uuid
+  email             String    @unique @map("email")
+  password          String?   @map("password")
+  firstName         String?   @map("first_name")
+  lastName          String?   @map("last_name")
+  phone             String?   @map("phone")
+  whatsapp          String?   @map("whatsapp")
+  nationality       String?   @map("nationality")
+  role              String    @default("CLIENT") @map("role")
+  emailVerified     Boolean   @default(false) @map("email_verified")
+  emailVerifyToken  String?   @map("email_verify_token")
+  resetToken        String?   @map("reset_token")
   resetExpiry       DateTime? @map("reset_expiry")
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @default(now()) @updatedAt @map("updated_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @default(now()) @updatedAt @map("updated_at")
 
   equipmentRentals  EquipmentRental[]
   eventRequests     EventRequest[]

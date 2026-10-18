@@ -1,21 +1,32 @@
-import { ArrowRight, ChevronLeft, Calendar, MapPin, Ticket, Users, Clock } from "lucide-react";
+import { ArrowRight, ChevronLeft, Calendar, MapPin, Ticket, Users, Clock, Video } from "lucide-react";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
+
+const MOIS_NOMS = [
+  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
+];
+
+function formatDateFR(dateVal: any): string {
+  if (!dateVal) return "";
+  if (typeof dateVal === "string" && !dateVal.includes("T") && !/^\d{4}-\d{2}-\d{2}/.test(dateVal)) {
+    return dateVal;
+  }
+  const d = new Date(dateVal);
+  if (isNaN(d.getTime())) return String(dateVal);
+  return `${d.getUTCDate()} ${MOIS_NOMS[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+}
 
 export default async function ActualiteDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // Recherche de l'événement dans la base de données par ID ou par Slug
   let article: any = null;
   try {
     article = await prisma.evenement.findFirst({
       where: {
-        OR: [
-          { id: id },
-          { slug: id }
-        ]
+        OR: [{ id: id }, { slug: id }]
       }
     });
   } catch (error) {
@@ -47,6 +58,7 @@ export default async function ActualiteDetailPage({ params }: { params: Promise<
         </Link>
 
         <article className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          {/* 1. IMAGE PRINCIPALE EN HAUT À PART */}
           <div className="relative h-64 sm:h-80 bg-gray-100">
             <img 
               src={article.image || "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80"} 
@@ -62,7 +74,7 @@ export default async function ActualiteDetailPage({ params }: { params: Promise<
           <div className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-gray-500 mb-4">
               <span className="flex items-center gap-1.5 font-semibold text-[#c9a84c]">
-                <Calendar size={14} /> {article.date}
+                <Calendar size={14} /> {formatDateFR(article.date)}
               </span>
               {article.heure && (
                 <span className="flex items-center gap-1.5">
@@ -78,30 +90,49 @@ export default async function ActualiteDetailPage({ params }: { params: Promise<
 
             <h1 className="text-2xl sm:text-3xl font-bold text-[#0c4a6e] mb-6 leading-tight">{article.titre}</h1>
 
-            {/* Détails supplémentaires de l'événement */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl mb-6 border border-gray-100 text-sm">
-              {article.prix && (
-                <div className="flex items-center gap-2 text-gray-700">
-                  <Ticket size={16} className="text-[#c9a84c] shrink-0" />
-                  <span><strong>Tarif :</strong> {article.prix}</span>
-                </div>
-              )}
-              {article.capacite && (
-                <div className="flex items-center gap-2 text-gray-700">
-                  <Users size={16} className="text-[#c9a84c] shrink-0" />
-                  <span><strong>Capacité :</strong> {article.capacite}</span>
-                </div>
-              )}
-              {article.organisateur && (
-                <div className="flex items-center gap-2 text-gray-700 sm:col-span-2">
-                  <span className="font-semibold text-[#0c4a6e]">Organisateur :</span> {article.organisateur}
-                </div>
-              )}
-            </div>
+            {(article.prix || article.capacite || article.organisateur) && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl mb-6 border border-gray-100 text-sm">
+                {article.prix && (
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <Ticket size={16} className="text-[#c9a84c] shrink-0" />
+                    <span><strong>Tarif :</strong> {article.prix}</span>
+                  </div>
+                )}
+                {article.capacite && (
+                  <div className="flex items-center gap-2 text-gray-700">
+                    <Users size={16} className="text-[#c9a84c] shrink-0" />
+                    <span><strong>Capacité :</strong> {article.capacite}</span>
+                  </div>
+                )}
+                {article.organisateur && (
+                  <div className="flex items-center gap-2 text-gray-700 sm:col-span-2">
+                    <span className="font-semibold text-[#0c4a6e]">Organisateur :</span> {article.organisateur}
+                  </div>
+                )}
+              </div>
+            )}
 
-            <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed">
+            <div className="prose prose-sm max-w-none text-gray-600 leading-relaxed mb-8">
               <p className="text-base leading-relaxed whitespace-pre-line">{article.description || "Aucune description détaillée fournie pour le moment."}</p>
             </div>
+
+            {/* 2. SECTION VIDÉO SÉPARÉE AVEC APERÇU ET CONTRÔLES */}
+            {article.videoUrl && (
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <h3 className="text-base font-bold text-[#0c4a6e] mb-3 flex items-center gap-2">
+                  <Video size={18} className="text-[#c9a84c]" /> Vidéo de l'événement
+                </h3>
+                <div className="rounded-2xl overflow-hidden bg-black border border-gray-200 shadow-md">
+                  <video
+                    src={`${article.videoUrl}#t=0.5`}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    className="w-full max-h-[450px] object-contain"
+                  />
+                </div>
+              </div>
+            )}
 
             <div className="mt-8 pt-6 border-t border-gray-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <p className="text-xs text-gray-400">Publié par <strong className="text-[#0c4a6e]">CÔTIÈRE INFO+</strong></p>
